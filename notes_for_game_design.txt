@@ -1,0 +1,2 @@
+First levels: *basic logic to navigate and avoid guards.
+Journal for 

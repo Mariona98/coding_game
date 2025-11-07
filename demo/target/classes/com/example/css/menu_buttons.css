@@ -1,0 +1,32 @@
+/* Learn More Button - JavaFX Version */
+
+.button {
+    -fx-cursor: hand;
+    -fx-font-family: "Roboto Condensed Bold", "Arial Narrow", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #fbfbfa;
+    -fx-background-color: linear-gradient(to bottom, #182c7e, #2c1a74);
+    -fx-border-color: #150f4f;
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 12 26;
+    -fx-font-smoothing-type: lcd;
+    -fx-letter-spacing: 0.4px;
+    -fx-effect: dropshadow(three-pass-box, #5c130d, 8, 0, 0, 5);
+}
+
+/* Hover state */
+.button:hover {
+    -fx-background-color: #233eac;
+    -fx-translate-y: 2px;
+    -fx-effect: dropshadow(three-pass-box, #5c130d, 8, 0, 0, 4);
+}
+
+/* Pressed (active) state */
+.button:pressed {
+    -fx-background-color: #140c32;
+    -fx-translate-y: 6px;
+    -fx-effect: dropshadow(three-pass-box, #5c130d, 0, 0, 0, 0);
+}

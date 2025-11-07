@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="660.0" styleClass="pane" stylesheets="@css/pane.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainMenu">
+   <children>
+      <Button fx:id="NewGame" layoutX="261.0" layoutY="104.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="135.0" styleClass="learn-more" stylesheets="@css/menu_buttons.css" text="New Game">
+         <font>
+            <Font name="SansSerif Regular" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="LoadGame" layoutX="261.0" layoutY="164.0" mnemonicParsing="false" stylesheets="@css/menu_buttons.css" text="Load Game" />
+      <Button fx:id="Settings" layoutX="261.0" layoutY="225.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="135.0" stylesheets="@css/menu_buttons.css" text="Settings" />
+      <Button fx:id="About" layoutX="262.0" layoutY="285.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="135.0" stylesheets="@css/menu_buttons.css" text="About" />
+      <ToggleButton fx:id="MusicToggle" layoutX="590.0" layoutY="385.0" mnemonicParsing="false" stylesheets="@css/toggle_buttons.css" text="🎵" />
+      <ToggleButton fx:id="SoundToggle" layoutX="552.0" layoutY="385.0" minHeight="33.0" minWidth="37.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="37.0" stylesheets="@css/toggle_buttons.css" text="🔊 " />
+   </children>
+</Pane>

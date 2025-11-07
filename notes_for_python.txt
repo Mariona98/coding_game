@@ -1,0 +1,18 @@
+Python basics to learn in the game.
+(Notes from w3schools)
+1.You have to use the same number of spaces in the same block of code,
+ otherwise Python will give you an error.
+2.Python has no command for declaring a variable.
+    ex: x = 5
+        y = "Hello, World!"
+3.The statements are executed one by one, in the same order as they are written.
+4.Text in Python must be inside quotes. You can use either " double quotes or ' single quotes.
+5.However, unlike text, we don't put numbers inside double quotes.
+6.Variables are containers for storing data values.
+7.The notes for these basic syntax will be added on the journal book .
+8.In the game beginners we will learn the logic for : 
+    *if...else
+    *match
+    *while
+    *for loops
+    *functions

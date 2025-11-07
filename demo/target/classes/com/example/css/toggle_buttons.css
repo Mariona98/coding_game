@@ -1,0 +1,43 @@
+/* === Shared Button Style === */
+.toggle-button {
+    -fx-cursor: hand;
+    -fx-background-color: #182c7e;
+    -fx-border-color: #150f4f;
+    -fx-border-width: 2px;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+    -fx-effect: dropshadow(three-pass-box,#5c130d, 6, 0, 0, 4);
+    -fx-alignment: center;
+    -fx-font-family: "Roboto Condensed Bold", "Arial Narrow", sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2d1b14;
+    -fx-padding: 0;
+    -fx-transition: all 0.15s ease-in-out;
+}
+
+/* Hover state */
+.toggle-button:hover {
+    -fx-background-color:#1d3699;
+    -fx-translate-y: 2px;
+    -fx-effect: dropshadow(three-pass-box, #5c130d, 4, 0, 0, 2);
+}
+
+/* Active (pressed/toggled on) state */
+.toggle-button:selected {
+    -fx-background-color: #1a3088;
+    -fx-translate-y: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(177,133,151,0.2), 0, 0, 0, 0);
+}
+
+/* Optional: make icon colors softer when toggled off */
+.toggle-button .ikonli-font-icon {
+    -fx-icon-color: #2d1b14;
+}
+.toggle-button:selected .ikonli-font-icon {
+    -fx-icon-color: #3a1e1e;
+}
