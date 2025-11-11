@@ -29,7 +29,7 @@ public class MainMenu {
     @FXML
     public void initialize() {
         
-        clickSound = new AudioClip(getClass().getResource("click.mp3").toExternalForm());
+        clickSound = new AudioClip(getClass().getResource("click.wav").toExternalForm());
 
         Media bgMusic = new Media(getClass().getResource("background.mp3").toExternalForm());
         backgroundMusic = new MediaPlayer(bgMusic);
@@ -46,6 +46,8 @@ public class MainMenu {
         
         SoundToggle.selectedProperty().addListener((obs, wasOn, isOn) -> {
             SoundToggle.setText(isOn ? "🔇" : "🔊");
+            if (isOn) clickSound.setVolume(0);
+            else clickSound.setVolume(1);
         });
     }
 
@@ -76,4 +78,10 @@ public class MainMenu {
         System.out.println("About clicked!");
         
     }
+    
+    @FXML
+    private void clickSound() {
+        clickSound.play();
+    }
+    
 }

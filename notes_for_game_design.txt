@@ -1,2 +1,9 @@
 First levels: *basic logic to navigate and avoid guards.
-Journal for 
+
+1. I made the main menu , the background picture was made by ai and i found the button 
+design online . The menu has background music and sound effects that i found online , and there 
+is the ability to turn them off and on if you want.
+2. I made a simple map like structure with the levels of the game based on another level map, 
+later on i'll change the design with something of my one later one , i'll
+add three stars and a number to each level that change depending on the progress and i'll 
+to add these elements on Game Map.

@@ -1,0 +1,38 @@
+.pane {
+    -fx-background-image: url("temp_back.png");
+    -fx-background-color: #f7f7f7;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+}
+/* Simple Circular Button */
+.circle-button {
+    -fx-background-radius: 50%;
+    -fx-background-color: linear-gradient(to bottom, #2c2c2c, #111);
+    -fx-text-fill: rgba(255, 255, 255, 0.414);
+    -fx-font-weight: bold;
+    -fx-font-size: 40px;
+    -fx-min-width: 100px;
+    -fx-min-height: 100px;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 100px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 10, 0.6, 0, 3);
+    -fx-cursor: hand;
+    -fx-padding: 10;
+    -fx-content-display: center;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+/* Hover effects */
+.circle-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #444, #222);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.circle-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #000, #080808);
+    -fx-translate-y: 1px;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
