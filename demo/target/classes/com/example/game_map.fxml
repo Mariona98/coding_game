@@ -6,9 +6,9 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="922.0" styleClass="pane" stylesheets="@css/map.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="922.0" styleClass="pane" stylesheets="@css/map.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.GameMap">
    <children>
-      <Button fx:id="lv1" layoutX="39.0" layoutY="338.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="74.0" styleClass="circle-button" stylesheets="@css/map.css" text="1" />
+      <Button fx:id="lv1" layoutX="39.0" layoutY="338.0" mnemonicParsing="false" onAction="#onLevelClicked" prefHeight="63.0" prefWidth="74.0" styleClass="circle-button" stylesheets="@css/map.css" text="1" />
       <Button fx:id="lv2" layoutX="210.0" layoutY="271.0" minHeight="78.0" minWidth="66.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="66.0" styleClass="circle-button" stylesheets="@css/map.css" text="2" />
       <Button fx:id="lv3" layoutX="110.0" layoutY="94.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="3" />
       <Button fx:id="lv4" layoutX="267.0" layoutY="14.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="4" />

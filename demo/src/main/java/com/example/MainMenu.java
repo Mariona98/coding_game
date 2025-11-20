@@ -1,12 +1,19 @@
 package com.example;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
+import javafx.stage.Stage;
 public class MainMenu {
 
     @FXML
@@ -25,6 +32,8 @@ public class MainMenu {
 
     private AudioClip clickSound;
     private MediaPlayer backgroundMusic;
+    private static Scene scene;
+    private static Stage stage;
 
     @FXML
     public void initialize() {
@@ -52,9 +61,14 @@ public class MainMenu {
     }
 
     @FXML
-    private void onNewGameClicked() {
+    private void onNewGameClicked() throws IOException {
         clickSound.play();
         System.out.println("New Game clicked!");
+       Parent root=FXMLLoader.load(getClass().getResource("/com/example/game_map.fxml"));
+       stage=(Stage)NewGame.getScene().getWindow();
+       scene=new Scene(root);
+         stage.setScene(scene);
+            stage.show();
         
     }
 

@@ -1,0 +1,12 @@
+.text-field-dark{
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
+.text-field-light{
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
