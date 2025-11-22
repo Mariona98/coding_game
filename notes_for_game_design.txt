@@ -7,3 +7,8 @@ is the ability to turn them off and on if you want.
 later on i'll change the design with something of my one later one , i'll
 add three stars and a number to each level that change depending on the progress and i'll 
 to add these elements on Game Map.
+3.The code that the player writes are saved on a python file from the text area and later on 
+that file runs on a processbuilder , Ill cast that part of the code in to a specific 
+lines of code that Ill write on every level so I can see if the answer is accepted or not
+depending on the needs of that level the code will pass data through another file written 
+by python read by java .

@@ -25,7 +25,7 @@ public class GameMap {
     private void onLevelClicked() throws IOException {
         
         System.out.println("Level clicked!");
-       Parent root=FXMLLoader.load(getClass().getResource("/com/example/game_map.fxml"));
+       Parent root=FXMLLoader.load(getClass().getResource("/com/example/GameScene.fxml"));
        stage=(Stage)lv1.getScene().getWindow();
        scene=new Scene(root);
          stage.setScene(scene);
