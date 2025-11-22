@@ -17,7 +17,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         try {
             
-            Path fxmlPath = Paths.get("/demo/src/main/resources/com/example/GameScene.fxml");
+            Path fxmlPath = Paths.get("/demo/src/main/resources/com/example/main_menu.fxml");
             if (fxmlPath.toFile().exists()) {
                 System.out.println("Found FXML in file system: " + fxmlPath.toAbsolutePath());
                 FXMLLoader fxmlLoader = new FXMLLoader(fxmlPath.toUri().toURL());
@@ -25,7 +25,7 @@ public class App extends Application {
                 scene = new Scene(root, 640, 480);
             } else {
                 
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/GameScene.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/main_menu.fxml"));
                 Parent root = fxmlLoader.load();
                 scene = new Scene(root, 640, 480);
             }
