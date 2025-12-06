@@ -12,3 +12,6 @@ that file runs on a processbuilder , Ill cast that part of the code in to a spec
 lines of code that Ill write on every level so I can see if the answer is accepted or not
 depending on the needs of that level the code will pass data through another file written 
 by python read by java .
+4.Added a grid pane as structure to navigate more easily the character , the idea is to
+use more like pseudocode in the beginning to learn the basics.So I'll make it a bit easier
+to code by accepting specific type of answer.
