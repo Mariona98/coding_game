@@ -15,3 +15,5 @@ by python read by java .
 4.Added a grid pane as structure to navigate more easily the character , the idea is to
 use more like pseudocode in the beginning to learn the basics.So I'll make it a bit easier
 to code by accepting specific type of answer.
+5.Now I am going to script the first level and test if the pytthon and java can coorespond , 
+so I will create the script for this level , code it and then test it.

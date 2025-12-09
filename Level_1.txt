@@ -1,0 +1,24 @@
+Story:
+The character wakes up there is some pop up windows for the plot stating that the lost soul (programmers spoiler) 
+travels through hell to escape and find its original vessel that is on the real world 
+No guards to begin with , only follow the path with simple commands "unlimited" lines 
+Explain how the code works in the beginning after the story telling , and also adding 
+the helping scroll that the user has always access to and there explains the current 
+code and also in every level it adds up and has more .
+Path: r,r,u,u,u,r,d,d,l.
+Logic: character has items (with the def logic) that allows them to move or do actions 
+accordingly by using 'charactername'.item(command)
+Items: Boots
+Fixed code: def boots(direction):
+            if direction=right :
+                //Move character to right
+            if direction=left :
+                //Move character to left
+            if direction=up :
+                //Move character to up
+            if direction=down :
+                //Move character to down
+Wanted code :
+        'name'.boots(Path)//writing down in each row the right direction
+
+        
