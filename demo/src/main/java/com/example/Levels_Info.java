@@ -2,14 +2,14 @@ package com.example;
 
 import java.util.ArrayList;
 
-public class GameStatus {
+public class Levels_Info {
 
-  private Level[] levels;//arraylist of levels , added later on?
+  private Level_1_Mechanics[] levels;//arraylist of levels , added later on?
   private int totalStars;
   private int map;
 
   
-      public GameStatus() {
+      public Levels_Info() {
           
           this.totalStars = 0 ;
           this.map = 1;
@@ -29,7 +29,7 @@ public class GameStatus {
         }
         public int getLevelStars(int levelIndex) {
             if (levels != null && levelIndex >= 0 && levelIndex < levels.length) {
-                return levels[levelIndex].getStarsEarned();
+             
             }
             return 0;
         }

@@ -1,118 +1,125 @@
 package com.example;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Scanner;
-
-
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+
+import java.util.List;
 
 public class GameScreen {
+
     @FXML
     private TextArea code;
-    @FXML
-    private Button Run;
+
     @FXML
     private RadioButton darkmode;
+
+    @FXML
+    private Button Run;
+
     @FXML
     private ImageView character;
+
     @FXML
-    private ImageView partcode;
-    
+    private GridPane grid; 
 
-    public void initialize() throws Exception {
+    private Level_1_Mechanics engine;
 
+    public void initialize(){
 
-
-    }
-    @FXML
-    private void onRunClicked() throws Exception {
-        System.out.println("Run button clicked!");
-
-
-    String content = code.getText();
-
-    File file = new File("C:\\\\Users\\\\pittm\\\\OneDrive\\\\Desktop\\\\Paper\\\\script.py");
-
-    try (FileWriter writer = new FileWriter(file)) {
-        writer.write("");
-        writer.write(content);
-        
-    }
-
-    System.out.println("Saved!");
-
-
-
-                  ProcessBuilder pb = new ProcessBuilder(
-        "C:\\Users\\pittm\\AppData\\Local\\Programs\\Python\\Launcher\\py.exe",
-        "C:\\Users\\pittm\\OneDrive\\Desktop\\Paper\\script.py"
-    );
-              Process process = pb.start();
-
-
-
-       BufferedReader reader = new BufferedReader(
-           new InputStreamReader(process.getInputStream())
+        // Level 1 from your FXML
+        Level_1_Data level1 = new Level_1_Data(
+                0,5, // hero start
+                2,1, // key
+                4,4  // door
         );
-        BufferedReader errorReader = new BufferedReader(
-        new InputStreamReader(process.getErrorStream())
-);
 
-String errorLine;
-while ((errorLine = errorReader.readLine()) != null) {
-    System.err.println("PYTHON ERROR: " + errorLine);
-}
+        engine = new Level_1_Mechanics(level1);
 
+        updateVisuals();
+    }
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
+    @FXML
+
+private void onRunClicked() throws Exception {
+
+    System.out.println("===== RUN BUTTON PRESSED =====");
+
+    // 1️⃣ check code from editor
+    String userCode = code.getText();
+    System.out.println("User code received:");
+    System.out.println(userCode);
+
+    // 2️⃣ run python
+    System.out.println("Calling Python_Reader.runPython()...");
+
+    List<Level_1_Commands> commands =
+            Python_Reader.runPython(userCode);
+
+    // 3️⃣ check python output
+    if(commands == null){
+        System.out.println("ERROR: Python returned null!");
+        return;
+    }
+
+    System.out.println("Commands returned from Python:");
+    System.out.println(commands);
+
+    if(commands.isEmpty()){
+        System.out.println("WARNING: No commands returned.");
+    }
+
+    // 4️⃣ execute commands
+    int step = 0;
+
+    for(Level_1_Commands cmd : commands){
+
+        step++;
+
+        System.out.println("Executing step " + step + ": " + cmd);
+
+        engine.executeCommand(cmd);
+
+        System.out.println("Hero position after command:");
+        System.out.println("X = " + engine.getHeroX());
+        System.out.println("Y = " + engine.getHeroY());
+
+        updateVisuals();
+
+        System.out.println("Visuals updated.");
+
+        if(engine.checkWin()){
+            System.out.println("LEVEL COMPLETE!");
+            break;
         }
 
-        process.waitFor();
-     
-
-
-
-
-
-
-    
-
-
-
     }
 
+    System.out.println("===== RUN FINISHED =====");
+
+}
+
+    private void updateVisuals(){
+
+        GridPane.setColumnIndex(character, engine.getHeroX());
+        GridPane.setRowIndex(character, engine.getHeroY());
+
+    }
 
     @FXML
     private void onDarkmodeToggled() {
-        System.out.println("Darkmode toggled!");
-    if (darkmode.isSelected()) {
-        code.getStylesheets().add(getClass().getResource("/com/example/css/darkmode.css").toExternalForm());
-        code.getStyleClass().add("code");
-        Image image = new Image("file:/C:/Users/pittm/OneDrive/Desktop/Paper/coding_game/demo/src/main/resources/com/example/dark.png");
-partcode.setImage(image);
 
-    } else {
-        code.getStylesheets().clear();
-        Image image = new Image("file:/C:/Users/pittm/OneDrive/Desktop/Paper/coding_game/demo/src/main/resources/com/example/white.png");
-partcode.setImage(image);
+        if (darkmode.isSelected()) {
+            code.getStylesheets().add(
+                    getClass().getResource("/com/example/css/darkmode.css")
+                            .toExternalForm());
+        } else {
+            code.getStylesheets().clear();
+        }
+
     }
-
-}
-
-
 
 }
