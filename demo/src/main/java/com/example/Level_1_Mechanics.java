@@ -13,7 +13,9 @@ public class Level_1_Mechanics {
     private int goalX;
     private int goalY;
 
-    private boolean hasKey = false;
+    private int stars;
+
+   public boolean hasKey = false;
 
     public Level_1_Mechanics(Level_1_Data level){
 
@@ -52,6 +54,7 @@ public class Level_1_Mechanics {
                 if(heroX == keyX && heroY == keyY){
                     hasKey = true;
                     System.out.println("Key collected!");
+
                 }
 
                 break;
@@ -71,6 +74,13 @@ public class Level_1_Mechanics {
 
     public int getHeroY(){
         return heroY;
+    }
+
+    public int getStars() {
+        return stars;
+    }
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 
 }

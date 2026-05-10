@@ -1,0 +1,98 @@
+/* scroll_pane.css - Paper/Scroll Texture */
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: #8b7355;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Paper texture background */
+.scroll-pane .content {
+    -fx-background-color: #f5e6c8;
+    -fx-background-image: 
+        repeating-linear-gradient(
+            0deg,
+            rgba(210, 180, 140, 0.1) 0px,
+            rgba(210, 180, 140, 0.1) 2px,
+            transparent 2px,
+            transparent 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(210, 180, 140, 0.05) 0px,
+            rgba(210, 180, 140, 0.05) 1px,
+            transparent 1px,
+            transparent 3px
+        ),
+        linear-gradient(
+            to bottom,
+            #f5e6c8 0%,
+            #eeddbb 100%
+        );
+    -fx-background-radius: 3px;
+}
+
+/* Parchment edge effect */
+.scroll-pane {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.2, 2, 2);
+}
+
+/* Scroll bars styling */
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: #d4c4a8;
+    -fx-border-color: #b8a88a;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #8b7355;
+    -fx-background-radius: 5px;
+    -fx-background-insets: 2px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6b5335;
+}
+
+.scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 12px;
+}
+
+.scroll-pane .scroll-bar:horizontal .track {
+    -fx-background-color: #d4c4a8;
+    -fx-border-color: #b8a88a;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.scroll-pane .scroll-bar:horizontal .thumb {
+    -fx-background-color: #8b7355;
+    -fx-background-radius: 5px;
+    -fx-background-insets: 2px;
+}
+
+/* Button styling for close button */
+.button {
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-text-fill: #ff6b6b;
+}

@@ -80,10 +80,16 @@ public class MainMenu {
     }
 
     @FXML
-    private void onSettingsClicked() {
+    private void onSettingsClicked() throws IOException {
         clickSound.play();
         System.out.println("Settings clicked!");
+     Parent root=FXMLLoader.load(getClass().getResource("/com/example/Settings.fxml"));
+       stage=(Stage)NewGame.getScene().getWindow();
+       scene=new Scene(root);
+         stage.setScene(scene);
+            stage.show();
         
+    
     }
 
     @FXML

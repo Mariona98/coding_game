@@ -1,38 +1,83 @@
 .pane {
-    -fx-background-image: url("temp_back.png");
+    -fx-background-image: url("map.png");
     -fx-background-color: #f7f7f7;
     -fx-border-color: #cccccc;
     -fx-border-width: 1px;
 }
-/* Simple Circular Button */
+
+/* 90s Pixel Art Circular Button */
 .circle-button {
     -fx-background-radius: 50%;
-    -fx-background-color: linear-gradient(to bottom, #2c2c2c, #111);
-    -fx-text-fill: rgba(255, 255, 255, 0.414);
+    -fx-background-color: #b8b8b8;
+    -fx-text-fill: #000000;
     -fx-font-weight: bold;
-    -fx-font-size: 40px;
+    -fx-font-size: 32px;
+    -fx-font-family: "Courier New", "MS Sans Serif", monospace;
     -fx-min-width: 100px;
     -fx-min-height: 100px;
     -fx-pref-width: 100px;
     -fx-pref-height: 100px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 10, 0.6, 0, 3);
     -fx-cursor: hand;
     -fx-padding: 10;
     -fx-content-display: center;
     -fx-alignment: center;
     -fx-text-alignment: center;
+    -fx-border-style: solid;
+    -fx-border-width: 3px;
+    -fx-border-color: #dfdfdf #606060 #606060 #dfdfdf;
+    -fx-border-radius: 50%;
+    -fx-effect: null;
 }
 
-/* Hover effects */
+/* Chunky pixel gradient for 90s look */
+.circle-button {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+                                        #d0d0d0 0%, #d0d0d0 33%,
+                                        #b8b8b8 33%, #b8b8b8 66%,
+                                        #a0a0a0 66%, #a0a0a0 100%);
+    -fx-background-radius: 50%;
+}
+
+/* Scanline and pixel grid for retro CRT feel */
+.circle-button {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+                                        #d0d0d0 0%, #d0d0d0 33%,
+                                        #b8b8b8 33%, #b8b8b8 66%,
+                                        #a0a0a0 66%, #a0a0a0 100%),
+                        repeating-linear-gradient(0deg,
+                            rgba(0,0,0,0.1) 0px,
+                            rgba(0,0,0,0.1) 2px,
+                            transparent 2px,
+                            transparent 4px),
+                        repeating-linear-gradient(90deg,
+                            rgba(0,0,0,0.08) 0px,
+                            rgba(0,0,0,0.08) 2px,
+                            transparent 2px,
+                            transparent 4px);
+    -fx-background-radius: 50%, 50%, 50%;
+    -fx-background-repeat: repeat, repeat;
+}
+
+/* Hover - 90s highlight effect */
 .circle-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #444, #222);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+                                        #e0e0e0 0%, #e0e0e0 33%,
+                                        #c8c8c8 33%, #c8c8c8 66%,
+                                        #b0b0b0 66%, #b0b0b0 100%);
+    -fx-border-color: #ffffff #505050 #505050 #ffffff;
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
 }
 
+/* Pressed - pushed in 90s effect with shadow */
 .circle-button:pressed {
-    -fx-background-color: linear-gradient(to bottom, #000, #080808);
-    -fx-translate-y: 1px;
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,
+                                        #909090 0%, #909090 33%,
+                                        #a0a0a0 33%, #a0a0a0 66%,
+                                        #b0b0b0 66%, #b0b0b0 100%);
+    -fx-border-color: #606060 #dfdfdf #dfdfdf #606060;
+    -fx-translate-y: 2px;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.4), 4, 0.5, 0, 1);
 }

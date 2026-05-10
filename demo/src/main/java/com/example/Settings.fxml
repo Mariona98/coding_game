@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="660.0" styleClass="pane" stylesheets="@css/pane.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SettingsMenu">
+   <children>
+      
+      <Label layoutX="280.0" layoutY="30.0" style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;" text="SETTINGS">
+         <font>
+            <Font name="SansSerif Bold" size="28.0" />
+         </font>
+      </Label>
+      
+      
+      <VBox layoutX="130.0" layoutY="80.0" spacing="15" prefWidth="400.0">
+         
+         
+         <HBox alignment="CENTER_LEFT" spacing="20" prefHeight="40.0">
+            <Label prefWidth="80.0" style="-fx-text-fill: white; -fx-font-size: 14px;" text="Volume:">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Label>
+            <Slider fx:id="volumeSlider" blockIncrement="0.1" majorTickUnit="0.25" max="1.0" min="0.0" prefWidth="250.0" showTickLabels="true" showTickMarks="true" value="0.75" />
+         </HBox>
+         
+         
+         <HBox alignment="CENTER_LEFT" spacing="20" prefHeight="40.0">
+            <Label prefWidth="80.0" style="-fx-text-fill: white; -fx-font-size: 14px;" text="Difficulty:">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="difficultyComboBox" prefWidth="150.0" style="-fx-font-size: 13px;">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Easy" />
+                     <String fx:value="Normal" />
+                     <String fx:value="Hard" />
+                     <String fx:value="Expert" />
+                  </FXCollections>
+               </items>
+            </ComboBox>
+         </HBox>
+         
+         
+         <HBox alignment="CENTER_LEFT" spacing="20" prefHeight="40.0">
+            <Label prefWidth="80.0" style="-fx-text-fill: white; -fx-font-size: 14px;" text="Language:">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="languageComboBox" prefWidth="150.0" style="-fx-font-size: 13px;">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="English" />
+                     <String fx:value="Spanish" />
+                     <String fx:value="French" />
+                     <String fx:value="German" />
+                     <String fx:value="Japanese" />
+                  </FXCollections>
+               </items>
+            </ComboBox>
+         </HBox>
+         
+        
+         <HBox alignment="CENTER_LEFT" spacing="20" prefHeight="40.0">
+            <Label prefWidth="80.0" style="-fx-text-fill: white; -fx-font-size: 14px;" text="Resolution:">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="resolutionComboBox" prefWidth="150.0" style="-fx-font-size: 13px;">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="800x600" />
+                     <String fx:value="1024x768" />
+                     <String fx:value="1280x720" />
+                     <String fx:value="1920x1080" />
+                  </FXCollections>
+               </items>
+            </ComboBox>
+         </HBox>
+         
+         
+         <HBox alignment="CENTER_LEFT" spacing="20" prefHeight="40.0">
+            <Label prefWidth="80.0" style="-fx-text-fill: white; -fx-font-size: 14px;" text="Fullscreen:">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="fullscreenComboBox" prefWidth="150.0" style="-fx-font-size: 13px;">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Off" />
+                     <String fx:value="On" />
+                  </FXCollections>
+               </items>
+            </ComboBox>
+         </HBox>
+         
+      </VBox>
+      
+      
+      <Button fx:id="saveButton" layoutX="195.0" layoutY="330.0" onAction="#onSaveClicked" prefHeight="40.0" prefWidth="100.0" styleClass="menu-button" stylesheets="@css/menu_buttons.css" text="SAVE">
+         <font>
+            <Font name="SansSerif Regular" size="14.0" />
+         </font>
+      </Button>
+      
+      <Button fx:id="cancelButton" layoutX="380.0" layoutY="330.0" onAction="#onCancelClicked" prefHeight="40.0" prefWidth="100.0" styleClass="menu-button" stylesheets="@css/menu_buttons.css" text="BACK">
+         <font>
+            <Font name="SansSerif Regular" size="14.0" />
+         </font>
+      </Button>
+      
+      <Button fx:id="resetButton" layoutX="285.0" layoutY="385.0" onAction="#onResetClicked" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-text-fill: #aaaaaa; -fx-font-size: 11px;" text="Reset to Default" />
+      
+   </children>
+</Pane>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.Line?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+      prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: transparent;"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.InfoPane">
+   <children>
+      
+     
+      <ScrollPane fx:id="scrollPane" layoutX="20.0" layoutY="20.0" prefHeight="460.0" prefWidth="660.0" styleClass="scroll-pane" stylesheets="@css/scroll-pane.css">
+         
+         
+         <VBox fx:id="contentContainer" alignment="TOP_CENTER" spacing="20" style="-fx-padding: 30 40 30 40; -fx-background-color: transparent;">
+            
+            
+            <VBox alignment="CENTER" spacing="10">
+               <Label fx:id="titleLabel" style="-fx-text-fill: #3a2a1a; -fx-font-size: 32px; -fx-font-weight: bold; -fx-font-family: 'Georgia';" text="📜 Code Documentation">
+                  <font>
+                     <Font name="Georgia Bold" size="32.0" />
+                  </font>
+               </Label>
+               <Line endX="200" startX="-200" stroke="#8b7355" strokeWidth="1.5" />
+            </VBox>
+            
+            
+            <VBox fx:id="introSection" spacing="8">
+               <Label style="-fx-text-fill: #5a3a1a; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Georgia';" text="📖 Introduction" />
+               <Text fx:id="introText" style="-fx-fill: #2c2418; -fx-font-size: 14px; -fx-font-family: 'Georgia'; -fx-line-spacing: 5;" wrappingWidth="560" 
+                     text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." />
+            </VBox>
+            
+           
+            <VBox fx:id="section1" spacing="8">
+               <Label style="-fx-text-fill: #5a3a1a; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Georgia';" text="🔧 Code Explanation 1" />
+               <Text fx:id="section1Text" style="-fx-fill: #2c2418; -fx-font-size: 14px; -fx-font-family: 'Georgia'; -fx-line-spacing: 5;" wrappingWidth="560" 
+                     text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." />
+               
+               
+               <Pane style="-fx-background-color: #2c2418; -fx-background-radius: 5px; -fx-padding: 10;" prefWidth="560">
+                  <Text style="-fx-fill: #d4c4a8; -fx-font-size: 12px; -fx-font-family: 'Courier New';" 
+                        text="// Example code block&#10;public void exampleMethod() {&#10;    System.out.println(&quot;This is where you can show code examples&quot;);&#10;}" />
+               </Pane>
+            </VBox>
+            
+            
+            <VBox fx:id="bulletSection" spacing="8">
+               <Label style="-fx-text-fill: #5a3a1a; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Georgia';" text="✨ Key Points" />
+               <VBox fx:id="bulletPoints" spacing="6" style="-fx-padding: 0 0 0 20;">
+                  <Text style="-fx-fill: #2c2418; -fx-font-size: 13px; -fx-font-family: 'Georgia';" text="• Lorem ipsum dolor sit amet" />
+                  <Text style="-fx-fill: #2c2418; -fx-font-size: 13px; -fx-font-family: 'Georgia';" text="• Consectetur adipiscing elit" />
+                  <Text style="-fx-fill: #2c2418; -fx-font-size: 13px; -fx-font-family: 'Georgia';" text="• Sed do eiusmod tempor incididunt" />
+                  <Text style="-fx-fill: #2c2418; -fx-font-size: 13px; -fx-font-family: 'Georgia';" text="• Ut labore et dolore magna aliqua" />
+               </VBox>
+            </VBox>
+            
+            
+            <VBox fx:id="section2" spacing="8">
+               <Label style="-fx-text-fill: #5a3a1a; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Georgia';" text="💻 Code Explanation 2" />
+               <Text fx:id="section2Text" style="-fx-fill: #2c2418; -fx-font-size: 14px; -fx-font-family: 'Georgia'; -fx-line-spacing: 5;" wrappingWidth="560" 
+                     text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
+            </VBox>
+            
+            
+            <VBox fx:id="notesSection" spacing="8">
+               <Label style="-fx-text-fill: #5a3a1a; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Georgia';" text="⚠️ Important Notes" />
+               <VBox fx:id="notesList" spacing="6" style="-fx-padding: 0 0 0 20;">
+                  <Text style="-fx-fill: #8b4513; -fx-font-size: 13px; -fx-font-family: 'Georgia';" text="📌 Note 1: Lorem ipsum dolor sit amet" />
+                  <Text style="-fx-fill: #8b4513; -fx-font-size: 13px; -fx-font-family: 'Georgia';" text="📌 Note 2: Consectetur adipiscing elit" />
+                  <Text style="-fx-fill: #8b4513; -fx-font-size: 13px; -fx-font-family: 'Georgia';" text="📌 Note 3: Sed do eiusmod tempor incididunt" />
+               </VBox>
+            </VBox>
+            
+            
+            <VBox fx:id="conclusionSection" spacing="8">
+               <Label style="-fx-text-fill: #5a3a1a; -fx-font-size: 18px; -fx-font-weight: bold; -fx-font-family: 'Georgia';" text="🎯 Conclusion" />
+               <Text fx:id="conclusionText" style="-fx-fill: #2c2418; -fx-font-size: 14px; -fx-font-family: 'Georgia'; -fx-line-spacing: 5;" wrappingWidth="560" 
+                     text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris." />
+            </VBox>
+            
+            
+            <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 10 0;">
+               <Line startX="-200" endX="200" stroke="#8b7355" strokeWidth="1" />
+            </HBox>
+            <Label style="-fx-text-fill: #8b7355; -fx-font-size: 11px; -fx-font-family: 'Georgia';" text="Documentation • Last Updated: 2024" />
+            
+         </VBox>
+         
+      </ScrollPane>
+      
+      
+      <Button fx:id="closeButton" layoutX="665.0" layoutY="15.0" onAction="#onCloseClicked" 
+              style="-fx-background-color: transparent; -fx-text-fill: #8b7355; -fx-font-size: 20px; -fx-font-weight: bold; -fx-cursor: hand;" text="✕" />
+      
+   </children>
+</Pane>

@@ -1,0 +1,13 @@
+from game_api import hero
+
+hero.moveRight() 
+hero.moveRight()
+ 
+for i in range(4): 
+ hero.moveUp() 
+ 
+hero.collect() 
+hero.moveRight() 
+hero.moveRight() 
+for i in range(3): 
+ hero.moveDown()

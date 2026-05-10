@@ -29,10 +29,14 @@ public class Levels_Info {
         }
         public int getLevelStars(int levelIndex) {
             if (levels != null && levelIndex >= 0 && levelIndex < levels.length) {
-             
+                return levels[levelIndex].getStars();
             }
             return 0;
         }
-
+        public void setLevelStars(int levelIndex, int stars) {
+            if (levels != null && levelIndex >= 0 && levelIndex < levels.length) {
+                levels[levelIndex].setStars(stars);
+            }
+        }
 
 }

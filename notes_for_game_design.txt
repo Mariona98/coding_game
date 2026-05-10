@@ -17,3 +17,10 @@ use more like pseudocode in the beginning to learn the basics.So I'll make it a 
 to code by accepting specific type of answer.
 5.Now I am going to script the first level and test if the pytthon and java can coorespond , 
 so I will create the script for this level , code it and then test it.
+6.I scripted the level one and succesfully enginered the commands using api based on this levels 
+demands , also added the commands , the order is that you fill the data for the level,
+and in the mechanics it compares the commands give to the data and can check if the game is passed.
+7. I had an issue with the time delay because i want to add the element for the animation and
+I searhed online for the optimal solution
+8.Also added some artwork that I created in pixel art , and Im trying to create some windows for 
+the extra elements .

@@ -6,13 +6,13 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="680.0" prefWidth="922.0" styleClass="pane" stylesheets="@css/map.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.GameMap">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="922.0" styleClass="pane" stylesheets="@css/map.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.GameMap">
    <children>
       <Button fx:id="lv1" layoutX="39.0" layoutY="338.0" mnemonicParsing="false" onAction="#onLevelClicked" prefHeight="63.0" prefWidth="74.0" styleClass="circle-button" stylesheets="@css/map.css" text="1" />
       <Button fx:id="lv2" layoutX="210.0" layoutY="271.0" minHeight="78.0" minWidth="66.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="66.0" styleClass="circle-button" stylesheets="@css/map.css" text="2" />
       <Button fx:id="lv3" layoutX="110.0" layoutY="94.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="3" />
-      <Button fx:id="lv4" layoutX="267.0" layoutY="14.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="4" />
-      <Button fx:id="lv5" layoutX="531.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="5" />
+      <Button fx:id="lv4" layoutX="284.0" layoutY="19.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="4" />
+      <Button fx:id="lv5" layoutX="525.0" layoutY="33.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="5" />
       <Button fx:id="lv6" layoutX="671.0" layoutY="163.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="6" />
       <Button fx:id="lv7" layoutX="512.0" layoutY="257.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="7" />
       <Button fx:id="lv8" layoutX="367.0" layoutY="432.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@css/map.css" text="8" />
@@ -28,12 +28,12 @@
       <SVGPath fx:id="lv3_star1" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="85.0" layoutY="73.0" />
       <SVGPath fx:id="lv3_star2" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="135.0" layoutY="50.0" />
       <SVGPath fx:id="lv3_star3" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="185.0" layoutY="73.0" />
-      <SVGPath fx:id="lv4_star1" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="242.0" layoutY="23.0" />
-      <SVGPath fx:id="lv4_star2" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="292.0" />
-      <SVGPath fx:id="lv4_star3" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="342.0" layoutY="23.0" />
-      <SVGPath fx:id="lv5_star1" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="506.0" layoutY="2.0" />
-      <SVGPath fx:id="lv5_star2" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="556.0" layoutY="-21.0" />
-      <SVGPath fx:id="lv5_star3" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="606.0" layoutY="2.0" />
+      <SVGPath fx:id="lv4_star1" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="259.0" layoutY="27.0" />
+      <SVGPath fx:id="lv4_star2" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="309.0" />
+      <SVGPath fx:id="lv4_star3" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="359.0" layoutY="23.0" />
+      <SVGPath fx:id="lv5_star1" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="500.0" layoutY="14.0" />
+      <SVGPath fx:id="lv5_star2" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="550.0" />
+      <SVGPath fx:id="lv5_star3" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="600.0" layoutY="14.0" />
       <SVGPath fx:id="lv6_star1" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="646.0" layoutY="142.0" />
       <SVGPath fx:id="lv6_star2" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="696.0" layoutY="119.0" />
       <SVGPath fx:id="lv6_star3" content="M25,0 L30.5,17.5 L49,17.5 L34,28.5 L39.5,45.5 L25,35 L10.5,45.5 L16,28.5 L1,17.5 L19.5,17.5 Z" fill="#464646" layoutX="746.0" layoutY="142.0" />
