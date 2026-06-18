@@ -7,7 +7,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+// aka scroll pane for including the specific codes that are available in that level
 public class InfoPane {
     
     @FXML

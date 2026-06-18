@@ -8,7 +8,7 @@ code and also in every level it adds up and has more .
 Path: r,r,u,u,u,r,d,d,l.
 Logic: character has items (with the def logic) that allows them to move or do actions 
 accordingly by using 'charactername'.item(command)
-Items: Boots
+Items: Boots,Bow
 Fixed code: def boots(direction):
             if direction=right :
                 //Move character to right
@@ -21,4 +21,13 @@ Fixed code: def boots(direction):
 Wanted code :
         'name'.boots(Path)//writing down in each row the right direction
 
-        
+so in the game we will have the bugs track down the hero , the hero should kill them with the Bow
+but not only , you can also make them go in lava if you are smart enough they only can "see"
+other bugs chest , and towers or the bow in which they can not go there .
+you get an achievment if you do that .
+to have three stars tho you have to do the minimal movements possible and then you can replay the 
+level and get the achievment.
+in the chest 1 you get a random item both useful , in chest 2 you get the key to the door (maybe add 
+explosive arrows to get down the towers)
+when the cursor goes through the images it would have an explanation for what the player statements
+

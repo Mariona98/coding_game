@@ -8,7 +8,10 @@ public enum Level_1_Commands {
     MOVE_LEFT,
     MOVE_UP,
     MOVE_DOWN,
-    COLLECT
+    COLLECT,
+    OPEN_CHEST,
+    SHOOT,
+    
 
 
 }

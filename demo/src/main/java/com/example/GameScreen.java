@@ -40,10 +40,31 @@ public class GameScreen {
     private ImageView key;
 
     @FXML
+    private ImageView scroll;
+
+    @FXML
+    private ImageView tower1;
+
+    @FXML
+    private ImageView tower2;
+
+    @FXML
+    private ImageView bow;
+
+    @FXML
     private ImageView door;
 
     @FXML
-    private ImageView scroll;
+    private ImageView chest1;
+
+    @FXML
+    private ImageView chest2;
+
+    @FXML
+    private ImageView bug1;
+
+    @FXML
+    private ImageView bug2;
 
     private Level_1_Mechanics engine;
     private List<Level_1_Commands> commandsList;
@@ -52,9 +73,15 @@ public class GameScreen {
     public void initialize(){
         // Level 1 from your FXML
         Level_1_Data level1 = new Level_1_Data(
-                0,5, // hero start
-                2,1, // key
-                4,4  // door
+                1,6, // hero start
+                5,4, // tower1
+                5,6, // tower2
+                0,2, // bow
+                8,1, // chest1
+                8,2, // chest2
+                7,5, // door
+                6,1, // bug1
+                6,2  // bug2
         );
 
         engine = new Level_1_Mechanics(level1);
@@ -67,9 +94,15 @@ public class GameScreen {
         
         // Reset engine to initial state before running new code
         Level_1_Data level1 = new Level_1_Data(
-                0,5, // hero start
-                2,1, // key
-                4,4  // door
+                1,6, // hero start
+                5,4, // tower1
+                5,6, // tower2
+                0,2, // bow
+                8,1, // chest1
+                8,2, // chest2
+                7,5, // door
+                6,1, // bug1
+                6,2  // bug2
         );
         engine = new Level_1_Mechanics(level1);
         
@@ -176,7 +209,7 @@ public class GameScreen {
    
   @FXML
 public void onScrollclick() {
-    // default , to be changed later
+    // default , to be changed later, i want to be easily modified because every level will be diffrent
     try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("scroll.fxml"));
         Parent root = loader.load();
@@ -185,7 +218,7 @@ public void onScrollclick() {
         InfoPane infoPane = loader.getController();
         
         
-        infoPane.setTitle("📜 Custom Documentation");
+        infoPane.setTitle(" Custom Documentation");
         infoPane.setIntroText("This is my custom introduction text...");
         infoPane.setSection1Text("First section explanation...");
         infoPane.setSection2Text("Second section explanation...");
