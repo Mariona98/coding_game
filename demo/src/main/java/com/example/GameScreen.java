@@ -70,41 +70,22 @@ public class GameScreen {
     private List<Level_1_Commands> commandsList;
     private int currentCommandIndex = 0;
 
-    public void initialize(){
-        // Level 1 from your FXML
-        Level_1_Data level1 = new Level_1_Data(
-                1,6, // hero start
-                5,4, // tower1
-                5,6, // tower2
-                0,2, // bow
-                8,1, // chest1
-                8,2, // chest2
-                7,5, // door
-                6,1, // bug1
-                6,2  // bug2
-        );
+    public void initialize() {
+    Level_1_Data level1 = new Level_1_Data();
 
-        engine = new Level_1_Mechanics(level1);
-        updateVisuals();
-    }
+    engine = new Level_1_Mechanics(level1);
+
+    updateVisuals();
+}
 
     @FXML
     private void onRunClicked() throws Exception {
         System.out.println("===== RUN BUTTON PRESSED =====");
         
         // Reset engine to initial state before running new code
-        Level_1_Data level1 = new Level_1_Data(
-                1,6, // hero start
-                5,4, // tower1
-                5,6, // tower2
-                0,2, // bow
-                8,1, // chest1
-                8,2, // chest2
-                7,5, // door
-                6,1, // bug1
-                6,2  // bug2
-        );
+       Level_1_Data level1 = new Level_1_Data();
         engine = new Level_1_Mechanics(level1);
+        
         
         String userCode = code.getText();
         System.out.println("User code received:");
@@ -136,6 +117,7 @@ public class GameScreen {
         // Check if all commands are executed
         if (currentCommandIndex >= commandsList.size()) {
             System.out.println("===== RUN FINISHED =====");
+            engine.resetGame();
             return;
         }
         
@@ -182,11 +164,29 @@ public class GameScreen {
     private void updateVisuals(){
         GridPane.setColumnIndex(character, engine.getHeroX());
         GridPane.setRowIndex(character, engine.getHeroY());  
+        GridPane.setColumnIndex(bug1, engine.getBug1X());
+        GridPane.setRowIndex(bug1, engine.getBug1Y());
+        GridPane.setColumnIndex(bug2, engine.getBug2X());
+        GridPane.setRowIndex(bug2, engine.getBug2Y());
 
+        if(engine.isBug1Dead == true){
+            bug1.setVisible(false);
+        }
+        if(engine.isBug2Dead == true){
+            bug2.setVisible(false);
+        }
         if (engine.hasKey == true){
             key.setVisible(false);
         } 
-        
+        if (engine.hasBow == true){
+            bow.setVisible(false);
+        }
+        if (engine.chest1Opened == true){
+            chest1.setVisible(false);
+        }
+        if (engine.chest2Opened == true){
+            chest2.setVisible(false);
+        }
         System.out.println("Visuals updated.");
     }
     
@@ -208,41 +208,157 @@ public class GameScreen {
 
    
   @FXML
+
 public void onScrollclick() {
-    // default , to be changed later, i want to be easily modified because every level will be diffrent
+    /*
+     * Level 1 documentation.
+     * This text can be replaced later with different information
+     * for each level.
+     */
     try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("scroll.fxml"));
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("scroll.fxml")
+        );
+
         Parent root = loader.load();
-        
-        
         InfoPane infoPane = loader.getController();
-        
-        
-        infoPane.setTitle(" Custom Documentation");
-        infoPane.setIntroText("This is my custom introduction text...");
-        infoPane.setSection1Text("First section explanation...");
-        infoPane.setSection2Text("Second section explanation...");
-        infoPane.setConclusionText("Final conclusion here...");
-        
-        
-        infoPane.addBulletPoint("First important point");
-        infoPane.addBulletPoint("Second important point");
-        infoPane.addBulletPoint("Third important point");
-        
-        
-        infoPane.addNote("Remember to save your work");
-        infoPane.addNote("Check for updates regularly");
-        
-        
-        
-        
+
+        infoPane.setTitle("Level 1 Commands and Game Elements");
+
+        infoPane.setIntroText(
+            "Write commands for the hero in the code editor, then press Run. "
+            + "The commands are executed in order, one at a time."
+        );
+
+        infoPane.setSection1Text(
+            "Available commands:\n\n"
+            + "hero.moveRight()\n"
+            + "Moves the hero one tile to the right.\n\n"
+
+            + "hero.moveLeft()\n"
+            + "Moves the hero one tile to the left.\n\n"
+
+            + "hero.moveUp()\n"
+            + "Moves the hero one tile upward.\n\n"
+
+            + "hero.moveDown()\n"
+            + "Moves the hero one tile downward.\n\n"
+
+            + "hero.collect()\n"
+            + "Collects the bow when the hero is standing on the bow tile.\n\n"
+
+            + "hero.openChest()\n"
+            + "Opens a chest when the hero is standing on its tile.\n\n"
+
+            + "hero.shootUp()\n"
+            + "Shoots an arrow upward.\n\n"
+
+            + "hero.shootDown()\n"
+            + "Shoots an arrow downward.\n\n"
+
+            + "hero.shootLeft()\n"
+            + "Shoots an arrow to the left.\n\n"
+
+            + "hero.shootRight()\n"
+            + "Shoots an arrow to the right."
+        );
+
+        infoPane.setSection2Text(
+            "Game elements:\n\n"
+            + "Hero\n"
+            + "The character controlled by your commands.\n\n"
+
+            + "Bow\n"
+            + "Must be collected before the hero can shoot arrows. "
+            + "After collection, it disappears from the map.\n\n"
+
+            + "Bugs\n"
+            + "Move toward the hero after movement commands. "
+            + "They kill the hero if they reach the same tile. "
+            + "They can be killed by arrows or by moving into lava.\n\n"
+
+            + "Towers\n"
+            + "Kill the hero when the hero enters one of the eight surrounding "
+            + "tiles, including diagonal tiles.\n\n"
+
+            + "Chest 1\n"
+            + "Contains either lava boots or an invisibility cloak. "
+            + "The reward is selected randomly.\n\n"
+
+            + "Chest 2\n"
+            + "Contains the key needed to unlock the door.\n\n"
+
+            + "Lava boots\n"
+            + "Allow the hero to walk safely over lava.\n\n"
+
+            + "Invisibility cloak\n"
+            + "Prevents the towers from detecting and killing the hero.\n\n"
+
+            + "Lava\n"
+            + "Kills the hero unless the hero has the boots. "
+            + "Bugs that enter dangerous lava are also killed.\n\n"
+
+            + "Bridge\n"
+            + "Provides a safe path through the lava area.\n\n"
+
+            + "Door\n"
+            + "Completes the level when the hero reaches it while carrying the key."
+        );
+
+        infoPane.setConclusionText(
+            "Plan the command order carefully. Avoid the bugs, towers, lava, "
+            + "and map boundaries. Collect the required items and reach the door "
+            + "with the key to complete Level 1."
+        );
+
+        infoPane.addBulletPoint(
+            "Commands are executed from top to bottom."
+        );
+
+        infoPane.addBulletPoint(
+            "Movement outside the grid is blocked and prints an out-of-bounds warning."
+        );
+
+        infoPane.addBulletPoint(
+            "The bow must be collected before any shooting command can succeed."
+        );
+
+        infoPane.addBulletPoint(
+            "An arrow kills the first living bug in the selected direction."
+        );
+
+        infoPane.addBulletPoint(
+            "Opened chests, collected items, and dead bugs are removed from the map."
+        );
+
+        infoPane.addBulletPoint(
+            "The level resets after every completed run."
+        );
+
+        infoPane.addNote(
+            "The hero can only collect or open something while standing on its tile."
+        );
+
+        infoPane.addNote(
+            "Shooting does not depend on the hero's previous movement direction."
+        );
+
+        infoPane.addNote(
+            "Tower danger includes horizontal, vertical, and diagonal neighboring tiles."
+        );
+
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+
         stage.setScene(scene);
-        stage.setTitle("Information");
+        stage.setTitle("Level 1 Information");
+        stage.setResizable(false);
         stage.show();
-        
+
     } catch (IOException e) {
+        System.out.println(
+            "Could not open the Level 1 information window."
+        );
         e.printStackTrace();
     }
 }

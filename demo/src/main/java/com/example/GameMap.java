@@ -27,8 +27,21 @@ public class GameMap {
         System.out.println("Level clicked!");
        Parent root=FXMLLoader.load(getClass().getResource("/com/example/GameScene.fxml"));
        stage=(Stage)lv1.getScene().getWindow();
-       scene=new Scene(root);
+       scene=new Scene(root, 1260, 810);
          stage.setScene(scene);
+
+    stage.setTitle("Coders' Haven");
+
+    // NEW: Prevent resizing.
+    stage.setResizable(false);
+
+    // NEW: Keep the exact window size.
+    stage.setMinWidth(1260);
+    stage.setMaxWidth(1260);
+    stage.setMinHeight(810);
+    stage.setMaxHeight(810);
+
+
             stage.show();
         
     }
