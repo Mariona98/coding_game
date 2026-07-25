@@ -367,6 +367,16 @@ public class Level_1_Mechanics {
         levelStartTime = System.currentTimeMillis();
 
         System.out.println("Level 1 reset. Total resets: " + resetTimes + ".");
+        System.out.println("Hero position reset to (" + heroX + ", " + heroY + ").");
+        System.out.println("Bug 1 position reset to (" + bug1X + ", " + bug1Y + ").");
+        System.out.println("Bug 2 position reset to (" + bug2X + ", " + bug2Y + ").");
+        System.out.println(isBug1Dead ? "Bug 1 is dead." : "Bug 1 is alive.");
+        System.out.println(isBug2Dead ? "Bug 2 is dead." : "Bug 2 is alive.");
+        System.out.println(isTower1Dead ? "Tower 1 is dead." : "Tower 1 is alive.");
+        System.out.println(isTower2Dead ? "Tower 2 is dead." : "Tower 2 is alive.");
+        System.out.println("Chests opened: " + (chest1Opened ? "Chest 1" : "") + (chest2Opened ? " Chest 2" : "")); 
+        System.out.println("Items collected: " + (hasKey ? "Key " : "") + (hasBow ? "Bow " : "") + (hasBoots ? "Boots " : "") + (isInvisible ? "Cloak" : ""));
+        System.out.println("Is hero dead? " + (GameOver ? "Yes" : "No"));
     }
 
     private void initialiseLevelOneLava() {

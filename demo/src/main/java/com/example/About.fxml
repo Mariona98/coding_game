@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1"
+      prefWidth="1156"
+      prefHeight="932"
+      style="-fx-background-color: white;">
+
+    <Text text="THIS IS A TEST"
+          x="163"
+          y="388"
+          wrappingWidth="831"
+          textAlignment="CENTER"
+          style="-fx-fill: linear-gradient(
+                     from 26% 0% to 73% 100%,
+                     #a750ab,
+                     #442045
+                 );">
+        <font>
+            <Font name="Irish Grover Regular" size="48"/>
+        </font>
+    </Text>
+
+</Pane>

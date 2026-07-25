@@ -118,6 +118,7 @@ public class GameScreen {
         if (currentCommandIndex >= commandsList.size()) {
             System.out.println("===== RUN FINISHED =====");
             engine.resetGame();
+            updateVisuals(); // Reset visuals after run
             return;
         }
         
@@ -172,9 +173,17 @@ public class GameScreen {
         if(engine.isBug1Dead == true){
             bug1.setVisible(false);
         }
+        else{
+            bug1.setVisible(true);
+        }
         if(engine.isBug2Dead == true){
             bug2.setVisible(false);
         }
+        else{
+            bug2.setVisible(true);
+        }
+
+
         if (engine.hasKey == true){
             key.setVisible(false);
         } 

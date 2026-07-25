@@ -13,6 +13,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 public class MainMenu {
 
@@ -83,6 +84,7 @@ public class MainMenu {
     private void onSettingsClicked() throws IOException {
         clickSound.play();
         System.out.println("Settings clicked!");
+
      Parent root=FXMLLoader.load(getClass().getResource("/com/example/Settings.fxml"));
        stage=(Stage)NewGame.getScene().getWindow();
        scene=new Scene(root);
@@ -93,8 +95,24 @@ public class MainMenu {
     }
 
     @FXML
-    private void onAboutClicked() {
+    private void onAboutClicked() throws IOException {
         clickSound.play();
+
+                Font irishGrover = Font.loadFont(
+            getClass().getResourceAsStream(
+                "/com/example/fonts/IrishGrover-Regular.ttf"
+            ),
+            48
+        );
+
+        if (irishGrover == null) {
+            throw new IllegalStateException("Could not load Irish Grover font");
+        }
+         Parent root=FXMLLoader.load(getClass().getResource("/com/example/About.fxml"));
+       stage=(Stage)NewGame.getScene().getWindow();
+       scene=new Scene(root);
+         stage.setScene(scene);
+            stage.show();
         System.out.println("About clicked!");
         
     }

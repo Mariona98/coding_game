@@ -1,13 +1,40 @@
+#standart must be put o every level
 from game_api import hero
 
-hero.moveRight() 
+##level 1 tests
+
+#1. Move hero to the right twice
+
 hero.moveRight()
+
+
+#or (also checking for loops)
+
+for i in range(2):
+    hero.moveRight()
+    
+#level should be reset after each run, so the hero should be back at the starting position (0, 0) for the next test.
+
+
+#2. Hero out of bounds test (should not be able to move left from starting position)
+hero.moveLeft()  # This should not change the hero's position and a message should be printed indicating that the move is invalid.  
+hero.moveLeft()  # This should not change the hero's position and a message should be printed indicating that the move is invalid.
+#the level resets
+    
+#3. Hero dying test (should not be able to move into lava)
+hero.moveRight()
+hero.moveDown() 
+hero.moveDown()  
+for i in range(6):
+    hero.moveRight()  
+hero.moveUp()
  
-for i in range(4): 
- hero.moveUp() 
+ #4. Hero moving into bug test (hero dies if it moves into a bug)
  
-hero.collect() 
-hero.moveRight() 
-hero.moveRight() 
-for i in range(3): 
- hero.moveDown()
+for i in range(5):
+    hero.moveUp()
+    
+ #5. Hero moving into tower test (hero dies if it moves into a tower)
+ 
+for i in range(5):
+    hero.moveRight()
