@@ -9,11 +9,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -65,6 +63,9 @@ public class GameScreen {
 
     @FXML
     private ImageView bug2;
+
+    @FXML
+    private ImageView book;
 
     private Level_1_Mechanics engine;
     private List<Level_1_Commands> commandsList;
@@ -131,6 +132,48 @@ public class GameScreen {
             System.out.println("Stars set for completed level.");
             return;
         }
+
+        // Check if hero is dead
+        if (engine.checkHeroDead()) {
+            System.out.println("HERO IS DEAD!");
+            System.out.println("===== RUN FINISHED =====");
+
+
+
+            try {
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("Losing.fxml")
+        );
+        Font irishGrover = Font.loadFont(
+            getClass().getResourceAsStream(
+                "/com/example/fonts/IrishGrover-Regular.ttf"
+            ),
+            48
+        );
+
+        if (irishGrover == null) {
+            throw new IllegalStateException("Could not load Irish Grover font");
+        }
+
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Level 1 Commands");
+        stage.setScene(new Scene(root,1260, 810));
+        stage.show();
+
+    } catch (IOException e) {
+        System.out.println(
+            "Could not open the Level 1 information window."
+        );
+        e.printStackTrace();
+    }
+
+
+
+            engine.resetGame();
+            updateVisuals(); // Reset visuals after run
+            return;
+        }
         
         // Get and execute current command
         Level_1_Commands cmd = commandsList.get(currentCommandIndex);
@@ -146,12 +189,6 @@ public class GameScreen {
         
         updateVisuals();
         
-        // Check for win after execution
-        if (engine.checkWin()) {
-            System.out.println("LEVEL COMPLETE!");
-            System.out.println("===== RUN FINISHED =====");
-            return;
-        }
         
         
         currentCommandIndex++;
@@ -200,168 +237,61 @@ public class GameScreen {
     }
     
     
-    private void stopExecution() {
-        currentCommandIndex = commandsList.size(); 
-    }
-
-    @FXML
-    private void onDarkmodeToggled() {
-        if (darkmode.isSelected()) {
-            code.getStylesheets().add(
-                    getClass().getResource("/com/example/css/darkmode.css")
-                            .toExternalForm());
-        } else {
-            code.getStylesheets().clear();
-        }
-    }
 
    
   @FXML
 
 public void onScrollclick() {
-    /*
-     * Level 1 documentation.
-     * This text can be replaced later with different information
-     * for each level.
-     */
+    
     try {
         FXMLLoader loader = new FXMLLoader(
-            getClass().getResource("scroll.fxml")
+            getClass().getResource("commands.fxml")
         );
+        Font irishGrover = Font.loadFont(
+            getClass().getResourceAsStream(
+                "/com/example/fonts/IrishGrover-Regular.ttf"
+            ),
+            48
+        );
+
+        if (irishGrover == null) {
+            throw new IllegalStateException("Could not load Irish Grover font");
+        }
 
         Parent root = loader.load();
-        InfoPane infoPane = loader.getController();
-
-        infoPane.setTitle("Level 1 Commands and Game Elements");
-
-        infoPane.setIntroText(
-            "Write commands for the hero in the code editor, then press Run. "
-            + "The commands are executed in order, one at a time."
-        );
-
-        infoPane.setSection1Text(
-            "Available commands:\n\n"
-            + "hero.moveRight()\n"
-            + "Moves the hero one tile to the right.\n\n"
-
-            + "hero.moveLeft()\n"
-            + "Moves the hero one tile to the left.\n\n"
-
-            + "hero.moveUp()\n"
-            + "Moves the hero one tile upward.\n\n"
-
-            + "hero.moveDown()\n"
-            + "Moves the hero one tile downward.\n\n"
-
-            + "hero.collect()\n"
-            + "Collects the bow when the hero is standing on the bow tile.\n\n"
-
-            + "hero.openChest()\n"
-            + "Opens a chest when the hero is standing on its tile.\n\n"
-
-            + "hero.shootUp()\n"
-            + "Shoots an arrow upward.\n\n"
-
-            + "hero.shootDown()\n"
-            + "Shoots an arrow downward.\n\n"
-
-            + "hero.shootLeft()\n"
-            + "Shoots an arrow to the left.\n\n"
-
-            + "hero.shootRight()\n"
-            + "Shoots an arrow to the right."
-        );
-
-        infoPane.setSection2Text(
-            "Game elements:\n\n"
-            + "Hero\n"
-            + "The character controlled by your commands.\n\n"
-
-            + "Bow\n"
-            + "Must be collected before the hero can shoot arrows. "
-            + "After collection, it disappears from the map.\n\n"
-
-            + "Bugs\n"
-            + "Move toward the hero after movement commands. "
-            + "They kill the hero if they reach the same tile. "
-            + "They can be killed by arrows or by moving into lava.\n\n"
-
-            + "Towers\n"
-            + "Kill the hero when the hero enters one of the eight surrounding "
-            + "tiles, including diagonal tiles.\n\n"
-
-            + "Chest 1\n"
-            + "Contains either lava boots or an invisibility cloak. "
-            + "The reward is selected randomly.\n\n"
-
-            + "Chest 2\n"
-            + "Contains the key needed to unlock the door.\n\n"
-
-            + "Lava boots\n"
-            + "Allow the hero to walk safely over lava.\n\n"
-
-            + "Invisibility cloak\n"
-            + "Prevents the towers from detecting and killing the hero.\n\n"
-
-            + "Lava\n"
-            + "Kills the hero unless the hero has the boots. "
-            + "Bugs that enter dangerous lava are also killed.\n\n"
-
-            + "Bridge\n"
-            + "Provides a safe path through the lava area.\n\n"
-
-            + "Door\n"
-            + "Completes the level when the hero reaches it while carrying the key."
-        );
-
-        infoPane.setConclusionText(
-            "Plan the command order carefully. Avoid the bugs, towers, lava, "
-            + "and map boundaries. Collect the required items and reach the door "
-            + "with the key to complete Level 1."
-        );
-
-        infoPane.addBulletPoint(
-            "Commands are executed from top to bottom."
-        );
-
-        infoPane.addBulletPoint(
-            "Movement outside the grid is blocked and prints an out-of-bounds warning."
-        );
-
-        infoPane.addBulletPoint(
-            "The bow must be collected before any shooting command can succeed."
-        );
-
-        infoPane.addBulletPoint(
-            "An arrow kills the first living bug in the selected direction."
-        );
-
-        infoPane.addBulletPoint(
-            "Opened chests, collected items, and dead bugs are removed from the map."
-        );
-
-        infoPane.addBulletPoint(
-            "The level resets after every completed run."
-        );
-
-        infoPane.addNote(
-            "The hero can only collect or open something while standing on its tile."
-        );
-
-        infoPane.addNote(
-            "Shooting does not depend on the hero's previous movement direction."
-        );
-
-        infoPane.addNote(
-            "Tower danger includes horizontal, vertical, and diagonal neighboring tiles."
-        );
-
-        Scene scene = new Scene(root);
         Stage stage = new Stage();
+        stage.setTitle("Level 1 Commands");
+        stage.setScene(new Scene(root,1260, 810));
+        stage.show();
 
-        stage.setScene(scene);
-        stage.setTitle("Level 1 Information");
-        stage.setResizable(false);
+    } catch (IOException e) {
+        System.out.println(
+            "Could not open the Level 1 information window."
+        );
+        e.printStackTrace();
+    }
+}
+
+public void onBookclick() {
+    
+    try {
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("Syntax.fxml")
+        );
+        Font irishGrover = Font.loadFont(
+            getClass().getResourceAsStream(
+                "/com/example/fonts/IrishGrover-Regular.ttf"
+            ),
+            48
+        );
+
+        if (irishGrover == null) {
+            throw new IllegalStateException("Could not load Irish Grover font");
+        }
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Usefull syntax");
+        stage.setScene(new Scene(root,1260, 810));
         stage.show();
 
     } catch (IOException e) {

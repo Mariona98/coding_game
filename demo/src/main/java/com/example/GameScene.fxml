@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,380 +11,179 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane
-        minWidth="1260.0"
-        prefWidth="1260.0"
-        maxWidth="1260.0"
-        minHeight="810.0"
-        prefHeight="810.0"
-        maxHeight="810.0"
-        xmlns="http://javafx.com/javafx/23.0.1"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="com.example.GameScreen">
+<AnchorPane maxHeight="810.0" maxWidth="1260.0" minHeight="810.0" minWidth="1260.0" prefHeight="810.0" prefWidth="1260.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.GameScreen">
 
     <children>
 
         
-        <AnchorPane
-                layoutX="0.0"
-                layoutY="0.0"
-                minWidth="900.0"
-                prefWidth="900.0"
-                maxWidth="900.0"
-                minHeight="810.0"
-                prefHeight="810.0"
-                maxHeight="810.0">
+        <AnchorPane layoutX="0.0" layoutY="0.0" maxHeight="810.0" maxWidth="900.0" minHeight="810.0" minWidth="900.0" prefHeight="810.0" prefWidth="900.0">
 
             <children>
 
-                <ImageView
-                        layoutX="0.0"
-                        layoutY="0.0"
-                        fitWidth="900.0"
-                        fitHeight="810.0"
-                        pickOnBounds="true"
-                        preserveRatio="false"
-                        mouseTransparent="true">
+                <ImageView fitHeight="810.0" fitWidth="900.0" layoutX="0.0" layoutY="0.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="false">
 
                     <image>
-                        <Image url="@css/level1-tilemap.png"/>
+                        <Image url="@css/level1-tilemap.png" />
                     </image>
                 </ImageView>
 
-                <GridPane
-                        fx:id="grid"
-                        layoutX="0.0"
-                        layoutY="0.0"
-                        minWidth="900.0"
-                        prefWidth="900.0"
-                        maxWidth="900.0"
-                        minHeight="810.0"
-                        prefHeight="810.0"
-                        maxHeight="810.0">
+                <GridPane fx:id="grid" layoutX="0.0" layoutY="0.0" maxHeight="810.0" maxWidth="900.0" minHeight="810.0" minWidth="900.0" prefHeight="810.0" prefWidth="900.0">
 
                     
                     <columnConstraints>
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="76.80002441406248" prefWidth="84.80002441406248" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="103.99997558593748" minWidth="90.0" prefWidth="95.99997558593748" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
 
-                        <ColumnConstraints
-                                minWidth="90.0"
-                                prefWidth="90.0"
-                                maxWidth="90.0"/>
+                        <ColumnConstraints maxWidth="90.0" minWidth="90.0" prefWidth="90.0" />
                     </columnConstraints>
 
                   
                     <rowConstraints>
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="90.0" minHeight="69.5999969482422" prefHeight="76.00000610351563" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="100.80000305175781" minHeight="79.99999084472657" prefHeight="94.39999389648438" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="100.80000915527347" minHeight="90.0" prefHeight="90.39998779296874" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="97.60001220703123" minHeight="90.0" prefHeight="92.79999389648441" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="96.0000061035156" minHeight="90.0" prefHeight="96.0000061035156" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" />
 
-                        <RowConstraints
-                                minHeight="90.0"
-                                prefHeight="90.0"
-                                maxHeight="90.0"/>
+                        <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" />
                     </rowConstraints>
 
                     <children>
 
                         
-                        <ImageView
-                                fx:id="character"
-                                fitWidth="60.0"
-                                fitHeight="70.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="1"
-                                GridPane.rowIndex="6">
+                        <ImageView fx:id="character" fitHeight="34.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
 
                             <image>
-                                <Image url="@css/character.png"/>
+                                <Image url="@css/ghost.png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="10.0"
-                                        right="15.0"
-                                        bottom="10.0"
-                                        left="15.0"/>
+                                <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                             </GridPane.margin>
                         </ImageView>
 
                         
-                        <ImageView
-                                fx:id="bow"
-                                fitWidth="70.0"
-                                fitHeight="70.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="0"
-                                GridPane.rowIndex="2">
+                        <ImageView fx:id="bow" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="2">
 
                             <image>
-                                <Image url="@css/bow.png"/>
+                                <Image url="@css/bow-and-arrow.png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="10.0"
-                                        right="10.0"
-                                        bottom="10.0"
-                                        left="10.0"/>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </GridPane.margin>
                         </ImageView>
 
                         
-                        <Circle
-                                fill="#ffffffb3"
-                                radius="42.0"
-                                stroke="BLACK"
-                                strokeType="INSIDE"
-                                GridPane.columnIndex="5"
-                                GridPane.rowIndex="4"/>
+                        <Circle fill="#ffffffb3" radius="42.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="5" GridPane.rowIndex="4" />
 
                         
-                        <Circle
-                                fill="#ffffffb3"
-                                radius="42.0"
-                                stroke="BLACK"
-                                strokeType="INSIDE"
-                                GridPane.columnIndex="5"
-                                GridPane.rowIndex="6"/>
+                        <Circle fill="#ffffffb3" radius="42.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="5" GridPane.rowIndex="6" />
 
-                        <ImageView
-                                fx:id="tower1"
-                                fitWidth="80.0"
-                                fitHeight="80.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="5"
-                                GridPane.rowIndex="4">
+                        <ImageView fx:id="tower1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="4">
 
                             <image>
-                                <Image url="@css/tower.png"/>
+                                <Image url="@css/castle-tower.png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="5.0"
-                                        right="5.0"
-                                        bottom="5.0"
-                                        left="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </GridPane.margin>
                         </ImageView>
 
-                        <ImageView
-                                fx:id="tower2"
-                                fitWidth="80.0"
-                                fitHeight="80.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="5"
-                                GridPane.rowIndex="6">
+                        <ImageView fx:id="tower2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="6">
 
                             <image>
-                                <Image url="@css/tower.png"/>
+                                <Image url="@css/castle-tower.png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="5.0"
-                                        right="5.0"
-                                        bottom="5.0"
-                                        left="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </GridPane.margin>
                         </ImageView>
 
                         
-                        <ImageView
-                                fx:id="door"
-                                fitWidth="80.0"
-                                fitHeight="80.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="7"
-                                GridPane.rowIndex="5">
+                        <ImageView fx:id="door" fitHeight="67.0" fitWidth="68.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="5">
 
                             <image>
-                                <Image url="@css/door.png"/>
+                                <Image url="@css/gate.png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="5.0"
-                                        right="5.0"
-                                        bottom="5.0"
-                                        left="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </GridPane.margin>
                         </ImageView>
 
                        
-                        <ImageView
-                                fx:id="bug1"
-                                fitWidth="80.0"
-                                fitHeight="80.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="6"
-                                GridPane.rowIndex="1">
+                        <ImageView fx:id="bug1" fitHeight="53.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="1">
 
                             <image>
-                                <Image url="@css/bug.png"/>
+                                <Image url="@css/bug%20(2).png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="5.0"
-                                        right="5.0"
-                                        bottom="5.0"
-                                        left="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </GridPane.margin>
                         </ImageView>
 
                         
-                        <ImageView
-                                fx:id="bug2"
-                                fitWidth="80.0"
-                                fitHeight="80.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="6"
-                                GridPane.rowIndex="2">
+                        <ImageView fx:id="bug2" fitHeight="50.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="2">
 
                             <image>
-                                <Image url="@css/bug.png"/>
+                                <Image url="@css/bug%20(2).png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="5.0"
-                                        right="5.0"
-                                        bottom="5.0"
-                                        left="5.0"/>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </GridPane.margin>
                         </ImageView>
 
                         
-                        <ImageView
-                                fx:id="chest1"
-                                fitWidth="80.0"
-                                fitHeight="70.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="8"
-                                GridPane.rowIndex="1">
+                        <ImageView fx:id="chest1" fitHeight="70.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="1">
 
                             <image>
-                                <Image url="@css/box.png"/>
+                                <Image url="@css/treasure.png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="10.0"
-                                        right="5.0"
-                                        bottom="10.0"
-                                        left="5.0"/>
+                                <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                             </GridPane.margin>
                         </ImageView>
 
                         <!-- Chest 2 at (8, 2) -->
-                        <ImageView
-                                fx:id="chest2"
-                                fitWidth="80.0"
-                                fitHeight="70.0"
-                                pickOnBounds="true"
-                                preserveRatio="true"
-                                GridPane.columnIndex="8"
-                                GridPane.rowIndex="2">
+                        <ImageView fx:id="chest2" fitHeight="70.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="2">
 
                             <image>
-                                <Image url="@css/box.png"/>
+                                <Image url="@css/treasure.png" />
                             </image>
 
                             <GridPane.margin>
-                                <Insets
-                                        top="10.0"
-                                        right="5.0"
-                                        bottom="10.0"
-                                        left="5.0"/>
+                                <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                             </GridPane.margin>
                         </ImageView>
 
@@ -395,75 +193,26 @@
             </children>
         </AnchorPane>
 
-        <AnchorPane
-                layoutX="900.0"
-                layoutY="0.0"
-                minWidth="360.0"
-                prefWidth="360.0"
-                maxWidth="360.0"
-                minHeight="810.0"
-                prefHeight="810.0"
-                maxHeight="810.0">
+        <AnchorPane layoutX="900.0" maxHeight="810.0" maxWidth="360.0" minHeight="810.0" minWidth="360.0" prefHeight="810.0" prefWidth="360.0">
 
             <children>
 
-                <TextArea
-                        fx:id="code"
-                        layoutX="30.0"
-                        layoutY="30.0"
-                        minWidth="300.0"
-                        prefWidth="300.0"
-                        maxWidth="300.0"
-                        minHeight="620.0"
-                        prefHeight="620.0"
-                        maxHeight="620.0"
-                        wrapText="true"/>
+                <TextArea fx:id="code" layoutX="30.0" layoutY="30.0" maxHeight="620.0" maxWidth="300.0" minHeight="620.0" minWidth="300.0" prefHeight="620.0" prefWidth="300.0" wrapText="true" />
 
 
-                <Button
-                        fx:id="Run"
-                        layoutX="170.0"
-                        layoutY="695.0"
-                        minWidth="75.0"
-                        prefWidth="75.0"
-                        maxWidth="75.0"
-                        minHeight="30.0"
-                        prefHeight="30.0"
-                        maxHeight="30.0"
-                        mnemonicParsing="false"
-                        onAction="#onRunClicked"
-                        text="Run"/>
+                <Button fx:id="Run" layoutX="142.0" layoutY="675.0" maxHeight="30.0" maxWidth="75.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" onAction="#onRunClicked" prefHeight="30.0" prefWidth="75.0" text="Run" />
 
-                <ImageView
-                        fx:id="scroll"
-                        layoutX="285.0"
-                        layoutY="690.0"
-                        fitWidth="45.0"
-                        fitHeight="45.0"
-                        onMouseClicked="#onScrollclick"
-                        pickOnBounds="true"
-                        preserveRatio="true">
+                <ImageView fx:id="scroll" fitHeight="30.0" fitWidth="40.0" layoutX="30.0" layoutY="745.0" onMouseClicked="#onScrollclick" pickOnBounds="true" preserveRatio="true">
 
                     <image>
-                        <Image url="@css/scroll.png"/>
+                        <Image url="@css/ancient-scroll.png" />
                     </image>
                 </ImageView>
-
-
-                <ImageView
-                        fx:id="key"
-                        layoutX="30.0"
-                        layoutY="750.0"
-                        fitWidth="40.0"
-                        fitHeight="40.0"
-                        pickOnBounds="true"
-                        preserveRatio="true"
-                        visible="false">
-
-                    <image>
-                        <Image url="@css/key.png"/>
-                    </image>
-                </ImageView>
+            <ImageView fx:id="book" fitHeight="40.0" fitWidth="45.0" layoutX="290.0" layoutY="740.0" onMouseClicked="#onBookclick" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@css/books.png" />
+               </image>
+            </ImageView>
 
             </children>
         </AnchorPane>

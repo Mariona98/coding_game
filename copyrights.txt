@@ -1,2 +1,4 @@
 background music : https://pixabay.com/music/search/background%20music/
 click sound : https://mixkit.co/free-sound-effects/click/
+scroll:<a href="https://www.flaticon.com/free-icons/scroll" title="scroll icons">Scroll icons created by Magnific - Flaticon</a>
+book:<a href="https://www.flaticon.com/free-icons/reading-book" title="reading book icons">Reading book icons created by Hamstring - Flaticon</a>

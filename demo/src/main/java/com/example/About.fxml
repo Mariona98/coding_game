@@ -1,28 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<Pane xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml/1"
-      prefWidth="1156"
-      prefHeight="932"
-      style="-fx-background-color: white;">
-
-    <Text text="THIS IS A TEST"
-          x="163"
-          y="388"
-          wrappingWidth="831"
-          textAlignment="CENTER"
-          style="-fx-fill: linear-gradient(
-                     from 26% 0% to 73% 100%,
-                     #a750ab,
-                     #442045
-                 );">
-        <font>
-            <Font name="Irish Grover Regular" size="48"/>
-        </font>
-    </Text>
-
-</Pane>
+<AnchorPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            prefWidth="1156" 
+            prefHeight="1633">
+    
+    <children>
+        <!-- ScrollPane that fills the entire AnchorPane -->
+        <ScrollPane fx:id="scrollPane" 
+                    fitToWidth="true"
+                    fitToHeight="false"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 0;"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0">
+            
+            <!-- Content container with gradient background -->
+            <VBox fx:id="contentBox" 
+                  style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #ce1818, #c27305);"
+                  prefWidth="1156"
+                  minHeight="1633">
+                
+                <children>
+                    <!-- Top padding spacer -->
+                    <VBox prefHeight="27" />
+                    
+                    <!-- Header/Title -->
+                    <VBox alignment="CENTER" spacing="10" prefWidth="1156">
+                        <Text text="About the game" 
+                              fill="black"
+                              textAlignment="CENTER"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 48px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Purpose Section -->
+                    <VBox layoutX="57" layoutY="213" spacing="5" prefWidth="1047" style="-fx-padding: 20 54 0 54;">
+                        <Text text="Purpose" 
+                              fill="white"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px; -fx-font-weight: bold;">
+                        </Text>
+                        <Text text="This game is created by the undergraduate student Maria Touloupi tha studies informatics and Telecommunications at the University of Peloponnesse for her final paper with Dr Platis N. as her supervisor." 
+                              fill="white"
+                              wrappingWidth="1047"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 18px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Idea Section -->
+                    <VBox layoutX="64" layoutY="513" spacing="5" prefWidth="1040" style="-fx-padding: 20 58 0 58;">
+                        <Text text="Idea" 
+                              fill="white"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px; -fx-font-weight: bold;">
+                        </Text>
+                        <Text text="The main idea came from the web game CodeCombat in which you can learn almost every coding language by playing the game.The style of that is a 2.5d advanture level based game." 
+                              fill="white"
+                              wrappingWidth="1040"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 18px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Story Section -->
+                    <VBox layoutX="57" layoutY="798" spacing="5" prefWidth="1028" style="-fx-padding: 20 64 0 64;">
+                        <Text text="Story" 
+                              fill="white"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px; -fx-font-weight: bold;">
+                        </Text>
+                        <Text text="The story behind Coders Adventure is that you begin as a character in hell-like enevironment , you come accross hostile environment and some 'bugs' as your enemies, and you have to code yourself out of there.&#10;&#10;(Spoiler alert: In the end you wake up from this nightmare and you now know how to fix your code and demolish those bugs.)" 
+                              fill="white"
+                              wrappingWidth="1028"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 18px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Mechanics Section -->
+                    <VBox layoutX="60" layoutY="1224" spacing="5" prefWidth="1042" style="-fx-padding: 20 57 40 57;">
+                        <Text text="Mechanics" 
+                              fill="white"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px; -fx-font-weight: bold;">
+                        </Text>
+                        <Text text="The game is level base , each level is a grid of tiles,  has a goal to teach something new and also challenge the player, for the purpose of the game complexity and to keep things intersting I also added achievments that a player can aim for. That makes the player want to play the level more than once as there are differnet ways to achieve your goal.&#10;&#10;The code is written on a text input on the right of the tile map and if the goal is not achieved the level resets and you gat to try again." 
+                              fill="white"
+                              wrappingWidth="1042"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 18px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Bottom padding spacer -->
+                    <VBox prefHeight="40" />
+                </children>
+            </VBox>
+        </ScrollPane>
+    </children>
+</AnchorPane>

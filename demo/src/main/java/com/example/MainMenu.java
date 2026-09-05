@@ -77,6 +77,9 @@ public class MainMenu {
     private void onLoadGameClicked() {
         clickSound.play();
         System.out.println("Load Game clicked!");
+        Levels_Info stats = new Levels_Info();
+        
+
        
     }
 

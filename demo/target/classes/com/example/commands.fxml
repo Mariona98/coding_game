@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            prefWidth="1156" 
+            prefHeight="1633">
+    
+    <children>
+        <!-- ScrollPane that fills the entire AnchorPane -->
+        <ScrollPane fx:id="scrollPane" 
+                    fitToWidth="true"
+                    fitToHeight="false"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 0;"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0">
+            
+            <!-- Content container with gradient background -->
+            <VBox fx:id="contentBox" 
+                  style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #ce1818, #c27305);"
+                  prefWidth="1156"
+                  minHeight="1637">
+                
+                <children>
+                    <!-- Top padding spacer -->
+                    <VBox prefHeight="48" />
+                    
+                    <!-- Header/Title -->
+                    <VBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 0 35;">
+                        <Text text="AVAILABLE COMMANDS" 
+                              fill="black"
+                              textAlignment="CENTER"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 48px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Hero Description -->
+                    <VBox spacing="5" style="-fx-padding: 20 114 0 30;">
+                        <Text fill="#100b4e" 
+                              wrappingWidth="928" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #2ea0b1; -fx-stroke-width: 2;"
+                              text="Hero&#10;&#10;The hero is the character controlled by the player.&#10;The hero moves one tile at a time and follows the commands written in the editor.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.moveRight() -->
+                    <VBox spacing="5" style="-fx-padding: 20 510 0 30;">
+                        <Text fill="#100b4e" 
+                              wrappingWidth="616" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.moveRight()&#10;Moves the hero one tile to the right.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.moveLeft() -->
+                    <VBox spacing="5" style="-fx-padding: 20 581 0 30;">
+                        <Text fill="#100b4e" 
+                              wrappingWidth="545" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.moveLeft()&#10;Moves the hero one tile to the left.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.moveUp() -->
+                    <VBox spacing="5" style="-fx-padding: 20 615 0 30;">
+                        <Text fill="#100b4e" 
+                              wrappingWidth="511" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.moveUp()&#10;Moves the hero one tile upward.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.moveDown() -->
+                    <VBox spacing="5" style="-fx-padding: 20 561 0 30;">
+                        <Text fill="#100b4e" 
+                              wrappingWidth="565" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.moveDown()&#10;Moves the hero one tile downward.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.collect() -->
+                    <VBox spacing="5" style="-fx-padding: 20 624 0 30;">
+                        <Text fill="#ca1a1a" 
+                              wrappingWidth="502" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #6a0707; -fx-stroke-width: 2;"
+                              text="hero.collect()&#10;Collects the bow when the hero is standing on the bow tile.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.openChest() -->
+                    <VBox spacing="5" style="-fx-padding: 20 622 0 30;">
+                        <Text fill="#e8c021" 
+                              wrappingWidth="504" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #995d0f; -fx-stroke-width: 2;"
+                              text="hero.openChest()&#10;Opens a chest when the hero is standing on a chest tile.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.shootUp() -->
+                    <VBox spacing="5" style="-fx-padding: 20 724 0 30;">
+                        <Text fill="#060457" 
+                              wrappingWidth="402" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.shootUp()&#10;Shoots an arrow upward.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.shootDown() -->
+                    <VBox spacing="5" style="-fx-padding: 20 692 0 30;">
+                        <Text fill="#060457" 
+                              wrappingWidth="434" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.shootDown()&#10;Shoots an arrow downward.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.shootLeft() -->
+                    <VBox spacing="5" style="-fx-padding: 20 724 0 30;">
+                        <Text fill="#060457" 
+                              wrappingWidth="402" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.shootLeft()&#10;Shoots an arrow to the left.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- hero.shootRight() -->
+                    <VBox spacing="5" style="-fx-padding: 20 681 0 30;">
+                        <Text fill="#060457" 
+                              wrappingWidth="445" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px; -fx-stroke: #60b8e0; -fx-stroke-width: 2;"
+                              text="hero.shootRight()&#10;Shoots an arrow to the right.">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Bottom padding spacer -->
+                    <VBox prefHeight="40" />
+                </children>
+            </VBox>
+        </ScrollPane>
+    </children>
+</AnchorPane>

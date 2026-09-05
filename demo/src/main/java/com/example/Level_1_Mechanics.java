@@ -141,6 +141,10 @@ public class Level_1_Mechanics {
         return false;
     }
 
+    public boolean checkHeroDead() {
+        return GameOver;
+    }
+
     public void enemymovment() {
         if (!isBug1Dead) {
             moveBug1();
