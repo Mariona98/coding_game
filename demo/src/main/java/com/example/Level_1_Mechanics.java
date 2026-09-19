@@ -7,42 +7,24 @@ public class Level_1_Mechanics {
 
     private int heroX;
     private int heroY;
-    private int bug1X;
-    private int bug1Y;
-    private int bug2X;
-    private int bug2Y;
-    private int stars;
 
-    public boolean hasKey = false;
-    public boolean hasBow = false;
-    public boolean hasBoots = false;
-    public boolean isInvisible = false;
-    public boolean isBug1Dead = false;
-    public boolean isBug2Dead = false;
-    public boolean isTower1Dead = false;
-    public boolean isTower2Dead = false;
+
+
     public boolean GameOver = false;
-    public boolean chest1Opened = false;
-    public boolean chest2Opened = false;
 
+    public boolean pressButton = false;
     // Level 1-only temporary and hazard state.
-    private final Set<TilePosition> lavaTiles = new HashSet<>();
-    private final Set<TilePosition> bridgeTiles = new HashSet<>();
+  
 
     private int resetTimes = 0;
     private long levelStartTime;
 
-    public enum ArrowDirection {
-        UP, DOWN, LEFT, RIGHT
-    }
+   
 
     public Level_1_Mechanics(Level_1_Data level) {
         heroX = level.heroX;
         heroY = level.heroY;
-        bug1X = level.bug1X;
-        bug1Y = level.bug1Y;
-        bug2X = level.bug2X;
-        bug2Y = level.bug2Y;
+     
 
         initialiseLevelOneLava();
         levelStartTime = System.currentTimeMillis();
@@ -83,27 +65,7 @@ public class Level_1_Mechanics {
                 heroY++;
                 moved = true;
                 break;
-            case COLLECT:
-                collectBow();
-                break;
-            case OPEN_CHEST:
-                openChest();
-                break;
-            case SHOOT_UP:
-                shootArrow(ArrowDirection.UP);
-                break;
 
-            case SHOOT_DOWN:
-                shootArrow(ArrowDirection.DOWN);
-                break;
-
-            case SHOOT_LEFT:
-                shootArrow(ArrowDirection.LEFT);
-                break;
-
-            case SHOOT_RIGHT:
-                shootArrow(ArrowDirection.RIGHT);
-                break;
             default:
                 System.out.println("Unsupported Level 1 command.");
         }
@@ -351,10 +313,6 @@ public class Level_1_Mechanics {
 
         heroX = Level_1_Data.HERO_START_X;
         heroY = Level_1_Data.HERO_START_Y;
-        bug1X = Level_1_Data.BUG_1_START_X;
-        bug1Y = Level_1_Data.BUG_1_START_Y;
-        bug2X = Level_1_Data.BUG_2_START_X;
-        bug2Y = Level_1_Data.BUG_2_START_Y;
 
         hasKey = false;
         hasBow = false;
