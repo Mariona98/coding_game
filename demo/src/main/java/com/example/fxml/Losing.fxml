@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            prefWidth="761" 
+            prefHeight="403"
+            style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #817f7c, #262525);">
+    
+    <children>
+        <VBox alignment="CENTER" 
+              spacing="20"
+              AnchorPane.topAnchor="0"
+              AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0">
+            
+            <Text text="Failed!" 
+                  fill="#fdf9f4" 
+                  opacity="0.71"
+                  stroke="black"
+                  strokeWidth="1"
+                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 64px;">
+            </Text>
+            
+            <Text text="Tip: Keep out of lava!" 
+                  fill="#fdf7ef" 
+                  stroke="black"
+                  strokeWidth="1"
+                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+            </Text>
+        </VBox>
+    </children>
+</AnchorPane>

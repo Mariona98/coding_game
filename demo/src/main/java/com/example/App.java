@@ -17,21 +17,22 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         try {
             
-            Path fxmlPath = Paths.get("/demo/src/main/resources/com/example/main_menu.fxml");
+            Path fxmlPath = Paths.get("src/main/resources/com/example/fxml/MM.fxml");
             if (fxmlPath.toFile().exists()) {
                 System.out.println("Found FXML in file system: " + fxmlPath.toAbsolutePath());
                 FXMLLoader fxmlLoader = new FXMLLoader(fxmlPath.toUri().toURL());
                 Parent root = fxmlLoader.load();
-                scene = new Scene(root, 640, 480);
+                scene = new Scene(root, 586, 438);
             } else {
                 
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/main_menu.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/fxml/MM.fxml"));
                 Parent root = fxmlLoader.load();
-                scene = new Scene(root, 640, 480);
+                scene = new Scene(root, 586, 438);
             }
             stage.setTitle("Coders' Haven");
             stage.setScene(scene);
             stage.show();
+            stage.setResizable(false);
         } catch (Exception e) {
             System.err.println("Error loading FXML: " + e.getMessage());
             e.printStackTrace();

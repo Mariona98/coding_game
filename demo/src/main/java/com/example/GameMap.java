@@ -22,28 +22,26 @@ public class GameMap {
         
     }
     @FXML
-    private void onLevelClicked() throws IOException {
-        
+private void onLevelClicked() throws IOException {
+
         System.out.println("Level clicked!");
-       Parent root=FXMLLoader.load(getClass().getResource("/com/example/GameScene.fxml"));
-       stage=(Stage)lv1.getScene().getWindow();
-       scene=new Scene(root, 1260, 810);
-         stage.setScene(scene);
 
-    stage.setTitle("Coders' Haven");
+        Parent root = FXMLLoader.load(
+            getClass().getResource("/com/example/fxml/GameScene.fxml")
+        );
 
-    // NEW: Prevent resizing.
-    stage.setResizable(false);
+        Stage stage = (Stage) lv1.getScene().getWindow();
 
-    // NEW: Keep the exact window size.
-    stage.setMinWidth(1260);
-    stage.setMaxWidth(1260);
-    stage.setMinHeight(810);
-    stage.setMaxHeight(810);
+        Scene scene = new Scene(root, 1260, 830);
 
+        stage.setScene(scene);
+        stage.setTitle("Coders' Haven");
+        stage.setResizable(false);
 
-            stage.show();
-        
+        // Center the window after setting the new scene
+        stage.centerOnScreen();
+
+        stage.show();
     }
     
 }

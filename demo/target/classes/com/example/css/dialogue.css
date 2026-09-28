@@ -1,0 +1,17 @@
+.pane {
+    -fx-background-color: linear-gradient(
+        to bottom,
+        #e8d8b0,
+        #c9b17c
+    );
+
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #5a4325;
+    -fx-border-width: 3px;
+}
+.dialogue-text {
+    -fx-text-fill: #292015;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}

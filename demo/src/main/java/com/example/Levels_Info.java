@@ -1,96 +1,197 @@
 package com.example;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Levels_Info {
 
-  private Level_1_Mechanics[] levels;//arraylist of levels , added later on?
-  private int totalStars;
-  private int map;
-  private ArrayList<String> name;
-  private int level;
+    private int map;
+    private int levels;
+    private ArrayList<Integer> passedLevels;
+    private int steps;
 
-  
-      public Levels_Info() {
-          
-          this.totalStars = 0 ;
-          this.map = 1;
-          this.name = new ArrayList<>();
-          this.level=0;
-      }
+    public Levels_Info() {
+        this.map = 1;
+        this.levels = 0;
+        this.passedLevels = new ArrayList<>();
+        this.steps = 0;
+    }
 
-        public int getLevels() {
-            return level;
-        }
-        public void setLevels(int level) {
-            this.level = level;
-        }
-        public ArrayList<String> getName() {
-            return name;
-        }
-        public void setName(ArrayList<String> name) {
-            this.name = name;
-        }
-        public int getTotalStars() {
-            return totalStars;
-        }
-        public void setTotalStars(int totalStars) {
-            this.totalStars = totalStars;
-        }
-        public int getMap() {
-            return map;
-        }
-        public void setMap(int map) {
-            this.map = map;
-        }
-        public int getLevelStars(int levelIndex) {
-            if (levels != null && levelIndex >= 0 && levelIndex < levels.length) {
-                return levels[levelIndex].getStars();
-            }
-            return 0;
-        }
-        public void setLevelStars(int levelIndex, int stars) {
-            if (levels != null && levelIndex >= 0 && levelIndex < levels.length) {
-                levels[levelIndex].setStars(stars);
-            }
-        }
-public void loadGame(String filename) {
-        try {
-            FileReader reader = new FileReader(filename);
-            StringBuilder content = new StringBuilder();
-            int character;
-            
-            while ((character = reader.read()) != -1) {
-                content.append((char) character);
-            }
-            reader.close();
-            
-            // Parse the content
-            String[] lines = content.toString().split("\n");
-            for (String line : lines) {
-                if (line.startsWith("totalStars:")) {
-                    totalStars = Integer.parseInt(line.substring(11));
-                } else if (line.startsWith("map:")) {
-                    map = Integer.parseInt(line.substring(4));
-                } else if (line.startsWith("level:")) {
-                    level = Integer.parseInt(line.substring(6));
-                } else if (line.startsWith("names:")) {
-                    String[] namesArray = line.substring(6).split(",");
-                    name = new ArrayList<>();
-                    for (String n : namesArray) {
-                        name.add(n);
-                    }
-                }
-            }
-            
-            System.out.println("Game loaded successfully from: " + filename);
-            
-        } catch (IOException e) {
-            System.out.println("Error loading game: " + e.getMessage());
+    // =========================
+    // MAP
+    // =========================
+
+    public int getMap() {
+        return map;
+    }
+
+    public void setMap(int map) {
+        this.map = map;
+    }
+
+    // =========================
+    // NUMBER OF LEVELS
+    // =========================
+
+    public int getLevels() {
+        return levels;
+    }
+
+    public void setLevels(int levels) {
+        this.levels = levels;
+    }
+
+    // =========================
+    // PASSED LEVELS
+    // =========================
+
+    public ArrayList<Integer> getPassedLevels() {
+        return passedLevels;
+    }
+
+    public void setPassedLevels(ArrayList<Integer> passedLevels) {
+        this.passedLevels = passedLevels;
+    }
+
+    public void passLevel(int level) {
+        if (!passedLevels.contains(level)) {
+            passedLevels.add(level);
         }
     }
 
+    public boolean isLevelPassed(int level) {
+        return passedLevels.contains(level);
+    }
 
+    // =========================
+    // STEPS
+    // =========================
+
+    public int getSteps() {
+        return steps;
+    }
+
+    public void setSteps(int steps) {
+        this.steps = steps;
+    }
+
+    public void addStep() {
+        steps++;
+    }
+
+    public void addSteps(int amount) {
+        steps += amount;
+    }
+
+    // =========================
+    // SAVE GAME
+    // =========================
+
+    public void saveGame(String filename) {
+
+        try (FileWriter writer = new FileWriter(filename)) {
+
+            writer.write("map:" + map + "\n");
+            writer.write("levels:" + levels + "\n");
+
+            writer.write("passedLevels:");
+
+            for (int i = 0; i < passedLevels.size(); i++) {
+
+                writer.write(
+                    String.valueOf(passedLevels.get(i))
+                );
+
+                if (i < passedLevels.size() - 1) {
+                    writer.write(",");
+                }
+            }
+
+            writer.write("\n");
+            writer.write("steps:" + steps + "\n");
+
+            System.out.println(
+                "Game saved successfully to: " + filename
+            );
+
+        } catch (IOException e) {
+
+            System.out.println(
+                "Error saving game: " + e.getMessage()
+            );
+        }
+    }
+
+    // =========================
+    // LOAD GAME
+    // =========================
+
+    public void loadGame(String filename) {
+
+        try (FileReader reader = new FileReader(filename)) {
+
+            StringBuilder content = new StringBuilder();
+            int character;
+
+            while ((character = reader.read()) != -1) {
+                content.append((char) character);
+            }
+
+            String[] lines = content.toString().split("\n");
+
+            for (String line : lines) {
+
+                line = line.trim();
+
+                if (line.startsWith("map:")) {
+
+                    map = Integer.parseInt(
+                        line.substring(4)
+                    );
+
+                } else if (line.startsWith("levels:")) {
+
+                    levels = Integer.parseInt(
+                        line.substring(7)
+                    );
+
+                } else if (line.startsWith("passedLevels:")) {
+
+                    passedLevels.clear();
+
+                    String data = line.substring(13);
+
+                    if (!data.isEmpty()) {
+
+                        String[] levelArray = data.split(",");
+
+                        for (String level : levelArray) {
+
+                            passedLevels.add(
+                                Integer.parseInt(level.trim())
+                            );
+                        }
+                    }
+
+                } else if (line.startsWith("steps:")) {
+
+                    steps = Integer.parseInt(
+                        line.substring(6)
+                    );
+                }
+            }
+
+            System.out.println(
+                "Game loaded successfully from: " + filename
+            );
+
+        } catch (IOException e) {
+
+            System.out.println(
+                "Error loading game: " + e.getMessage()
+            );
+        }
+    }
 }

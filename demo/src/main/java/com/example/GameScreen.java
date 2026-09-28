@@ -7,12 +7,16 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
+import javafx.scene.layout.StackPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,51 +25,37 @@ public class GameScreen {
 
     @FXML
     private TextArea code;
-
-    @FXML
-    private RadioButton darkmode;
-
     @FXML
     private Button Run;
-
     @FXML
-    private ImageView character;
-
-    @FXML
-    private GridPane grid; 
-
-    @FXML
-    private ImageView key;
-
-    @FXML
+    private ImageView hero;
+    @FXML 
+    private ImageView doorclosed;
+    @FXML 
+    private ImageView button;
+    @FXML   
     private ImageView scroll;
-
-    @FXML
-    private ImageView tower1;
-
-    @FXML
-    private ImageView tower2;
-
-    @FXML
-    private ImageView bow;
-
-    @FXML
-    private ImageView door;
-
-    @FXML
-    private ImageView chest1;
-
-    @FXML
-    private ImageView chest2;
-
-    @FXML
-    private ImageView bug1;
-
-    @FXML
-    private ImageView bug2;
-
-    @FXML
+    @FXML 
     private ImageView book;
+   
+
+     @FXML
+    private Label dialogueText;
+
+   @FXML
+private StackPane dialoguePane;
+
+    private String[] dialogues;
+    private int currentDialogue = 0;
+
+
+
+
+    private Stage stage;
+    private Scene scene;
+   
+
+
 
     private Level_1_Mechanics engine;
     private List<Level_1_Commands> commandsList;
@@ -76,9 +66,37 @@ public class GameScreen {
 
     engine = new Level_1_Mechanics(level1);
 
+    setDialogues(Level_1_Data.DIALOGUES);
+
     updateVisuals();
 }
 
+
+
+public void setDialogues(String[] dialogues) {
+    this.dialogues = dialogues;
+    currentDialogue = 0;
+
+    if (dialogues != null && dialogues.length > 0) {
+        dialogueText.setText(dialogues[0]);
+        dialoguePane.setVisible(true);
+    }
+}
+
+    @FXML
+    private void onDialogueClicked() {
+        if (dialogues == null || dialogues.length == 0) {
+            return;
+        }
+
+        currentDialogue++;
+
+        if (currentDialogue < dialogues.length) {
+            dialogueText.setText(dialogues[currentDialogue]);
+        } else {
+            dialoguePane.setVisible(false);
+        }
+    }
     @FXML
     private void onRunClicked() throws Exception {
         System.out.println("===== RUN BUTTON PRESSED =====");
@@ -114,24 +132,20 @@ public class GameScreen {
         executeNextCommand();
     }
     
-    private void executeNextCommand() {
+    private void executeNextCommand() throws IOException{
+       
         // Check if all commands are executed
         if (currentCommandIndex >= commandsList.size()) {
             System.out.println("===== RUN FINISHED =====");
+
+
             engine.resetGame();
             updateVisuals(); // Reset visuals after run
             return;
         }
         
         // Check if level is already complete
-        if (engine.checkWin()) {
-            System.out.println("LEVEL COMPLETE!");
-            System.out.println("===== RUN FINISHED =====");
-            //thinking what the starts logic should be maybe based on the number of commands used
-            engine.setStars(3); // Set stars for the completed level
-            System.out.println("Stars set for completed level.");
-            return;
-        }
+        
 
         // Check if hero is dead
         if (engine.checkHeroDead()) {
@@ -186,6 +200,27 @@ public class GameScreen {
         System.out.println("Hero position after command:");
         System.out.println("X = " + engine.getHeroX());
         System.out.println("Y = " + engine.getHeroY());
+
+
+
+
+if (engine.checkWin()) {
+    System.out.println("LEVEL COMPLETE!");
+    System.out.println("===== RUN FINISHED =====");
+
+    Parent root = FXMLLoader.load(
+        getClass().getResource("/com/example/fxml/game_map.fxml")
+    );
+
+    stage = (Stage) Run.getScene().getWindow();
+
+    scene = new Scene(root);
+
+    stage.setScene(scene);
+    stage.show();
+
+    return;
+}
         
         updateVisuals();
         
@@ -195,48 +230,41 @@ public class GameScreen {
         
         
         PauseTransition delay = new PauseTransition(Duration.millis(1000)); // 1 second delay
-        delay.setOnFinished(event -> executeNextCommand());
+        delay.setOnFinished(event -> {
+            try {
+                executeNextCommand();
+            } catch (IOException e) {
+                throw new RuntimeException("Could not continue command execution.", e);
+            }
+        });
         delay.play();
     }
     
     private void updateVisuals(){
-        GridPane.setColumnIndex(character, engine.getHeroX());
-        GridPane.setRowIndex(character, engine.getHeroY());  
-        GridPane.setColumnIndex(bug1, engine.getBug1X());
-        GridPane.setRowIndex(bug1, engine.getBug1Y());
-        GridPane.setColumnIndex(bug2, engine.getBug2X());
-        GridPane.setRowIndex(bug2, engine.getBug2Y());
+        GridPane.setColumnIndex(hero, engine.getHeroX());
+        GridPane.setRowIndex(hero, engine.getHeroY()); 
+        engine.updateButtonState(); // Update button state based on hero position 
+        
+        if(engine.isDoorOpen()==true)
+        {    Image openDoor = new Image(
+        getClass().getResource("/com/example/css/door-open.png").toExternalForm()
+    );
 
-        if(engine.isBug1Dead == true){
-            bug1.setVisible(false);
-        }
-        else{
-            bug1.setVisible(true);
-        }
-        if(engine.isBug2Dead == true){
-            bug2.setVisible(false);
-        }
-        else{
-            bug2.setVisible(true);
-        }
+    doorclosed.setImage(openDoor);
 
+    Image buttonpressed = new Image(
+        getClass().getResource("/com/example/css/button-pressed.png").toExternalForm()
+    );
 
-        if (engine.hasKey == true){
-            key.setVisible(false);
-        } 
-        if (engine.hasBow == true){
-            bow.setVisible(false);
-        }
-        if (engine.chest1Opened == true){
-            chest1.setVisible(false);
-        }
-        if (engine.chest2Opened == true){
-            chest2.setVisible(false);
-        }
+    button.setImage(buttonpressed);
+
+}
+    
+
         System.out.println("Visuals updated.");
     }
     
-    
+
 
    
   @FXML
@@ -245,7 +273,7 @@ public void onScrollclick() {
     
     try {
         FXMLLoader loader = new FXMLLoader(
-            getClass().getResource("commands.fxml")
+            getClass().getResource("fxml/commands.fxml")
         );
         Font irishGrover = Font.loadFont(
             getClass().getResourceAsStream(
@@ -262,6 +290,7 @@ public void onScrollclick() {
         Stage stage = new Stage();
         stage.setTitle("Level 1 Commands");
         stage.setScene(new Scene(root,1260, 810));
+        stage.centerOnScreen();
         stage.show();
 
     } catch (IOException e) {
@@ -276,7 +305,7 @@ public void onBookclick() {
     
     try {
         FXMLLoader loader = new FXMLLoader(
-            getClass().getResource("Syntax.fxml")
+            getClass().getResource("fxml/Syntax.fxml")
         );
         Font irishGrover = Font.loadFont(
             getClass().getResourceAsStream(
@@ -292,6 +321,7 @@ public void onBookclick() {
         Stage stage = new Stage();
         stage.setTitle("Usefull syntax");
         stage.setScene(new Scene(root,1260, 810));
+        stage.centerOnScreen();
         stage.show();
 
     } catch (IOException e) {

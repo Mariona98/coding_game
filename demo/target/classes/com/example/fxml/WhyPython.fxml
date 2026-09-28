@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            prefWidth="1156" 
+            prefHeight="1633">
+    
+    <children>
+        <!-- ScrollPane that fills the entire AnchorPane -->
+        <ScrollPane fx:id="scrollPane" 
+                    fitToWidth="true"
+                    fitToHeight="false"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 0;"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0">
+            
+            <!-- Content container with gradient background -->
+            <VBox fx:id="contentBox" 
+                  style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #ce1818, #c27305);"
+                  prefWidth="1156"
+                  minHeight="2962">
+                
+                <children>
+                    <!-- Top padding spacer -->
+                    <VBox prefHeight="17" />
+                    
+                    <!-- Header/Title -->
+                    <VBox alignment="CENTER" spacing="10" prefWidth="1156">
+                        <Text text="Why Python ?" 
+                              fill="white"
+                              textAlignment="CENTER"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 48px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Difficulty Level Section -->
+                    <VBox spacing="5" prefWidth="1017" style="-fx-padding: 20 69 0 69;">
+                        <Text fill="white" wrappingWidth="1017" style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            <![CDATA[
+                            Difficulty Level: ⭐⭐☆☆☆ (Easy to Moderate)
+
+                            Python is one of the easiest programming languages for beginners because it uses simple, readable syntax that is close to everyday English. Compared to many other programming languages, Python requires fewer lines of code, making it easier to understand and write. It also has a large learning community, with thousands of free tutorials, courses, and videos available online.
+
+                            Learning Timeline
+                            1–2 weeks: Learn basic programming concepts such as variables, loops, and functions.
+                            1–3 months: Build beginner projects like calculators, quizzes, and simple games.
+                            6–12 months: Create websites, automate tasks, analyze data, or develop AI projects.
+                            ]]>
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Academic Opportunities Section -->
+                    <VBox spacing="5" prefWidth="1042" style="-fx-padding: 20 57 0 57;">
+                        <Text fill="white" wrappingWidth="1042" style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            <![CDATA[
+                            🎓 Academic Opportunities
+
+                            Python is widely used in schools, colleges, universities, and research institutions around the world. Learning Python can prepare students for many academic fields, including:
+
+                            Computer Science
+                            Artificial Intelligence (AI)
+                            Data Science
+                            Machine Learning
+                            Cybersecurity
+                            Software Engineering
+                            Robotics
+                            Scientific Research
+                            Bioinformatics
+                            Statistics and Mathematics
+                            Environmental Science
+                            Engineering
+
+                            Many universities choose Python as the first programming language because it is beginner-friendly while remaining powerful enough for advanced research.
+                            ]]>
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Work Opportunities Section -->
+                    <VBox spacing="5" prefWidth="1045" style="-fx-padding: 20 55 0 55;">
+                        <Text fill="white" wrappingWidth="1045" style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            <![CDATA[
+                            💼 Work Opportunities
+
+                            Python is one of the most in-demand programming languages in the technology industry. It opens the door to many career paths across different industries.
+
+                            Popular Careers
+
+                            Software Developer
+                            Python Developer
+                            Data Scientist
+                            Data Analyst
+                            Machine Learning Engineer
+                            AI Engineer
+                            Cybersecurity Analyst
+                            Web Developer
+                            Automation Engineer
+                            Cloud Engineer
+                            DevOps Engineer
+                            Robotics Engineer
+                            Research Scientist
+
+                            Python is used by startups, government organizations, research labs, financial institutions, healthcare companies, and many of the world's largest technology companies.
+                            ]]>
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Salary Section -->
+                    <VBox spacing="5" prefWidth="1033" style="-fx-padding: 20 61 0 61;">
+                        <Text fill="white" wrappingWidth="1033" style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            <![CDATA[
+                            💰 Python Developer Salary Summary (Greece)
+
+                            Average Salary: €20,000–€30,000 per year (entry-level)
+                            Mid-Level: €30,000–€45,000 per year
+                            Senior: €45,000–€60,000+ per year
+                            Top Remote/International Roles: Can exceed €80,000 per year.
+                            ]]>
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Fun Facts Section -->
+                    <VBox spacing="5" prefWidth="1043" style="-fx-padding: 20 56 40 56;">
+                        <Text fill="white" wrappingWidth="1043" style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            <![CDATA[
+                            🎉 Fun Facts
+
+                            🐍 Python was not named after the snake. It was named after the British comedy television show Monty Python's Flying Circus.
+                            📅 Python was created by Guido van Rossum and officially released in 1991.
+                            🌍 Python consistently ranks among the most popular programming languages in the world.
+                            🤖 Python is one of the leading programming languages for Artificial Intelligence and Machine Learning.
+                            🚀 Scientists and engineers use Python for space exploration, robotics, and scientific research.
+                            🎮 Python can be used to build games, websites, desktop applications, automation tools, and AI systems.
+                            📦 Python has one of the world's largest collections of reusable libraries, making development faster and easier.
+                            ❤️ Python's design philosophy emphasizes readability, making code easier to understand and maintain.
+                            ]]>
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Bottom padding spacer -->
+                    <VBox prefHeight="40" />
+                </children>
+            </VBox>
+        </ScrollPane>
+    </children>
+</AnchorPane>

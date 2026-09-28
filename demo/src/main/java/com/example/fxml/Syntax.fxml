@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            prefWidth="1156" 
+            prefHeight="1633">
+    
+    <children>
+        <!-- ScrollPane that fills the entire AnchorPane -->
+        <ScrollPane fx:id="scrollPane" 
+                    fitToWidth="true"
+                    fitToHeight="false"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 0;"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0">
+            
+            <!-- Content container with gradient background -->
+            <VBox fx:id="contentBox" 
+                  style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #ce1818, #c27305);"
+                  prefWidth="1156"
+                  minHeight="7661">
+                
+                <children>
+                    <!-- Top padding spacer -->
+                    <VBox prefHeight="13" />
+                    
+                    <!-- Header/Title -->
+                    <VBox alignment="CENTER_LEFT" style="-fx-padding: 0 0 0 79;">
+                        <Text text="Useful Syntax for Python" 
+                              fill="white"
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 48px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Encapsulated Code Section -->
+                    <VBox style="-fx-padding: 20 573 0 37;">
+                        <Text text="SOS"
+                              fill="#67262f" 
+                              wrappingWidth="536" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 36px;">
+                        </Text>
+                        <Text text="Encapsulated Code&#10;&#10;In Python, indentation is used to group lines of code into a block. This is called an encapsulated code block. Any line that ends with a colon (:) starts a new block. Every line inside that block must be indented by"
+                              fill="white" 
+                              wrappingWidth="536" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                        </Text>
+                    </VBox>
+                    
+                    <!-- Code Example Box 1 -->
+                    <VBox style="-fx-padding: 0 74 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="if condition: &#10;    # Code inside the block &#10;    # This line is also inside the block  &#10;# This line is outside the block  &#10;&#10;Example&#10;  &#10;if hero.can_move_right():  &#10;   hero.move_right()   &#10;   hero.move_right() &#10;&#10;hero.move_left()&#10;&#10;Result&#10;&#10;Only the indented lines are executed when the condition is True and the hero moves two steps to the right. The last line is outside the block, so the hero always moves one tile to the left no matter the condition."
+                                  fill="black" 
+                                  wrappingWidth="456" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- If Statement -->
+                    <VBox style="-fx-padding: 20 691 0 37;">
+                        <Text text="If&#10;&#10;Use if to run code only when a condition is True."
+                              fill="white" 
+                              wrappingWidth="435" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 131 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="if condition: &#10;     # Code to execute &#10;&#10; Example &#10;if hero.can_move_right():   &#10;     hero.move_right()&#10;&#10;If the hero can move to the right, it moves one tile to the right."
+                                  fill="black" 
+                                  wrappingWidth="453" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- If/Else Statement -->
+                    <VBox style="-fx-padding: 20 727 0 37;">
+                        <Text text="If / Else&#10;&#10;Use else to run code when the condition is False."
+                              fill="white" 
+                              wrappingWidth="399" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 169 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="if condition: &#10;   # Code if True &#10;else: &#10;   # Code if False  &#10;&#10;Example  &#10;if hero.can_move_up():&#10;   hero.move_up() &#10;else: &#10;   hero.move_right()&#10;&#10;The hero moves up if possible; otherwise, it moves right."
+                                  fill="black" 
+                                  wrappingWidth="414" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- While Loop -->
+                    <VBox style="-fx-padding: 20 685 0 37;">
+                        <Text text="While Loop&#10;&#10;Use a while loop to repeat code while a condition is True."
+                              fill="white" 
+                              wrappingWidth="439" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 169 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="while condition: &#10;        # Repeated code  &#10;&#10;Example  &#10;while hero.can_move_right():   &#10;        hero.move_right()&#10;&#10;The hero keeps moving right until it can no longer move in that direction."
+                                  fill="black" 
+                                  wrappingWidth="414" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- For Loop -->
+                    <VBox style="-fx-padding: 20 668 0 37;">
+                        <Text text="For Loop&#10;&#10;Use a for loop to repeat code a specific number of times or for each item in a sequence."
+                              fill="white" 
+                              wrappingWidth="460" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 156 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="for i in range(5): &#10;     # Code  &#10;&#10;Example  &#10;for i in range(3): &#10;     hero.move_right()&#10;&#10;The hero moves right exactly three times."
+                                  fill="black" 
+                                  wrappingWidth="428" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- Functions -->
+                    <VBox style="-fx-padding: 20 684 0 37;">
+                        <Text text="Functions&#10;&#10;Functions let you group code that can be used multiple times."
+                              fill="white" 
+                              wrappingWidth="444" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 142 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="def function_name(): &#10;     # Code  &#10;&#10;function_name()  &#10;&#10;Example  &#10;&#10;def go_right_twice(): &#10;     hero.move_right() &#10;     hero.move_right()  &#10;&#10;go_right_twice()&#10;&#10;The hero moves two tiles to the right by calling the function once."
+                                  fill="black" 
+                                  wrappingWidth="442" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- Variables -->
+                    <VBox style="-fx-padding: 20 749 0 37;">
+                        <Text text="Variables&#10;&#10;Variables store values."
+                              fill="white" 
+                              wrappingWidth="379" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 158 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="variable_name = value &#10;&#10;Example  &#10;steps = 3  &#10;for i in range(steps): &#10;    hero.move_right()&#10;&#10;The hero moves right three times using the value stored in the variable."
+                                  fill="black" 
+                                  wrappingWidth="406" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- Lists -->
+                    <VBox style="-fx-padding: 20 723 0 37;">
+                        <Text text="Lists&#10;&#10;Lists store multiple values in one variable."
+                              fill="white" 
+                              wrappingWidth="405" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 144 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="my_list = [item1, item2, item3]  &#10;&#10;Example  &#10;&#10;directions = [&quot;up&quot;, &quot;right&quot;, &quot;down&quot;]  &#10;for direction in directions: &#10;     hero.move(direction)&#10;&#10;The hero moves up, then right, and finally down."
+                                  fill="black" 
+                                  wrappingWidth="410" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- Boolean Values -->
+                    <VBox style="-fx-padding: 20 716 0 37;">
+                        <Text text="Boolean Values&#10;&#10;A boolean can only be True or False."
+                              fill="white" 
+                              wrappingWidth="412" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 163 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="True &#10;False  &#10;&#10;Example  &#10;&#10;door_open = True  &#10;if door_open: &#10;   hero.move_right()&#10;&#10;Since the value is True, the hero moves right."
+                                  fill="black" 
+                                  wrappingWidth="420" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- Comparison Operators -->
+                    <VBox style="-fx-padding: 20 694 0 37;">
+                        <Text text="Comparison Operators&#10;&#10;Compare two values."
+                              fill="white" 
+                              wrappingWidth="434" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 155 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="==   Equal to &#10;!=   Not equal to &#10;&gt;    Greater than &#10;&lt;    Less than &#10;&gt;=   Greater than or equal to &#10;&lt;=   Less than or equal to  &#10;&#10;Example &#10;&#10;coins = 5  &#10;&#10;if coins &gt;= 3: &#10;    hero.open_chest()&#10;&#10;Since 5 is greater than or equal to 3, the hero opens the chest."
+                                  fill="black" 
+                                  wrappingWidth="428" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- Logical Operators -->
+                    <VBox style="-fx-padding: 20 689 0 37;">
+                        <Text text="Logical Operators&#10;&#10;Combine multiple conditions."
+                              fill="white" 
+                              wrappingWidth="439" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 148 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="and   Both conditions must be True &#10;&#10;or    At least one condition must be True&#10;&#10;not   Reverses a boolean value  &#10;&#10;Example  &#10;&#10;if hero.has_key() and hero.on_door(): &#10;    hero.open_door()&#10;&#10;The hero opens the door only if it has the key and is standing on the door."
+                                  fill="black" 
+                                  wrappingWidth="455" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Separator Line -->
+                    <Separator style="-fx-background-color: black; -fx-pref-height: 2;" VBox.margin="$x{20,0,20,0}"/>
+
+                    
+                    <!-- Comments -->
+                    <VBox style="-fx-padding: 20 735 0 37;">
+                        <Text text="Comments&#10;&#10;Comments help explain your code. Python ignores them when running the program."
+                              fill="white" 
+                              wrappingWidth="393" 
+                              style="-fx-font-family: 'Irish Grover'; -fx-font-size: 32px;">
+                        </Text>
+                    </VBox>
+                    
+                    <VBox style="-fx-padding: 0 131 0 590;">
+                        <VBox style="-fx-background-color: rgba(255, 255, 255, 0.66); -fx-padding: 20; -fx-border-radius: 5;">
+                            <Text text="# This is a comment  &#10;&#10;Example  &#10;&#10;# Move to the exit &#10;hero.move_right() &#10;hero.move_up()&#10;&#10;The comment is ignored by Python, and the hero moves right and then up."
+                                  fill="black" 
+                                  wrappingWidth="424" 
+                                  style="-fx-font-family: 'Irish Grover'; -fx-font-size: 24px;">
+                            </Text>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Bottom padding spacer -->
+                    <VBox prefHeight="40" />
+                </children>
+            </VBox>
+        </ScrollPane>
+    </children>
+</AnchorPane>
