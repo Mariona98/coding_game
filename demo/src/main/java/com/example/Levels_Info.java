@@ -19,10 +19,7 @@ public class Levels_Info {
         this.steps = 0;
     }
 
-    // =========================
-    // MAP
-    // =========================
-
+  
     public int getMap() {
         return map;
     }
@@ -31,9 +28,6 @@ public class Levels_Info {
         this.map = map;
     }
 
-    // =========================
-    // NUMBER OF LEVELS
-    // =========================
 
     public int getLevels() {
         return levels;
@@ -43,9 +37,6 @@ public class Levels_Info {
         this.levels = levels;
     }
 
-    // =========================
-    // PASSED LEVELS
-    // =========================
 
     public ArrayList<Integer> getPassedLevels() {
         return passedLevels;
@@ -65,9 +56,6 @@ public class Levels_Info {
         return passedLevels.contains(level);
     }
 
-    // =========================
-    // STEPS
-    // =========================
 
     public int getSteps() {
         return steps;
@@ -85,9 +73,6 @@ public class Levels_Info {
         steps += amount;
     }
 
-    // =========================
-    // SAVE GAME
-    // =========================
 
     public void saveGame(String filename) {
 
@@ -124,9 +109,6 @@ public class Levels_Info {
         }
     }
 
-    // =========================
-    // LOAD GAME
-    // =========================
 
     public void loadGame(String filename) {
 

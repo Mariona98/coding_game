@@ -12,7 +12,7 @@
             prefHeight="1633">
     
     <children>
-        <!-- ScrollPane that fills the entire AnchorPane -->
+        
         <ScrollPane fx:id="scrollPane" 
                     fitToWidth="true"
                     fitToHeight="false"
@@ -24,17 +24,17 @@
                     AnchorPane.leftAnchor="0"
                     AnchorPane.rightAnchor="0">
             
-            <!-- Content container with gradient background -->
+            
             <VBox fx:id="contentBox" 
                   style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #ce1818, #c27305);"
                   prefWidth="1156"
                   minHeight="1637">
                 
                 <children>
-                    <!-- Top padding spacer -->
+                    
                     <VBox prefHeight="48" />
                     
-                    <!-- Header/Title -->
+                    
                     <VBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 0 35;">
                         <Text text="AVAILABLE COMMANDS" 
                               fill="black"
@@ -43,7 +43,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- Hero Description -->
+                    
                     <VBox spacing="5" style="-fx-padding: 20 114 0 30;">
                         <Text fill="#100b4e" 
                               wrappingWidth="928" 
@@ -52,7 +52,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- hero.moveRight() -->
+                    
                     <VBox spacing="5" style="-fx-padding: 20 510 0 30;">
                         <Text fill="#100b4e" 
                               wrappingWidth="616" 
@@ -61,7 +61,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- hero.moveLeft() -->
+                    
                     <VBox spacing="5" style="-fx-padding: 20 581 0 30;">
                         <Text fill="#100b4e" 
                               wrappingWidth="545" 

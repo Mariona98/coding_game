@@ -6,12 +6,12 @@
 }
 
 
-/* 90s Pixel Art Circular Button */
+
 .circle-button {
     -fx-background-radius: 50%;
     -fx-background-color: #b8b8b8;
 
-    /* 30% transparent */
+    
     -fx-opacity: 0.7;
 
     -fx-text-fill: #000000;
@@ -39,7 +39,7 @@
 }
 
 
-/* Chunky pixel gradient */
+
 .circle-button {
     -fx-background-color:
         linear-gradient(
@@ -53,7 +53,7 @@
 }
 
 
-/* Scanline and pixel grid */
+
 .circle-button {
     -fx-background-color:
         linear-gradient(
@@ -82,7 +82,7 @@
 }
 
 
-/* Hover */
+
 .circle-button:hover {
     -fx-background-color:
         linear-gradient(
@@ -99,7 +99,7 @@
 }
 
 
-/* Pressed */
+
 .circle-button:pressed {
     -fx-background-color:
         linear-gradient(

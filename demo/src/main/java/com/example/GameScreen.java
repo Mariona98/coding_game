@@ -47,6 +47,8 @@ private StackPane dialoguePane;
 
     private String[] dialogues;
     private int currentDialogue = 0;
+    private Levels_Info saveData;
+private String saveFilename;
 
 
 
@@ -64,6 +66,7 @@ private StackPane dialoguePane;
     public void initialize() {
     Level_1_Data level1 = new Level_1_Data();
 
+saveData = new Levels_Info();
     engine = new Level_1_Mechanics(level1);
 
     setDialogues(Level_1_Data.DIALOGUES);
@@ -71,7 +74,16 @@ private StackPane dialoguePane;
     updateVisuals();
 }
 
+public void setSaveFilename(String saveFilename) {
 
+    this.saveFilename = saveFilename;
+
+    System.out.println("Save file received: " + saveFilename);
+
+    if (saveFilename != null && !saveFilename.isEmpty()) {
+        saveData.loadGame(saveFilename);
+    }
+}
 
 public void setDialogues(String[] dialogues) {
     this.dialogues = dialogues;
@@ -205,24 +217,104 @@ public void setDialogues(String[] dialogues) {
 
 
 if (engine.checkWin()) {
+
     System.out.println("LEVEL COMPLETE!");
     System.out.println("===== RUN FINISHED =====");
 
-    Parent root = FXMLLoader.load(
-        getClass().getResource("/com/example/fxml/game_map.fxml")
+
+    // =========================
+    // SAVE LEVEL PROGRESS
+    // =========================
+
+    if (saveData != null) {
+
+        saveData.passLevel(1);
+
+        if (saveFilename != null && !saveFilename.isEmpty()) {
+
+            saveData.saveGame(saveFilename);
+
+            System.out.println(
+                "Level 1 saved to: " + saveFilename
+            );
+        }
+    }
+
+
+    // =========================
+    // SUCCESS MESSAGE
+    // =========================
+
+    javafx.scene.control.Alert alert =
+        new javafx.scene.control.Alert(
+            javafx.scene.control.Alert.AlertType.INFORMATION
+        );
+
+    alert.setTitle("Level Complete!");
+
+    alert.setHeaderText(null);
+
+    alert.setContentText(
+        "Level passed successfully!"
     );
 
-    stage = (Stage) Run.getScene().getWindow();
+   alert.show();
 
-    scene = new Scene(root);
+
+    // =========================
+    // OPEN GAME MAP
+    // =========================
+
+    FXMLLoader loader = new FXMLLoader(
+        getClass().getResource(
+            "/com/example/fxml/game_map.fxml"
+        )
+    );
+
+    Parent root = loader.load();
+
+
+    // Get GameMap controller
+    GameMap gameMap =
+        loader.getController();
+
+
+    // Pass the save file to GameMap
+    gameMap.setSaveFilename(
+        saveFilename
+    );
+
+
+    // Get current window
+    stage =
+        (Stage) Run
+            .getScene()
+            .getWindow();
+
+
+    scene =
+        new Scene(
+            root
+        );
+
 
     stage.setScene(scene);
+
+    stage.setTitle(
+        "Coders' Haven"
+    );
+
+    stage.setResizable(false);
+
+    stage.centerOnScreen();
+
     stage.show();
 
+
     return;
-}
-        
-        updateVisuals();
+}        
+       
+updateVisuals();
         
         
         

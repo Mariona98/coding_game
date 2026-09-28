@@ -1,7 +1,4 @@
 
-/* =========================================
-   HAND-DRAWN PENCIL BUTTON
-   ========================================= */
 
 .button {
     -fx-cursor: hand;
@@ -12,9 +9,7 @@
 
     -fx-text-fill: rgba(153, 153, 153, 0.763);
 
-    /*
-     * BLACK GRAPHITE BASE
-     */
+
     -fx-background-color:
         linear-gradient(
             to right,
@@ -52,18 +47,14 @@
 
     -fx-background-radius: 24px;
 
-    /*
-     * THICK GRAPHITE OUTLINE
-     */
+
     -fx-border-color: #000000;
     -fx-border-width: 3px;
     -fx-border-radius: 24px;
 
     -fx-padding: 12px 28px;
 
-    /*
-     * DARK GRAPHITE SHADOW
-     */
+
     -fx-effect:
         dropshadow(
             gaussian,
@@ -74,11 +65,6 @@
             3
         );
 }
-
-
-/* =========================================
-   HOVER
-   ========================================= */
 
 .button:hover {
     -fx-background-color:
@@ -127,9 +113,6 @@
 }
 
 
-/* =========================================
-   PRESSED
-   ========================================= */
 
 .button:pressed {
     -fx-background-color:
@@ -160,18 +143,12 @@
 }
 
 
-/* =========================================
-   FOCUS
-   ========================================= */
 
 .button:focused {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
-/* =========================================
-   TOGGLE BUTTONS
-   ========================================= */
 
 .toggle-button {
     -fx-background-radius: 24px;
@@ -186,7 +163,6 @@
 }
 
 
-/* Toggle selected state */
 
 .toggle-button:selected {
     -fx-background-color:
@@ -213,7 +189,6 @@
 }
 
 
-/* Toggle hover */
 
 .toggle-button:selected:hover {
     -fx-background-color:
@@ -225,7 +200,6 @@
 }
 
 
-/* Toggle pressed */
 
 .toggle-button:selected:pressed {
     -fx-translate-y: 3px;

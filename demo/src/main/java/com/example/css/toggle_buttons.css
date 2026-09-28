@@ -1,4 +1,4 @@
-/* === Shared Button Style === */
+
 .toggle-button {
     -fx-cursor: hand;
     -fx-background-color: #182c7e;
@@ -20,21 +20,21 @@
     -fx-transition: all 0.15s ease-in-out;
 }
 
-/* Hover state */
+
 .toggle-button:hover {
     -fx-background-color:#1d3699;
     -fx-translate-y: 2px;
     -fx-effect: dropshadow(three-pass-box, #5c130d, 4, 0, 0, 2);
 }
 
-/* Active (pressed/toggled on) state */
+
 .toggle-button:selected {
     -fx-background-color: #1a3088;
     -fx-translate-y: 5px;
     -fx-effect: dropshadow(three-pass-box, rgba(177,133,151,0.2), 0, 0, 0, 0);
 }
 
-/* Optional: make icon colors softer when toggled off */
+
 .toggle-button .ikonli-font-icon {
     -fx-icon-color: #2d1b14;
 }

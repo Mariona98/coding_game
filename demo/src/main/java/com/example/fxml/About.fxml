@@ -12,7 +12,7 @@
             prefHeight="1633">
     
     <children>
-        <!-- ScrollPane that fills the entire AnchorPane -->
+        
         <ScrollPane fx:id="scrollPane" 
                     fitToWidth="true"
                     fitToHeight="false"
@@ -24,17 +24,17 @@
                     AnchorPane.leftAnchor="0"
                     AnchorPane.rightAnchor="0">
             
-            <!-- Content container with gradient background -->
+            
             <VBox fx:id="contentBox" 
                   style="-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #ce1818, #c27305);"
                   prefWidth="1156"
                   minHeight="1633">
                 
                 <children>
-                    <!-- Top padding spacer -->
+                    
                     <VBox prefHeight="27" />
                     
-                    <!-- Header/Title -->
+                    
                     <VBox alignment="CENTER" spacing="10" prefWidth="1156">
                         <Text text="About the game" 
                               fill="black"
@@ -43,7 +43,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- Purpose Section -->
+                   
                     <VBox layoutX="57" layoutY="213" spacing="5" prefWidth="1047" style="-fx-padding: 20 54 0 54;">
                         <Text text="Purpose" 
                               fill="white"
@@ -56,7 +56,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- Idea Section -->
+                    
                     <VBox layoutX="64" layoutY="513" spacing="5" prefWidth="1040" style="-fx-padding: 20 58 0 58;">
                         <Text text="Idea" 
                               fill="white"
@@ -69,7 +69,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- Story Section -->
+                    
                     <VBox layoutX="57" layoutY="798" spacing="5" prefWidth="1028" style="-fx-padding: 20 64 0 64;">
                         <Text text="Story" 
                               fill="white"
@@ -82,7 +82,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- Mechanics Section -->
+                    
                     <VBox layoutX="60" layoutY="1224" spacing="5" prefWidth="1042" style="-fx-padding: 20 57 40 57;">
                         <Text text="Mechanics" 
                               fill="white"
@@ -95,7 +95,7 @@
                         </Text>
                     </VBox>
                     
-                    <!-- Bottom padding spacer -->
+                  
                     <VBox prefHeight="40" />
                 </children>
             </VBox>
