@@ -31,12 +31,9 @@ public class GameMap {
 
     @FXML
     private void onLevelClicked() throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(
-            getClass().getResource(
-                "/com/example/fxml/GameScene.fxml"
-            )
-        );
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxml/GameScene.fxml"));
+        
+        
 
         Parent root = loader.load();
 
