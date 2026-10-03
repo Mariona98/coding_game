@@ -7,6 +7,12 @@ public class Level_1_Mechanics {
 
     private int heroX;
     private int heroY;
+    private final int startX;
+    private final int startY;
+    private final int buttonX;
+    private final int buttonY;
+    private final int doorX;
+    private final int doorY;
 
     
 
@@ -24,12 +30,34 @@ public boolean dooropened = false;
    
 
     public Level_1_Mechanics(Level_1_Data level) {
-        heroX = level.heroX;
-        heroY = level.heroY;
-     
-
-        levelStartTime = System.currentTimeMillis();
+        this(
+            level.heroX,
+            level.heroY,
+            Level_1_Data.BUTTON_X,
+            Level_1_Data.BUTTON_Y,
+            Level_1_Data.DOOR_X,
+            Level_1_Data.DOOR_Y
+        );
         System.out.println("Level 1 started.");
+    }
+
+    public Level_1_Mechanics(
+        int startX,
+        int startY,
+        int buttonX,
+        int buttonY,
+        int doorX,
+        int doorY
+    ) {
+        this.startX = startX;
+        this.startY = startY;
+        this.buttonX = buttonX;
+        this.buttonY = buttonY;
+        this.doorX = doorX;
+        this.doorY = doorY;
+        heroX = startX;
+        heroY = startY;
+        levelStartTime = System.currentTimeMillis();
     }
 
     public void executeCommand(Level_1_Commands cmd) {
@@ -81,7 +109,7 @@ public boolean dooropened = false;
        
     }
     public void updateButtonState() {
-        if (heroX == Level_1_Data.BUTTON_X && heroY == Level_1_Data.BUTTON_Y) {
+        if (heroX == buttonX && heroY == buttonY) {
             pressButton = true;
             this.dooropened = true;
             System.out.println("Button pressed!");
@@ -100,7 +128,7 @@ public boolean dooropened = false;
         return this.dooropened;
     }
     public boolean checkWin() {
-        if (isDoorOpen() && heroX == Level_1_Data.DOOR_X && heroY == Level_1_Data.DOOR_Y) {
+        if (isDoorOpen() && heroX == doorX && heroY == doorY) {
             System.out.println("Hero reached the open door. Level completed!");
             return true;
            
@@ -118,8 +146,8 @@ public boolean dooropened = false;
     public void resetGame() {
         resetTimes++;
 
-        heroX = Level_1_Data.HERO_START_X;
-        heroY = Level_1_Data.HERO_START_Y;
+        heroX = startX;
+        heroY = startY;
 
     
         GameOver = false;

@@ -5,7 +5,8 @@ import java.util.*;
 
 public class Python_Reader {
 
-   public static List<Level_1_Commands> runPython(String code) throws Exception {
+   public static List<Level_1_Commands> runPython(String code)
+       throws IOException, InterruptedException, PythonExecutionException {
 
     // create temporary script file
     File script = new File("script.py");
@@ -18,13 +19,14 @@ public class Python_Reader {
 
  File workingDir = new File("C:\\Users\\pittm\\OneDrive\\Desktop\\Paper");
 
-ProcessBuilder pb = new ProcessBuilder(
+    ProcessBuilder pb = new ProcessBuilder(
         "py",
         "coding_game\\demo\\src\\main\\java\\com\\example\\run_level.py",
         "script.py"
 );
 
 pb.directory(workingDir);
+pb.redirectErrorStream(true);
 
     Process process = pb.start();
 
@@ -33,24 +35,37 @@ pb.directory(workingDir);
     );
 
     List<Level_1_Commands> commands = new ArrayList<>();
+    StringBuilder errorOutput = new StringBuilder();
 
     String line;
 
     while ((line = reader.readLine()) != null) {
         System.out.println("PYTHON OUTPUT: " + line);
-        commands.add(Level_1_Commands.valueOf(line));
+        if (line.trim().isEmpty()) {
+            continue;
+        }
+
+        try {
+            commands.add(Level_1_Commands.valueOf(line.trim()));
+        } catch (IllegalArgumentException e) {
+            errorOutput.append(line).append(System.lineSeparator());
+        }
     }
-    BufferedReader errorReader =
-        new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-String errorLine;
-while ((errorLine = errorReader.readLine()) != null) {
-    System.out.println("PYTHON ERROR: " + errorLine);
-}
-
-    process.waitFor();
+    int exitCode = process.waitFor();
+    if (exitCode != 0 || errorOutput.length() > 0) {
+        throw new PythonExecutionException(errorOutput.toString().trim());
+    }
 
     return commands;
 }
+
+   public static class PythonExecutionException extends Exception {
+       private static final long serialVersionUID = 1L;
+
+       public PythonExecutionException(String output) {
+           super(output);
+       }
+   }
 
 }

@@ -12,7 +12,7 @@
          </font></Button>
       <Button fx:id="lv2" layoutX="142.0" layoutY="325.0" minHeight="78.0" minWidth="66.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="66.0" styleClass="circle-button" stylesheets="@../css/map.css" text="6" />
       <Button fx:id="lv3" layoutX="148.0" layoutY="172.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@../css/map.css" text="7" />
-      <Button fx:id="lv11" layoutX="173.0" layoutY="606.0" minHeight="76.0" minWidth="78.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="78.0" styleClass="circle-button" stylesheets="@../css/map.css" text="2">
+      <Button fx:id="lv11" layoutX="173.0" layoutY="606.0" minHeight="76.0" minWidth="78.0" mnemonicParsing="false" onAction="#onLevel2Clicked" prefHeight="76.0" prefWidth="78.0" styleClass="circle-button" stylesheets="@../css/map.css" text="2">
          <font>
             <Font size="9.0" />
          </font>
@@ -26,5 +26,6 @@
       <Button fx:id="lv22" layoutX="208.0" layoutY="383.0" minHeight="78.0" minWidth="66.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="66.0" styleClass="circle-button" stylesheets="@../css/map.css" text="5" />
       <Button fx:id="lv31" layoutX="84.0" layoutY="122.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@../css/map.css" text="8" />
       <Button fx:id="lv311" layoutX="142.0" layoutY="59.0" mnemonicParsing="false" styleClass="circle-button" stylesheets="@../css/map.css" text="9" />
+      <Button fx:id="mainMenuButton" layoutX="10.0" layoutY="764.0" mnemonicParsing="false" onAction="#onMainMenuClicked" prefHeight="42.0" prefWidth="132.0" stylesheets="@../css/menu_buttons.css" text="Main Menu" />
    </children>
 </Pane>

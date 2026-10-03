@@ -28,6 +28,9 @@ public class MainMenu {
     private Button LoadGame;
 
     @FXML
+    private Button ContinueGame;
+
+    @FXML
     private Button Settings;
 
     @FXML
@@ -58,6 +61,28 @@ private ListView<String> saveList;
     private static Scene scene;
     private static Stage stage;
      private final File saveDirectory =new File("saves");
+    private String continueSaveFilename;
+    private int continueLevelNumber = 1;
+    private boolean continueToMap;
+
+    public void setContinueGame(String saveFilename, int levelNumber) {
+        continueSaveFilename = saveFilename;
+        continueLevelNumber = levelNumber;
+        continueToMap = false;
+        setContinueVisible(saveFilename);
+    }
+
+    public void setContinueMap(String saveFilename) {
+        continueSaveFilename = saveFilename;
+        continueToMap = true;
+        setContinueVisible(saveFilename);
+    }
+
+    private void setContinueVisible(String saveFilename) {
+        boolean canContinue = saveFilename != null && !saveFilename.isEmpty();
+        ContinueGame.setVisible(canContinue);
+        ContinueGame.setManaged(canContinue);
+    }
 
     @FXML
     public void initialize() {
@@ -167,14 +192,14 @@ private void onLoadSelectedGameClicked() throws IOException {
 
     // Pass save filename to GameMap
     gameMap.setSaveFilename(
-        selectedSave
+        new File(saveDirectory, selectedSave).getPath()
     );
 
     stage =
         (Stage) LoadGame.getScene().getWindow();
 
     scene =
-        new Scene(root, 1260, 810);
+        new Scene(root);
 
     stage.setScene(scene);
     stage.centerOnScreen();
@@ -209,20 +234,20 @@ private void onLoadSelectedGameClicked() throws IOException {
     saveDirectory.mkdirs();
 }
 
-saveData.saveGame(
-    new File(
-        saveDirectory,
-        username + ".txt"
-    ).getPath()
-);
+File saveFile = new File(saveDirectory, username + ".txt");
+saveData.saveGame(saveFile.getPath());
 
         System.out.println("New game created for: " + username);
        
 
         // Now open the game map
-        Parent root = FXMLLoader.load(
+        FXMLLoader loader = new FXMLLoader(
             getClass().getResource("/com/example/fxml/game_map.fxml")
         );
+        Parent root = loader.load();
+
+        GameMap gameMap = loader.getController();
+        gameMap.setSaveFilename(saveFile.getPath());
 
         stage = (Stage) NewGame.getScene().getWindow();
         scene = new Scene(root);
@@ -260,6 +285,46 @@ private void onLoadGameClicked() {
 
     loadPane.setVisible(true);
 }
+
+    @FXML
+    private void onContinueGameClicked() throws IOException {
+        if (continueSaveFilename == null || continueSaveFilename.isEmpty()) {
+            return;
+        }
+
+        if (continueToMap) {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/example/fxml/game_map.fxml")
+            );
+            Parent root = loader.load();
+
+            GameMap gameMap = loader.getController();
+            gameMap.setSaveFilename(continueSaveFilename);
+
+            stage = (Stage) ContinueGame.getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+            return;
+        }
+
+        String fxmlPath = continueLevelNumber == 2
+            ? "/com/example/fxml/GameScene2.fxml"
+            : "/com/example/fxml/GameScene.fxml";
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent root = loader.load();
+
+        GameScreen gameScreen = loader.getController();
+        gameScreen.setLevelNumber(continueLevelNumber);
+        gameScreen.setSaveFilename(continueSaveFilename);
+
+        stage = (Stage) ContinueGame.getScene().getWindow();
+        scene = new Scene(root, 1260, 810);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
+    }
 
     // =========================
     // SETTINGS
