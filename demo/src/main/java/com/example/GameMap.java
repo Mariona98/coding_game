@@ -6,9 +6,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
+/**
+ * Controller for the level-selection screen. Loads save progress, shows each
+ * level's completion state, and opens the selected level or main menu.
+ */
 public class GameMap {
 
     @FXML
@@ -21,52 +28,100 @@ public class GameMap {
     private Button mainMenuButton;
 
     private String saveFilename;
+    private Levels_Info saveData = new Levels_Info();
 
-    // Receives the save filename from the menu or GameScreen.
+    /**
+     * Called by the menu/game screen after FXML loading to connect this map to
+     * the current save file and refresh the level buttons.
+     */
     public void setSaveFilename(String saveFilename) {
         this.saveFilename = saveFilename;
 
-        lv1.setText("1");
-        lv11.setText("2");
-        lv1.setDisable(false);
-        lv11.setDisable(false);
-        lv1.setStyle("");
-        lv11.setStyle("");
+        saveData = new Levels_Info();
         if (saveFilename != null && !saveFilename.isEmpty()) {
-            Levels_Info saveData = new Levels_Info();
             saveData.loadGame(saveFilename);
-            if (saveData.isLevelPassed(1)) {
-                markLevelPassed(lv1);
-            }
-            if (saveData.isLevelPassed(2)) {
-                markLevelPassed(lv11);
-            }
         }
+        configureLevelButton(lv1, 1);
+        configureLevelButton(lv11, 2);
 
         System.out.println("GameMap received save file: " + saveFilename);
     }
 
-    private void markLevelPassed(Button levelButton) {
-        levelButton.setDisable(true);
-        levelButton.setStyle(
-            "-fx-background-color: black; " +
-            "-fx-background-radius: 50%; " +
-            "-fx-border-color: #606060; " +
-            "-fx-border-radius: 50%; " +
-            "-fx-text-fill: white; " +
-            "-fx-opacity: 1; " +
-            "-fx-cursor: default;"
-        );
+    private void configureLevelButton(Button levelButton, int levelNumber) {
+        // The CSS class controls the visual style for completed levels.
+        boolean completed = saveData.isLevelPassed(levelNumber);
+        if (completed) {
+            if (!levelButton.getStyleClass().contains("completed")) {
+                levelButton.getStyleClass().add("completed");
+            }
+        } else {
+            levelButton.getStyleClass().remove("completed");
+        }
+    }
+
+    public void markLevelCompleted(int levelNumber) {
+        saveData.passLevel(levelNumber);
+        configureLevelButton(getLevelButton(levelNumber), levelNumber);
+    }
+
+    private Button getLevelButton(int levelNumber) {
+        switch (levelNumber) {
+            case 1:
+                return lv1;
+            case 2:
+                return lv11;
+            default:
+                throw new IllegalArgumentException(
+                    "No map button is configured for level " + levelNumber
+                );
+        }
     }
 
     @FXML
     private void onLevelClicked() throws IOException {
-        openLevel(1, "/com/example/fxml/GameScene.fxml", lv1);
+        if (showLevelInfo(1)) {
+            openLevel(1, "/com/example/fxml/GameScene.fxml", lv1);
+        }
     }
 
     @FXML
     private void onLevel2Clicked() throws IOException {
-        openLevel(2, "/com/example/fxml/GameScene2.fxml", lv11);
+        if (showLevelInfo(2)) {
+            openLevel(2, "/com/example/fxml/GameScene.fxml", lv11);
+        }
+    }
+
+    private boolean showLevelInfo(int levelNumber) {
+        // Let players review instructions and their best result before entering.
+        String description = levelNumber == 1
+            ? "Learn to activate the floor switch to open the door, then guide the hero to the exit."
+            : "The switch and door are close together. Plan the hero's moves carefully to reach the exit.";
+        description += "\n\nYou can revisit this level at any time.";
+
+        Integer bestSteps = saveData.getBestSteps(levelNumber);
+        if (bestSteps != null) {
+            description += "\nBest run: " + bestSteps + " steps.";
+        } else {
+            description += "\nBest run will be recorded when you finish the level.";
+        }
+
+        ButtonType startLevel = new ButtonType(
+            "Start Level",
+            ButtonBar.ButtonData.OK_DONE
+        );
+        ButtonType cancel = new ButtonType(
+            "Cancel",
+            ButtonBar.ButtonData.CANCEL_CLOSE
+        );
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Level " + levelNumber);
+        alert.setHeaderText("Level " + levelNumber + " Information");
+        alert.setContentText(description);
+        alert.getButtonTypes().setAll(startLevel, cancel);
+
+        return alert.showAndWait()
+            .filter(startLevel::equals)
+            .isPresent();
     }
 
     @FXML

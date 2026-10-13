@@ -1,12 +1,18 @@
 package com.example;
 
-//default settings, to be changed later 
+// This controller is currently unused; defaults and settings actions are placeholders.
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.stage.Stage;
 
+/**
+ * Separate settings-screen controller with placeholder defaults and console-only
+ * save behavior. It is not currently referenced by the project's FXML or Java
+ * navigation; the active settings controls are managed by {@link MainMenu}.
+ * Keep this class only if a separate settings window is planned.
+ */
 public class SettingsMenu {
     
     @FXML
@@ -36,6 +42,11 @@ public class SettingsMenu {
     @FXML
     public void initialize() {
         
+        difficultyComboBox.getItems().setAll("Easy", "Normal", "Hard");
+        languageComboBox.getItems().setAll("English");
+        resolutionComboBox.getItems().setAll("1280x720", "1920x1080");
+        fullscreenComboBox.getItems().setAll("Off", "On");
+
         loadSettings();
         
         

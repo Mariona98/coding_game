@@ -1,3 +1,4 @@
+<!-- Maven build: Java 11 compilation, JavaFX dependencies, bundled resources, and run entry point. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -11,6 +12,7 @@
         <javafx.version>21.0.2</javafx.version>
     </properties>
     <dependencies>
+        <!-- Controls/FXML provide the UI; media supports menu sounds and music. -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -30,6 +32,19 @@
 
     </dependencies>
     <build>
+        <!-- Python and UI resources live under src/main/java; FXML and assets also use src/main/resources. -->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                    <exclude>**/*.pyc</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -48,7 +63,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.6</version>
                 <configuration>
-                    <mainClass>com.example.App</mainClass>
+                    <mainClass>com.example/com.example.App</mainClass>
                     <options>
                         <option>--add-modules</option>
                         <option>javafx.controls,javafx.fxml,javafx.media</option>

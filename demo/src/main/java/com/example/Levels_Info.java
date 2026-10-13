@@ -4,19 +4,27 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Holds player save progress and reads/writes it in a simple text format.
+ * Use {@link #loadGame(String)} and {@link #saveGame(String)} to persist a save.
+ */
 public class Levels_Info {
 
     private int map;
     private int levels;
     private ArrayList<Integer> passedLevels;
     private int steps;
+    private final Map<Integer, Integer> bestStepsByLevel;
 
     public Levels_Info() {
         this.map = 1;
         this.levels = 0;
         this.passedLevels = new ArrayList<>();
         this.steps = 0;
+        this.bestStepsByLevel = new HashMap<>();
     }
 
   
@@ -56,6 +64,22 @@ public class Levels_Info {
         return passedLevels.contains(level);
     }
 
+    public Integer getBestSteps(int level) {
+        return bestStepsByLevel.get(level);
+    }
+
+    public boolean recordBestSteps(int level, int stepCount) {
+        if (stepCount < 0) {
+            throw new IllegalArgumentException("Step count cannot be negative.");
+        }
+        Integer currentBest = bestStepsByLevel.get(level);
+        if (currentBest == null || stepCount < currentBest) {
+            bestStepsByLevel.put(level, stepCount);
+            return true;
+        }
+        return false;
+    }
+
 
     public int getSteps() {
         return steps;
@@ -78,6 +102,7 @@ public class Levels_Info {
 
         try (FileWriter writer = new FileWriter(filename)) {
 
+            // Each field is stored on a separate line for simple manual inspection.
             writer.write("map:" + map + "\n");
             writer.write("levels:" + levels + "\n");
 
@@ -96,6 +121,16 @@ public class Levels_Info {
 
             writer.write("\n");
             writer.write("steps:" + steps + "\n");
+            writer.write("bestSteps:");
+            boolean firstBest = true;
+            for (Map.Entry<Integer, Integer> entry : bestStepsByLevel.entrySet()) {
+                if (!firstBest) {
+                    writer.write(",");
+                }
+                writer.write(entry.getKey() + "=" + entry.getValue());
+                firstBest = false;
+            }
+            writer.write("\n");
 
             System.out.println(
                 "Game saved successfully to: " + filename
@@ -123,6 +158,7 @@ public class Levels_Info {
 
             String[] lines = content.toString().split("\n");
 
+            // Parse known keys; unrecognized lines are ignored for basic compatibility.
             for (String line : lines) {
 
                 line = line.trim();
@@ -162,6 +198,21 @@ public class Levels_Info {
                     steps = Integer.parseInt(
                         line.substring(6)
                     );
+
+                } else if (line.startsWith("bestSteps:")) {
+                    bestStepsByLevel.clear();
+                    String data = line.substring("bestSteps:".length());
+                    if (!data.isEmpty()) {
+                        for (String record : data.split(",")) {
+                            String[] fields = record.split("=", 2);
+                            if (fields.length == 2) {
+                                bestStepsByLevel.put(
+                                    Integer.parseInt(fields[0].trim()),
+                                    Integer.parseInt(fields[1].trim())
+                                );
+                            }
+                        }
+                    }
                 }
             }
 

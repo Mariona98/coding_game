@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Maven/FXML sample primary view; not referenced by the current application navigation. -->
 
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>

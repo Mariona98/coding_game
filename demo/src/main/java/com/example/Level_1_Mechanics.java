@@ -1,21 +1,17 @@
 package com.example;
 
-import java.util.HashSet;
-import java.util.Set;
-
+/**
+ * Applies movement commands to a level, enforces tile/door rules, tracks run
+ * state, and reports win, movement, and elapsed-time information to the UI.
+ */
 public class Level_1_Mechanics {
 
     private int heroX;
     private int heroY;
     private final int startX;
     private final int startY;
-    private final int buttonX;
-    private final int buttonY;
-    private final int doorX;
-    private final int doorY;
-
-    
-
+    private final GameLevelData levelData;
+    private String lastMovementMessage;
 
 public boolean dooropened = false;
     public boolean GameOver = false;
@@ -29,38 +25,17 @@ public boolean dooropened = false;
 
    
 
-    public Level_1_Mechanics(Level_1_Data level) {
-        this(
-            level.heroX,
-            level.heroY,
-            Level_1_Data.BUTTON_X,
-            Level_1_Data.BUTTON_Y,
-            Level_1_Data.DOOR_X,
-            Level_1_Data.DOOR_Y
-        );
-        System.out.println("Level 1 started.");
-    }
-
-    public Level_1_Mechanics(
-        int startX,
-        int startY,
-        int buttonX,
-        int buttonY,
-        int doorX,
-        int doorY
-    ) {
-        this.startX = startX;
-        this.startY = startY;
-        this.buttonX = buttonX;
-        this.buttonY = buttonY;
-        this.doorX = doorX;
-        this.doorY = doorY;
-        heroX = startX;
-        heroY = startY;
+    public Level_1_Mechanics(GameLevelData levelData) {
+        this.levelData = levelData;
+        this.startX = levelData.getHeroStartX();
+        this.startY = levelData.getHeroStartY();
+        heroX = this.startX;
+        heroY = this.startY;
         levelStartTime = System.currentTimeMillis();
     }
 
     public void executeCommand(Level_1_Commands cmd) {
+        // Invalid/no-op moves leave the hero in place and expose a message to the UI.
         if (GameOver) {
             System.out.println("Command ignored because the game is over.");
             return;
@@ -70,46 +45,63 @@ public boolean dooropened = false;
             return;
         }
 
-        int oldX = heroX;
-        int oldY = heroY;
-        boolean moved = false;
+        lastMovementMessage = null;
+        int nextX = heroX;
+        int nextY = heroY;
 
         switch (cmd) {
             case MOVE_RIGHT:
-                heroX++;
-                moved = true;
+                nextX++;
                 break;
 
             case MOVE_LEFT:
-                heroX--;
-                moved = true;
+                nextX--;
                 break;
 
             case MOVE_UP:
-                heroY--;
-                moved = true;
+                nextY--;
                 break;
 
             case MOVE_DOWN:
-                heroY++;
-                moved = true;
+                nextY++;
                 break;
 
             default:
                 System.out.println("Unsupported Level 1 command.");
         }
 
-        if (!moved) {
+        if (nextX == heroX && nextY == heroY) {
             return;
         }
 
-        
+        GameLevelData.Tile tile = levelData.getTile(nextX, nextY);
+        if (tile == null) {
+            lastMovementMessage = levelData.getBoundaryMessage();
+            return;
+        }
+        if (!tile.isWalkable()) {
+            lastMovementMessage = tile.getMessage() != null
+                ? tile.getMessage()
+                : "That tile is blocked.";
+            return;
+        }
+        if (nextX == levelData.getDoorX()
+            && nextY == levelData.getDoorY()
+            && !dooropened) {
+            lastMovementMessage = "The door is closed. Find and press the switch first.";
+            return;
+        }
+
+        heroX = nextX;
+        heroY = nextY;
+        lastMovementMessage = tile.getMessage();
 
         System.out.println("Hero moved to (" + heroX + ", " + heroY + ").");
        
     }
     public void updateButtonState() {
-        if (heroX == buttonX && heroY == buttonY) {
+        // Standing on the switch opens the door; stepping away leaves it open.
+        if (heroX == levelData.getButtonX() && heroY == levelData.getButtonY()) {
             pressButton = true;
             this.dooropened = true;
             System.out.println("Button pressed!");
@@ -128,7 +120,9 @@ public boolean dooropened = false;
         return this.dooropened;
     }
     public boolean checkWin() {
-        if (isDoorOpen() && heroX == doorX && heroY == doorY) {
+        if (isDoorOpen()
+            && heroX == levelData.getDoorX()
+            && heroY == levelData.getDoorY()) {
             System.out.println("Hero reached the open door. Level completed!");
             return true;
            
@@ -144,12 +138,14 @@ public boolean dooropened = false;
 
 
     public void resetGame() {
+        // Reset current run state while preserving the total number of resets.
         resetTimes++;
 
         heroX = startX;
         heroY = startY;
-
-    
+        dooropened = false;
+        pressButton = false;
+        lastMovementMessage = null;
         GameOver = false;
         levelStartTime = System.currentTimeMillis();
 
@@ -175,6 +171,8 @@ public boolean dooropened = false;
         return heroY;
     }
 
-    
+    public String getLastMovementMessage() {
+        return lastMovementMessage;
+    }
 
 }
