@@ -28,11 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-/**
- * FXML controller for gameplay: selects level data, submits the player's Python
- * code, animates generated moves, updates visuals, and saves completed runs.
- * UI element fields are injected from GameScene.fxml.
- */
+
 public class GameScreen {
 
     @FXML
@@ -95,7 +91,7 @@ private String saveFilename;
     private int currentRunSteps = 0;
     private int levelNumber = 1;
 
-    // FXML lifecycle hook: initialize the default level after controls are injected.
+    /** Prepares save data, the default level, dialogue, and initial visuals after FXML injection. */
     public void initialize() {
         saveData = new Levels_Info();
         updateStepCounter();
@@ -104,13 +100,16 @@ private String saveFilename;
         updateVisuals();
     }
 
+    // Selects the level requested by the map and refreshes all level-dependent content. 
     public void setLevelNumber(int levelNumber) {
         this.levelNumber = levelNumber;
+        // FXML initializes level 1 first; the map calls this to apply the chosen level.
         configureLevel();
         setLevelDialogues();
         updateVisuals();
     }
 
+    /** Loads the selected level configuration and recreates its movement engine. */
     private void configureLevel() {
         // Match the data configuration to this screen's grid and reset the engine.
         switch (levelNumber) {
@@ -124,6 +123,7 @@ private String saveFilename;
                 throw new IllegalArgumentException("No data is configured for level " + levelNumber);
         }
         engine = new Level_1_Mechanics(levelData);
+        
         if (levelData.getWidth() != grid.getColumnConstraints().size()
             || levelData.getHeight() != grid.getRowConstraints().size()) {
             throw new IllegalStateException(
@@ -133,11 +133,13 @@ private String saveFilename;
         levelBackground.setImage(loadImage(levelData.getBackgroundPath()));
     }
 
+    /** Loads the dialogue sequence belonging to the currently selected level. */
     private void setLevelDialogues() {
         setDialogues(levelData.getDialogues());
     }
 
-public void setSaveFilename(String saveFilename) {
+    /** Associates this screen with a save file and loads its recorded progress. */
+    public void setSaveFilename(String saveFilename) {
 
     this.saveFilename = saveFilename;
 
@@ -148,6 +150,7 @@ public void setSaveFilename(String saveFilename) {
     }
 }
 
+    /** Returns to the level map while preserving the active save-file selection. */
     @FXML
     private void onReturnToMapClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -167,7 +170,8 @@ public void setSaveFilename(String saveFilename) {
         stage.show();
     }
 
-public void setDialogues(String[] dialogues) {
+    /** Sets the dialogue sequence and displays its first line when one is available. */
+    public void setDialogues(String[] dialogues) {
     this.dialogues = dialogues;
     currentDialogue = 0;
 
@@ -177,6 +181,7 @@ public void setDialogues(String[] dialogues) {
     }
 }
 
+    /** Advances the current dialogue or hides the dialogue panel when it is finished. */
     @FXML
     private void onDialogueClicked() {
         if (dialogues == null || dialogues.length == 0) {
@@ -191,6 +196,8 @@ public void setDialogues(String[] dialogues) {
             dialoguePane.setVisible(false);
         }
     }
+
+    /** Runs the player's Python code and starts animating its returned movement commands. */
     @FXML
     private void onRunClicked() throws Exception {
         // Convert submitted Python to commands first, then animate them on the JavaFX thread.
@@ -252,6 +259,7 @@ public void setDialogues(String[] dialogues) {
         executeNextCommand();
     }
 
+    /** Shows a failure message and resets the hero to the selected level's start state. */
     private void finishFailedRun(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Level Failed");
@@ -263,6 +271,7 @@ public void setDialogues(String[] dialogues) {
         updateVisuals();
     }
     
+    /** Executes the next queued move, updates the scene, and handles tile messages. */
     private void executeNextCommand() throws IOException{
        
         // Check if all commands are executed
@@ -311,6 +320,7 @@ public void setDialogues(String[] dialogues) {
         continueAfterCommand();
     }
 
+    /** Checks for a win, then schedules the next queued move after the animation delay. */
     private void continueAfterCommand() {
         if (engine.checkWin()) {
             finishLevel();
@@ -330,6 +340,7 @@ public void setDialogues(String[] dialogues) {
         delay.play();
     }
 
+    /** Records level completion, saves progress, and returns the player to the map. */
     private void finishLevel() {
         // Persist progress and offer the player a route back to the level map.
         System.out.println("LEVEL COMPLETE!");
@@ -338,6 +349,7 @@ public void setDialogues(String[] dialogues) {
         saveData.passLevel(levelNumber);
         saveData.setLevels(Math.max(saveData.getLevels(), levelNumber));
         saveData.setSteps(currentRunSteps);
+        //check to save only the lowest and the one that passed
         saveData.recordBestSteps(levelNumber, currentRunSteps);
 
         if (saveFilename != null && !saveFilename.isEmpty()) {
@@ -368,6 +380,7 @@ public void setDialogues(String[] dialogues) {
         alert.show();
     }
 
+    /** Loads the map screen and refreshes its completion state for the finished level. */
     private void openGameMap() throws IOException {
         FXMLLoader loader = new FXMLLoader(
             getClass().getResource("/com/example/fxml/game_map.fxml")
@@ -387,6 +400,7 @@ public void setDialogues(String[] dialogues) {
         stage.show();
     }
     
+    /** Updates the hero, switch, and door positions and images from the engine state. */
     private void updateVisuals() {
         // Synchronize map objects and their images with the current engine state.
         setGridPosition(hero, engine.getHeroX(), engine.getHeroY());
@@ -398,6 +412,7 @@ public void setDialogues(String[] dialogues) {
         String doorImagePath = engine.isDoorOpen()
             ? "/com/example/css/door-open.png"
             : "/com/example/css/door (2).png";
+            //change to actuall understanding?
         String buttonImagePath = engine.isDoorOpen()
             ? "/com/example/css/button-pressed.png"
             : "/com/example/css/button.png";
@@ -405,11 +420,13 @@ public void setDialogues(String[] dialogues) {
         button.setImage(loadImage(buttonImagePath));
     }
 
+    /** Places an image node at the specified column and row in the game grid. */
     private void setGridPosition(ImageView image, int x, int y) {
         GridPane.setColumnIndex(image, x);
         GridPane.setRowIndex(image, y);
     }
 
+    /** Loads an image resource or throws an explicit error if the resource is missing. */
     private Image loadImage(String resourcePath) {
         URL resource = getClass().getResource(resourcePath);
         if (resource == null) {
@@ -418,6 +435,7 @@ public void setDialogues(String[] dialogues) {
         return new Image(resource.toExternalForm());
     }
 
+    /** Displays a tile's message and resumes command execution after the alert closes. */
     private void showTileMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Level " + levelNumber);
@@ -427,6 +445,7 @@ public void setDialogues(String[] dialogues) {
         alert.show();
     }
 
+    /** Synchronizes the step-counter label with the number of moves in the current run. */
     private void updateStepCounter() {
         if (stepCounter != null) {
             stepCounter.setText("Steps: " + currentRunSteps);
@@ -435,8 +454,10 @@ public void setDialogues(String[] dialogues) {
 
 
    
+    /** Opens command guidance configured specifically for the selected level. */
     @FXML
     private void onScrollclick() {
+        // Command guidance is level-specific and is built from the selected level data.
         ScrollPane commandContent = new ScrollPane(createCommandReference());
         commandContent.setFitToWidth(true);
         commandContent.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -444,8 +465,10 @@ public void setDialogues(String[] dialogues) {
         openInfoPopup("Available Commands - Level " + levelNumber, commandContent);
     }
 
+    /** Opens the shared Python syntax reference used across all levels. */
     @FXML
     private void onBookclick() {
+        // Python syntax applies to every level, so this reference stays shared.
         ScrollPane syntaxContent = new ScrollPane(createSyntaxReference());
         syntaxContent.setFitToWidth(true);
         syntaxContent.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -453,6 +476,7 @@ public void setDialogues(String[] dialogues) {
         openInfoPopup("Useful Syntax", syntaxContent);
     }
 
+    /** Closes the help popup and clears its previously displayed content. */
     @FXML
     private void onInfoPopupCloseClicked() {
         infoPopup.setVisible(false);
@@ -460,10 +484,12 @@ public void setDialogues(String[] dialogues) {
         infoPopupContent.getChildren().clear();
     }
 
+    /** Resizes the supplied help content to fit the popup and displays it with a title. */
     private void openInfoPopup(String title, Parent content) {
         if (!(content instanceof Region)) {
             throw new IllegalArgumentException("Popup content must have a resizable root.");
         }
+        // Let the help content resize to the popup instead of preserving its preferred size.
         Region contentRegion = (Region) content;
         contentRegion.setMinSize(0, 0);
         contentRegion.setPrefSize(1080, 650);
@@ -475,11 +501,13 @@ public void setDialogues(String[] dialogues) {
         infoPopup.setVisible(true);
     }
 
+    /** Builds the command-help pane from the selected level's help configuration. */
     private VBox createCommandReference() {
         VBox content = new VBox(18);
         content.setPadding(new Insets(30, 40, 30, 40));
         content.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #ce1818, #c27305);");
 
+        // Each level owns its objective text and command examples in GameLevelData.
         Label introduction = new Label(levelData.getCommandHelpIntroduction());
         introduction.setWrapText(true);
         introduction.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
@@ -497,6 +525,7 @@ public void setDialogues(String[] dialogues) {
         return content;
     }
 
+    /** Builds the shared in-game reference for Python control-flow and data syntax. */
     private VBox createSyntaxReference() {
         // Build the in-game Python help content without a separate FXML file.
         VBox content = new VBox(18);
@@ -562,6 +591,7 @@ public void setDialogues(String[] dialogues) {
         return content;
     }
 
+    /** Creates one formatted help section containing a heading, explanation, and example. */
     private VBox createSyntaxSection(String heading, String explanation, String example) {
         VBox section = new VBox(8);
         Label headingLabel = new Label(heading);

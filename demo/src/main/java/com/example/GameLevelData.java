@@ -1,51 +1,55 @@
 package com.example;
 
 /**
- * Immutable configuration for a level: map dimensions, object locations,
- * dialogue, background image, and per-tile movement messages.
- * Create one configuration per level and pass it to {@link Level_1_Mechanics}.
+ * Shared immutable structure for describing a level. Each level supplies its
+ * own values for the map, object positions, dialogue, background, tile messages,
+ * and command help; the game screen and mechanics consume the same structure.
  */
 public final class GameLevelData {
 
     /** Describes whether a map tile can be entered and any message shown there. */
     public static final class Tile {
         private final boolean walkable;
-        private final String message;
+   
 
+        /** Creates a tile with its movement rule and optional arrival message. */
         public Tile(boolean walkable, String message) {
             this.walkable = walkable;
-            this.message = message;
+            
         }
 
+        /** Returns whether the hero can enter this tile. */
         public boolean isWalkable() {
             return walkable;
         }
 
-        public String getMessage() {
-            return message;
-        }
+
     }
 
-    /** One level-specific entry shown in the in-game command reference. */
+    //Maybe will be used
     public static final class HelpSection {
         private final String heading;
         private final String explanation;
         private final String example;
 
+        
         public HelpSection(String heading, String explanation, String example) {
             this.heading = heading;
             this.explanation = explanation;
             this.example = example;
         }
 
+        
         public String getHeading() {
             return heading;
         }
 
+       
         public String getExplanation() {
             return explanation;
         }
 
+       
         public String getExample() {
             return example;
         }
@@ -66,6 +70,7 @@ public final class GameLevelData {
     private final HelpSection[] commandHelpSections;
     private final Tile[][] tiles;
 
+
     public GameLevelData(
         int width,
         int height,
@@ -82,7 +87,7 @@ public final class GameLevelData {
         HelpSection[] commandHelpSections,
         Tile[][] tiles
     ) {
-        // Validate the map before copying it so later gameplay can trust its dimensions.
+        
         if (width <= 0 || height <= 0 || tiles == null || tiles.length != height) {
             throw new IllegalArgumentException("Tile table dimensions do not match the level size.");
         }
@@ -106,9 +111,6 @@ public final class GameLevelData {
                 }
             }
         }
-        validatePosition(heroStartX, heroStartY, width, height, "hero start");
-        validatePosition(buttonX, buttonY, width, height, "button");
-        validatePosition(doorX, doorY, width, height, "door");
 
         this.width = width;
         this.height = height;
@@ -129,49 +131,65 @@ public final class GameLevelData {
         }
     }
 
+    
     public static Tile[][] createOpenTileTable(int width, int height) {
-        // New levels can start with a fully walkable map, then override special tiles.
+        
         Tile[][] tiles = new Tile[height][width];
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                tiles[row][column] = new Tile(true, null);
+                tiles[row][column] = new Tile(false, null);
             }
         }
         return tiles;
     }
 
+    
     public int getWidth() {
         return width;
     }
+    public void setWalkable(int x, int y, boolean walkable) {
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            throw new IllegalArgumentException("Tile position is outside the tile table.");
+        }
+        tiles[y][x] = new Tile(walkable, null);
+    }
 
+   
     public int getHeight() {
         return height;
     }
 
+    
     public int getHeroStartX() {
         return heroStartX;
     }
 
+    
     public int getHeroStartY() {
         return heroStartY;
     }
 
+    
     public int getButtonX() {
         return buttonX;
     }
 
+    
     public int getButtonY() {
         return buttonY;
     }
 
+    
     public int getDoorX() {
         return doorX;
     }
 
+    
     public int getDoorY() {
         return doorY;
     }
 
+    
     public String getBackgroundPath() {
         return backgroundPath;
     }
@@ -193,22 +211,11 @@ public final class GameLevelData {
     }
 
     public Tile getTile(int x, int y) {
-        // Out-of-map coordinates are represented by null and handled as boundaries.
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return null;
         }
         return tiles[y][x];
     }
 
-    private static void validatePosition(
-        int x,
-        int y,
-        int width,
-        int height,
-        String name
-    ) {
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-            throw new IllegalArgumentException(name + " position is outside the tile table.");
-        }
-    }
+
 }

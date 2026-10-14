@@ -7,12 +7,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.stage.Stage;
 
-/**
- * Separate settings-screen controller with placeholder defaults and console-only
- * save behavior. It is not currently referenced by the project's FXML or Java
- * navigation; the active settings controls are managed by {@link MainMenu}.
- * Keep this class only if a separate settings window is planned.
- */
+
 public class SettingsMenu {
     
     @FXML

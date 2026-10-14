@@ -7,10 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Holds player save progress and reads/writes it in a simple text format.
- * Use {@link #loadGame(String)} and {@link #saveGame(String)} to persist a save.
- */
+
 public class Levels_Info {
 
     private int map;

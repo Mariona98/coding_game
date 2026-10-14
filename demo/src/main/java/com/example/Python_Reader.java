@@ -10,11 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Runs submitted Python game code in the Sandy sandbox and converts its
- * printed movement names to {@link Level_1_Commands}.
- * Set {@code PYTHON_EXE} or {@code SANDY_EXE} to override executable discovery.
- */
+
 public class Python_Reader {
 
     private static final int MAX_ERROR_OUTPUT_LENGTH = 16_384;

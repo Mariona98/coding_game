@@ -1,12 +1,12 @@
 package com.example;
 
 /**
- * Defines Level 2's dimensions, object locations, dialogue, background, and
- * tile messages. Update {@link #createLevel()} to change this level's map.
+ * Supplies Level 2's values to the shared {@link GameLevelData} structure.
+ * Edit these values and {@link #createLevel()} without changing other levels.
  */
 public class Level_2_Data {
 
-    // Fixed Level 2 map coordinates.
+    // These values belong to Level 2; other levels configure their own coordinates.
     public static final int LEVEL_WIDTH = 12;
     public static final int LEVEL_HEIGHT = 12;
 
@@ -21,7 +21,7 @@ public class Level_2_Data {
     public static final int HERO_START_X = 5;
     public static final int HERO_START_Y = 5;
 
-    // Legacy position fields; active gameplay position is held by Level_1_Mechanics.
+    // Legacy fields retained for compatibility; gameplay state belongs to the mechanics engine.
     public int heroX;
     public int heroY;
     
@@ -36,11 +36,12 @@ public class Level_2_Data {
 
     public static final GameLevelData LEVEL = createLevel();
 
-
+    /** Initializes the legacy position fields to Level 2's configured start. */
     public Level_2_Data() {
         resetPositions();
     }
 
+    /** Builds Level 2's tile map and combines all of its values into shared level data. */
     private static GameLevelData createLevel() {
         // Rows are Y coordinates and columns are X coordinates.
         GameLevelData.Tile[][] tiles =
@@ -89,8 +90,8 @@ public class Level_2_Data {
         );
     }
 
+    /** Resets the legacy position fields; the active game engine tracks gameplay movement. */
     public void resetPositions() {
-        // Kept for callers that still use this data holder's legacy position fields.
         heroX = HERO_START_X;
         heroY = HERO_START_Y;
         

@@ -80,9 +80,7 @@ public boolean dooropened = false;
             return;
         }
         if (!tile.isWalkable()) {
-            lastMovementMessage = tile.getMessage() != null
-                ? tile.getMessage()
-                : "That tile is blocked.";
+            lastMovementMessage =  "That tile is blocked.";
             return;
         }
         if (nextX == levelData.getDoorX()
@@ -94,7 +92,7 @@ public boolean dooropened = false;
 
         heroX = nextX;
         heroY = nextY;
-        lastMovementMessage = tile.getMessage();
+        
 
         System.out.println("Hero moved to (" + heroX + ", " + heroY + ").");
        

@@ -90,7 +90,7 @@ public class GameMap {
             openLevel(2, "/com/example/fxml/GameScene.fxml", lv11);
         }
     }
-
+//Review and rewrite
     private boolean showLevelInfo(int levelNumber) {
         // Let players review instructions and their best result before entering.
         String description = levelNumber == 1
