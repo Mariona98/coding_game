@@ -10,7 +10,7 @@ import java.net.URL;
 
 /**
  * JavaFX entry point for the Coders' Haven application.
- * The screen layout is loaded from {@code /com/example/fxml/MM.fxml}.
+ * The screen layout is loaded from {@code /com/example/fxml/MainMenu.fxml}.
  */
 public class App extends Application {
 
@@ -22,10 +22,10 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         try {
             // Resolve the FXML file from the application's classpath resources.
-            URL fxmlUrl = getClass().getResource("/com/example/fxml/MM.fxml");
+            URL fxmlUrl = getClass().getResource("/com/example/fxml/MainMenu.fxml");
             if (fxmlUrl == null) {
                 throw new IOException(
-                    "Could not find /com/example/fxml/MM.fxml on the classpath."
+                    "Could not find /com/example/fxml/MainMenu.fxml on the classpath."
                 );
             }
 
@@ -48,10 +48,6 @@ public class App extends Application {
         }
     }
 
-    /**
-     * Standard Java application entry point; JavaFX invokes {@link #start(Stage)} after launch.
-     * Pass {@code args} to {@code launch(args)} if the application needs command-line options.
-     */
     public static void main(String[] args) {
         // No command-line arguments are currently used, so launch() is sufficient.
         launch();

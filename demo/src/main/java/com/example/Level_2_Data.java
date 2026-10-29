@@ -12,18 +12,32 @@ public class Level_2_Data {
 
 
 
-    public static final int DOOR_X = 5;
-    public static final int DOOR_Y = 7;
+    public static final int DOOR_X = 10;
+    public static final int DOOR_Y = 9;
 
-    public static final int BUTTON_X = 5;
-    public static final int BUTTON_Y = 6;
+    public static final int BUTTON_X = 7;
+    public static final int BUTTON_Y = 10;
     
-    public static final int HERO_START_X = 5;
-    public static final int HERO_START_Y = 5;
+    public static final int HERO_START_X = 1;
+    public static final int HERO_START_Y = 1;
+    public static final int GOLD_MAX_STEPS = 10;
+    public static final int GOLD_MAX_LINES = 10;
 
+    public static final int ENEMY_START_X = 7;
+    public static final int ENEMY_START_Y = 6;
+
+    public static final int TOTEM_X = 1;
+    public static final int TOTEM_Y = 2;
+    
     // Legacy fields retained for compatibility; gameplay state belongs to the mechanics engine.
     public int heroX;
     public int heroY;
+
+    public int totemX;
+    public int totemY;
+
+    public int enemyX;
+    public int enemyY;
     
     public static final String[] DIALOGUES = {
         "Welcome, hero!",
@@ -43,16 +57,24 @@ public class Level_2_Data {
 
     /** Builds Level 2's tile map and combines all of its values into shared level data. */
     private static GameLevelData createLevel() {
-        // Rows are Y coordinates and columns are X coordinates.
+        // The first index is X (column); the second index is Y (row).
         GameLevelData.Tile[][] tiles =
             GameLevelData.createOpenTileTable(LEVEL_WIDTH, LEVEL_HEIGHT);
-        tiles[BUTTON_Y][BUTTON_X] = new GameLevelData.Tile(
+        tiles[BUTTON_X][BUTTON_Y] = new GameLevelData.Tile(
             true,
             "You pressed the switch. The door is now open!"
         );
-        tiles[DOOR_Y][DOOR_X] = new GameLevelData.Tile(
+        tiles[DOOR_X][DOOR_Y] = new GameLevelData.Tile(
             true,
             "You reached the exit."
+        );
+        tiles[TOTEM_X][TOTEM_Y] = new GameLevelData.Tile(
+            false,
+            "The totem blocks your path."
+        );
+        tiles[ENEMY_START_X][ENEMY_START_Y] = new GameLevelData.Tile(
+            false,
+            "The enemy blocks your path."
         );
 
         return new GameLevelData(
@@ -64,6 +86,12 @@ public class Level_2_Data {
             BUTTON_Y,
             DOOR_X,
             DOOR_Y,
+            TOTEM_X,
+            TOTEM_Y,
+            ENEMY_START_X,
+            ENEMY_START_Y,
+            GOLD_MAX_STEPS,
+            GOLD_MAX_LINES,
             "/com/example/css/level2.png",
             "The hero cannot move beyond the edge of this map.",
             DIALOGUES,
@@ -86,7 +114,64 @@ public class Level_2_Data {
                     "hero.moveDown()\nhero.moveDown()"
                 )
             },
-            tiles
+            tiles,
+            new GameLevelData.LevelObject[] {
+                new GameLevelData.LevelObject(
+                    GameLevelData.LevelObject.Type.HERO,
+                    "/com/example/css/hero.png",
+                    null,
+                    HERO_START_X,
+                    HERO_START_Y,
+                    63,
+                    63,
+                    false,
+                    null
+                ),
+                new GameLevelData.LevelObject(
+                    GameLevelData.LevelObject.Type.BUTTON,
+                    "/com/example/css/button.png",
+                    "/com/example/css/button-pressed.png",
+                    BUTTON_X,
+                    BUTTON_Y,
+                    38,
+                    30,
+                    false,
+                    null
+                ),
+                new GameLevelData.LevelObject(
+                    GameLevelData.LevelObject.Type.DOOR,
+                    "/com/example/css/door (2).png",
+                    "/com/example/css/door-open.png",
+                    DOOR_X,
+                    DOOR_Y,
+                    66,
+                    66,
+                    false,
+                    null
+                ),
+                new GameLevelData.LevelObject(
+                    GameLevelData.LevelObject.Type.BLOCKER,
+                    "/com/example/css/totem.png",
+                    null,
+                    TOTEM_X,
+                    TOTEM_Y,
+                    50,
+                    50,
+                    true,
+                    "The totem blocks your path."
+                ),
+                new GameLevelData.LevelObject(
+                    GameLevelData.LevelObject.Type.BLOCKER,
+                    "/com/example/css/enemy.png",
+                    null,
+                    ENEMY_START_X,
+                    ENEMY_START_Y,
+                    60,
+                    60,
+                    true,
+                    "The enemy blocks your path."
+                )
+            }
         );
     }
 
@@ -94,6 +179,12 @@ public class Level_2_Data {
     public void resetPositions() {
         heroX = HERO_START_X;
         heroY = HERO_START_Y;
+
+        totemX = TOTEM_X;
+        totemY = TOTEM_Y;
+
+        enemyX = ENEMY_START_X;
+        enemyY = ENEMY_START_Y;
         
     }
 }

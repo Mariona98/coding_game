@@ -4,7 +4,7 @@ package com.example;
  * Applies movement commands to a level, enforces tile/door rules, tracks run
  * state, and reports win, movement, and elapsed-time information to the UI.
  */
-public class Level_1_Mechanics {
+public class Level_Mechanics {
 
     private int heroX;
     private int heroY;
@@ -25,7 +25,7 @@ public boolean dooropened = false;
 
    
 
-    public Level_1_Mechanics(GameLevelData levelData) {
+    public Level_Mechanics(GameLevelData levelData) {
         this.levelData = levelData;
         this.startX = levelData.getHeroStartX();
         this.startY = levelData.getHeroStartY();
@@ -34,7 +34,7 @@ public boolean dooropened = false;
         levelStartTime = System.currentTimeMillis();
     }
 
-    public void executeCommand(Level_1_Commands cmd) {
+    public void executeCommand(Level_Commands cmd) {
         // Invalid/no-op moves leave the hero in place and expose a message to the UI.
         if (GameOver) {
             System.out.println("Command ignored because the game is over.");
@@ -77,6 +77,14 @@ public boolean dooropened = false;
         GameLevelData.Tile tile = levelData.getTile(nextX, nextY);
         if (tile == null) {
             lastMovementMessage = levelData.getBoundaryMessage();
+            return;
+        }
+        GameLevelData.LevelObject blockingObject =
+            levelData.getBlockingObjectAt(nextX, nextY);
+        if (blockingObject != null) {
+            lastMovementMessage = blockingObject.getBlockedMessage() == null
+                ? "That tile is blocked."
+                : blockingObject.getBlockedMessage();
             return;
         }
         if (!tile.isWalkable()) {

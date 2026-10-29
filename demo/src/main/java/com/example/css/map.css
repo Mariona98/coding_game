@@ -1,5 +1,5 @@
 .pane {
-    -fx-background-image: url("ued.png");
+    -fx-background-image: url("map.png");
     -fx-border-color: #cccccc;
     -fx-border-width: 1px;
 }
@@ -59,9 +59,9 @@
 }
 
 .circle-button.completed {
-    -fx-background-color: #131313;  
+    -fx-background-color: #3b8f5a;
     -fx-opacity: 0.8;
-    -fx-text-fill: #f6f2f2;
+    -fx-text-fill: #ffffff;
 
 }
 
@@ -70,10 +70,24 @@
 }
 
 .circle-button.completed:pressed {
-     -fx-background-color: #020202;
-
-    
+     -fx-background-color: #276b40;
     -fx-opacity: 1;
 
 }
-/* Level-map styling, including visual states for completed level buttons. */
+
+.circle-button.gold {
+    -fx-background-color: #d4a017;
+    -fx-border-color: #fff0a8 #8a6410 #8a6410 #fff0a8;
+    -fx-opacity: 1;
+    -fx-text-fill: #2b2100;
+}
+
+.circle-button.gold:hover {
+    -fx-background-color: #edbd32;
+}
+
+.circle-button.gold:pressed {
+    -fx-background-color: #b8860b;
+}
+
+/* Level-map styling, including passed and gold achievement states. */

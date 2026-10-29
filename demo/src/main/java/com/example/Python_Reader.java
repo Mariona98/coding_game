@@ -15,12 +15,17 @@ public class Python_Reader {
 
     private static final int MAX_ERROR_OUTPUT_LENGTH = 16_384;
 
-    public static List<Level_1_Commands> runPython(String code)
+    public static List<Level_Commands> runPython(String code)
         throws IOException, InterruptedException, PythonExecutionException {
+        long totalStartedAt = System.nanoTime();
+        long stageStartedAt = totalStartedAt;
         // Execute in a temporary directory, with a narrow filesystem/process sandbox.
         String sandyExecutable = resolveSandyExecutable();
+        logTiming("Resolve Sandy", stageStartedAt);
 
+        stageStartedAt = System.nanoTime();
         Path pythonExecutable = resolvePythonExecutable();
+        logTiming("Locate Python", stageStartedAt);
         Path pythonDirectory = pythonExecutable.getParent();
         if (pythonDirectory == null) {
             throw new PythonExecutionException(
@@ -34,6 +39,7 @@ public class Python_Reader {
         Path gameApi = workingDirectory.resolve("game_api.py");
 
         try {
+            stageStartedAt = System.nanoTime();
             Files.write(userScript, code.getBytes(StandardCharsets.UTF_8));
             copyPythonResource("/com/example/run_level.py", runnerScript);
             copyPythonResource("/com/example/game_api.py", gameApi);
@@ -52,14 +58,17 @@ public class Python_Reader {
             command.add("-B");
             command.add(runnerScript.toString());
             command.add(userScript.toString());
+            logTiming("Prepare scripts and sandbox", stageStartedAt);
 
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             processBuilder.directory(workingDirectory.toFile());
             processBuilder.redirectErrorStream(true);
 
             final Process process;
+            stageStartedAt = System.nanoTime();
             try {
                 process = processBuilder.start();
+                logTiming("Start Sandy process", stageStartedAt);
             } catch (IOException e) {
                 if ("sandy.exe".equals(sandyExecutable)) {
                     throw new PythonExecutionException(
@@ -73,8 +82,9 @@ public class Python_Reader {
                 );
             }
 
-            List<Level_1_Commands> commands = new ArrayList<>();
+            List<Level_Commands> commands = new ArrayList<>();
             StringBuilder errorOutput = new StringBuilder();
+            stageStartedAt = System.nanoTime();
             // Lines matching enum names become commands; other output is retained as error text.
             try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
@@ -90,7 +100,7 @@ public class Python_Reader {
                     }
 
                     try {
-                        commands.add(Level_1_Commands.valueOf(line.trim()));
+                        commands.add(Level_Commands.valueOf(line.trim()));
                     } catch (IllegalArgumentException e) {
                         if (errorOutput.length() < MAX_ERROR_OUTPUT_LENGTH) {
                             errorOutput.append(line)
@@ -101,6 +111,7 @@ public class Python_Reader {
             }
 
             int exitCode = process.waitFor();
+            logTiming("Wait for sandbox and read output", stageStartedAt);
             if (exitCode != 0) {
                 String message = errorOutput.toString().trim();
                 if (message.isEmpty()) {
@@ -111,11 +122,21 @@ public class Python_Reader {
 
             return commands;
         } finally {
+            stageStartedAt = System.nanoTime();
             Files.deleteIfExists(userScript);
             Files.deleteIfExists(runnerScript);
             Files.deleteIfExists(gameApi);
             Files.deleteIfExists(workingDirectory);
+            logTiming("Cleanup", stageStartedAt);
+            logTiming("Total Python run", totalStartedAt);
         }
+    }
+
+    private static void logTiming(String stage, long startedAt) {
+        long elapsedMillis = TimeUnit.NANOSECONDS.toMillis(
+            System.nanoTime() - startedAt
+        );
+        System.out.println("[Python timing] " + stage + ": " + elapsedMillis + " ms");
     }
 
     private static String resolveSandyExecutable()

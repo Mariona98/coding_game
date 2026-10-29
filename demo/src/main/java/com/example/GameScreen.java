@@ -2,6 +2,7 @@ package com.example;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Alert;
@@ -34,26 +35,28 @@ public class GameScreen {
     @FXML
     private TextArea code;
     @FXML
+    private TextArea lineNumbers;
+    @FXML
     private Button Run;
     @FXML
     private Button mainMenuButton;
     @FXML
     private Label stepCounter;
     @FXML
+    private Label lineCounter;
     private ImageView hero;
     @FXML
     private ImageView levelBackground;
     @FXML
     private GridPane grid;
-    @FXML 
     private ImageView doorclosed;
-    @FXML 
     private ImageView button;
     @FXML   
     private ImageView scroll;
     @FXML 
     private ImageView book;
-   
+    private GameLevelData.LevelObject buttonObject;
+    private GameLevelData.LevelObject doorObject;
 
      @FXML
     private Label dialogueText;
@@ -84,17 +87,25 @@ private String saveFilename;
 
 
 
-    private Level_1_Mechanics engine;
+    private Level_Mechanics engine;
     private GameLevelData levelData;
-    private List<Level_1_Commands> commandsList;
+    private List<Level_Commands> commandsList;
     private int currentCommandIndex = 0;
     private int currentRunSteps = 0;
+    private int currentRunLines = 0;
     private int levelNumber = 1;
 
     /** Prepares save data, the default level, dialogue, and initial visuals after FXML injection. */
     public void initialize() {
         saveData = new Levels_Info();
+        code.textProperty().addListener((observable, oldText, newText) -> {
+            updateLineCounter();
+            updateLineNumbers();
+        });
         updateStepCounter();
+        updateLineCounter();
+        updateLineNumbers();
+        Platform.runLater(this::syncLineNumberScrolling);
         configureLevel();
         setLevelDialogues();
         updateVisuals();
@@ -122,7 +133,7 @@ private String saveFilename;
             default:
                 throw new IllegalArgumentException("No data is configured for level " + levelNumber);
         }
-        engine = new Level_1_Mechanics(levelData);
+        engine = new Level_Mechanics(levelData);
         
         if (levelData.getWidth() != grid.getColumnConstraints().size()
             || levelData.getHeight() != grid.getRowConstraints().size()) {
@@ -131,6 +142,48 @@ private String saveFilename;
             );
         }
         levelBackground.setImage(loadImage(levelData.getBackgroundPath()));
+        buildLevelObjects();
+    }
+
+    private void buildLevelObjects() {
+        grid.getChildren().clear();
+        hero = null;
+        button = null;
+        doorclosed = null;
+        buttonObject = null;
+        doorObject = null;
+
+        for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
+            ImageView imageView = new ImageView(loadImage(object.getImagePath()));
+            imageView.setFitWidth(object.getFitWidth());
+            imageView.setFitHeight(object.getFitHeight());
+            imageView.setPreserveRatio(true);
+            imageView.setPickOnBounds(true);
+            GridPane.setHalignment(imageView, javafx.geometry.HPos.CENTER);
+            GridPane.setValignment(imageView, javafx.geometry.VPos.CENTER);
+            grid.add(imageView, object.getX(), object.getY());
+
+            switch (object.getType()) {
+                case HERO:
+                    hero = imageView;
+                    break;
+                case BUTTON:
+                    button = imageView;
+                    buttonObject = object;
+                    break;
+                case DOOR:
+                    doorclosed = imageView;
+                    doorObject = object;
+                    break;
+                case BLOCKER:
+                case DECORATION:
+                    break;
+                default:
+                    throw new IllegalStateException(
+                        "Unsupported level object type: " + object.getType()
+                    );
+            }
+        }
     }
 
     /** Loads the dialogue sequence belonging to the currently selected level. */
@@ -210,6 +263,10 @@ private String saveFilename;
         
         
         String userCode = code.getText();
+        currentRunLines = (int) userCode.lines()
+            .filter(line -> !line.isBlank())
+            .count();
+        System.out.println("Code lines: " + currentRunLines);
         System.out.println("User code received:");
         System.out.println(userCode);
         
@@ -297,7 +354,7 @@ private String saveFilename;
         }
         
         // Get and execute current command
-        Level_1_Commands cmd = commandsList.get(currentCommandIndex);
+        Level_Commands cmd = commandsList.get(currentCommandIndex);
         int step = currentCommandIndex + 1;
         currentRunSteps++;
         updateStepCounter();
@@ -351,6 +408,11 @@ private String saveFilename;
         saveData.setSteps(currentRunSteps);
         //check to save only the lowest and the one that passed
         saveData.recordBestSteps(levelNumber, currentRunSteps);
+        saveData.recordBestLines(levelNumber, currentRunLines);
+        if (currentRunSteps <= levelData.getGoldMaxSteps()
+            && currentRunLines <= levelData.getGoldMaxLines()) {
+            saveData.awardGold(levelNumber);
+        }
 
         if (saveFilename != null && !saveFilename.isEmpty()) {
             saveData.saveGame(saveFilename);
@@ -367,6 +429,8 @@ private String saveFilename;
         alert.setContentText(
             "Level passed in " + currentRunSteps + " steps.\n"
                 + "Best run: " + saveData.getBestSteps(levelNumber) + " steps.\n"
+                + "Lines in this solution: " + currentRunLines + ".\n"
+                + "Best solution: " + saveData.getBestLines(levelNumber) + " lines.\n"
                 + "You can revisit this level from the map at any time."
         );
         alert.getButtonTypes().setAll(backToMap);
@@ -404,24 +468,30 @@ private String saveFilename;
     private void updateVisuals() {
         // Synchronize map objects and their images with the current engine state.
         setGridPosition(hero, engine.getHeroX(), engine.getHeroY());
-        setGridPosition(button, levelData.getButtonX(), levelData.getButtonY());
-        setGridPosition(doorclosed, levelData.getDoorX(), levelData.getDoorY());
 
         engine.updateButtonState();
 
-        String doorImagePath = engine.isDoorOpen()
-            ? "/com/example/css/door-open.png"
-            : "/com/example/css/door (2).png";
-            //change to actuall understanding?
-        String buttonImagePath = engine.isDoorOpen()
-            ? "/com/example/css/button-pressed.png"
-            : "/com/example/css/button.png";
-        doorclosed.setImage(loadImage(doorImagePath));
-        button.setImage(loadImage(buttonImagePath));
+        if (doorObject.getActivatedImagePath() != null) {
+            String doorImagePath = engine.isDoorOpen()
+                ? doorObject.getActivatedImagePath()
+                : doorObject.getImagePath();
+            doorclosed.setImage(loadImage(doorImagePath));
+        }
+        if (buttonObject.getActivatedImagePath() != null) {
+            String buttonImagePath = engine.isDoorOpen()
+                ? buttonObject.getActivatedImagePath()
+                : buttonObject.getImagePath();
+            button.setImage(loadImage(buttonImagePath));
+        }
     }
 
     /** Places an image node at the specified column and row in the game grid. */
     private void setGridPosition(ImageView image, int x, int y) {
+        if (x==-1 || y==-1) {
+            image.setVisible(false);
+            return;
+        }
+        image.setVisible(true);
         GridPane.setColumnIndex(image, x);
         GridPane.setRowIndex(image, y);
     }
@@ -450,6 +520,41 @@ private String saveFilename;
         if (stepCounter != null) {
             stepCounter.setText("Steps: " + currentRunSteps);
         }
+    }
+
+    private void updateLineCounter() {
+        if (lineCounter != null) {
+            long lineCount = code.getText().lines()
+                .filter(line -> !line.isBlank())
+                .count();
+            lineCounter.setText("Lines: " + lineCount);
+        }
+    }
+
+    private void updateLineNumbers() {
+        int lineCount = (int) code.getText().chars()
+            .filter(character -> character == '\n')
+            .count() + 1;
+        StringBuilder numbers = new StringBuilder();
+        for (int line = 1; line <= lineCount; line++) {
+            if (line > 1) {
+                numbers.append('\n');
+            }
+            numbers.append(line);
+        }
+        lineNumbers.setText(numbers.toString());
+    }
+
+    private void syncLineNumberScrolling() {
+        ScrollPane codeScrollPane = (ScrollPane) code.lookup(".scroll-pane");
+        ScrollPane lineNumberScrollPane =
+            (ScrollPane) lineNumbers.lookup(".scroll-pane");
+        if (codeScrollPane == null || lineNumberScrollPane == null) {
+            throw new IllegalStateException(
+                "Could not find the text-area scroll panes for line-number alignment."
+            );
+        }
+        lineNumberScrollPane.vvalueProperty().bind(codeScrollPane.vvalueProperty());
     }
 
 

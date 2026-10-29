@@ -22,7 +22,7 @@ import java.io.File;
 
 /**
  * Controller for the main menu, save selection/creation, settings, and audio.
- * Its methods are connected to controls in MM.fxml via {@code onAction}.
+ * Its methods are connected to controls in MainMenu.fxml via {@code onAction}.
  */
 public class MainMenu {
 

@@ -15,6 +15,8 @@ public class Levels_Info {
     private ArrayList<Integer> passedLevels;
     private int steps;
     private final Map<Integer, Integer> bestStepsByLevel;
+    private final Map<Integer, Integer> bestLinesByLevel;
+    private final ArrayList<Integer> goldLevels;
 
     public Levels_Info() {
         this.map = 1;
@@ -22,6 +24,8 @@ public class Levels_Info {
         this.passedLevels = new ArrayList<>();
         this.steps = 0;
         this.bestStepsByLevel = new HashMap<>();
+        this.bestLinesByLevel = new HashMap<>();
+        this.goldLevels = new ArrayList<>();
     }
 
   
@@ -61,6 +65,16 @@ public class Levels_Info {
         return passedLevels.contains(level);
     }
 
+    public void awardGold(int level) {
+        if (!goldLevels.contains(level)) {
+            goldLevels.add(level);
+        }
+    }
+
+    public boolean hasGold(int level) {
+        return goldLevels.contains(level);
+    }
+
     public Integer getBestSteps(int level) {
         return bestStepsByLevel.get(level);
     }
@@ -72,6 +86,22 @@ public class Levels_Info {
         Integer currentBest = bestStepsByLevel.get(level);
         if (currentBest == null || stepCount < currentBest) {
             bestStepsByLevel.put(level, stepCount);
+            return true;
+        }
+        return false;
+    }
+
+    public Integer getBestLines(int level) {
+        return bestLinesByLevel.get(level);
+    }
+
+    public boolean recordBestLines(int level, int lineCount) {
+        if (lineCount < 0) {
+            throw new IllegalArgumentException("Line count cannot be negative.");
+        }
+        Integer currentBest = bestLinesByLevel.get(level);
+        if (currentBest == null || lineCount < currentBest) {
+            bestLinesByLevel.put(level, lineCount);
             return true;
         }
         return false;
@@ -115,7 +145,14 @@ public class Levels_Info {
                     writer.write(",");
                 }
             }
-
+            writer.write("\n");
+            writer.write("goldLevels:");
+            for (int i = 0; i < goldLevels.size(); i++) {
+                if (i > 0) {
+                    writer.write(",");
+                }
+                writer.write(String.valueOf(goldLevels.get(i)));
+            }
             writer.write("\n");
             writer.write("steps:" + steps + "\n");
             writer.write("bestSteps:");
@@ -126,6 +163,16 @@ public class Levels_Info {
                 }
                 writer.write(entry.getKey() + "=" + entry.getValue());
                 firstBest = false;
+            }
+            writer.write("\n");
+            writer.write("bestLines:");
+            boolean firstBestLineCount = true;
+            for (Map.Entry<Integer, Integer> entry : bestLinesByLevel.entrySet()) {
+                if (!firstBestLineCount) {
+                    writer.write(",");
+                }
+                writer.write(entry.getKey() + "=" + entry.getValue());
+                firstBestLineCount = false;
             }
             writer.write("\n");
 
@@ -190,6 +237,15 @@ public class Levels_Info {
                         }
                     }
 
+                } else if (line.startsWith("goldLevels:")) {
+                    goldLevels.clear();
+                    String data = line.substring("goldLevels:".length());
+                    if (!data.isEmpty()) {
+                        for (String level : data.split(",")) {
+                            goldLevels.add(Integer.parseInt(level.trim()));
+                        }
+                    }
+
                 } else if (line.startsWith("steps:")) {
 
                     steps = Integer.parseInt(
@@ -204,6 +260,20 @@ public class Levels_Info {
                             String[] fields = record.split("=", 2);
                             if (fields.length == 2) {
                                 bestStepsByLevel.put(
+                                    Integer.parseInt(fields[0].trim()),
+                                    Integer.parseInt(fields[1].trim())
+                                );
+                            }
+                        }
+                    }
+                } else if (line.startsWith("bestLines:")) {
+                    bestLinesByLevel.clear();
+                    String data = line.substring("bestLines:".length());
+                    if (!data.isEmpty()) {
+                        for (String record : data.split(",")) {
+                            String[] fields = record.split("=", 2);
+                            if (fields.length == 2) {
+                                bestLinesByLevel.put(
                                     Integer.parseInt(fields[0].trim()),
                                     Integer.parseInt(fields[1].trim())
                                 );
