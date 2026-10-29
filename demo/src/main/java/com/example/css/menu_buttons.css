@@ -1,32 +1,137 @@
-/* Learn More Button - JavaFX Version */
+
 
 .button {
     -fx-cursor: hand;
-    -fx-font-family: "Roboto Condensed Bold", "Arial Narrow", sans-serif;
+
+    -fx-font-family: "Arial Narrow", "Arial", sans-serif;
     -fx-font-size: 15px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #fbfbfa;
-    -fx-background-color: linear-gradient(to bottom, #182c7e, #2c1a74);
-    -fx-border-color: #150f4f;
-    -fx-border-width: 2px;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-    -fx-padding: 12 26;
-    -fx-font-smoothing-type: lcd;
-    -fx-letter-spacing: 0.4px;
-    -fx-effect: dropshadow(three-pass-box, #5c130d, 8, 0, 0, 5);
+    -fx-font-weight: bold;
+
+    -fx-text-fill: rgba(253, 251, 251, 0.763);
+
+
+    -fx-background-color:
+        #1a1a1a;
+
+    -fx-background-radius: 24px;
+
+
+    -fx-border-color: #646363;
+    -fx-border-width: 3px;
+    -fx-border-radius: 24px;
+
+    -fx-padding: 12px 28px;
+
+
+    -fx-effect:
+        dropshadow(
+            gaussian,
+            rgba(0,0,0,0.9),
+            2,
+            0,
+            2,
+            3
+        );
 }
 
-/* Hover state */
 .button:hover {
-    -fx-background-color: #233eac;
-    -fx-translate-y: 2px;
-    -fx-effect: dropshadow(three-pass-box, #5c130d, 8, 0, 0, 4);
+    -fx-background-color:
+     #8f8e8e;
+
+    -fx-translate-y: -2px;
+
+    -fx-effect:
+        dropshadow(
+            gaussian,
+            rgba(0,0,0,0.9),
+            5,
+            0,
+            2,
+            5
+        );
 }
 
-/* Pressed (active) state */
+
+
 .button:pressed {
-    -fx-background-color: #140c32;
-    -fx-translate-y: 6px;
-    -fx-effect: dropshadow(three-pass-box, #5c130d, 0, 0, 0, 0);
+    -fx-background-color:
+        #f9f6f6;
+
+    -fx-translate-y: 4px;
+
+    -fx-effect: none;
 }
+
+
+
+.button:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+.toggle-button {
+    -fx-background-radius: 24px;
+    -fx-border-radius: 24px;
+
+    -fx-padding: 5px;
+
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
+
+    -fx-text-fill: rgba(255,255,255,0.9);
+}
+
+
+
+.toggle-button:selected {
+    -fx-background-color:
+        linear-gradient(
+            to bottom,
+            #353535,
+            #111111
+        );
+
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+
+    -fx-effect:
+        dropshadow(
+            gaussian,
+            rgba(255,255,255,0.25),
+            4,
+            0,
+            0,
+            0
+        );
+
+    -fx-translate-y: 1px;
+}
+
+
+
+.toggle-button:selected:hover {
+    -fx-background-color:
+        linear-gradient(
+            to bottom,
+            #404040,
+            #151515
+        );
+}
+
+
+
+.toggle-button:selected:pressed {
+    -fx-translate-y: 3px;
+
+    -fx-effect:
+        dropshadow(
+            gaussian,
+            rgba(0,0,0,0.8),
+            2,
+            0,
+            1,
+            2
+        );
+}
+/* Shared button appearance for the main menu and related screens. */

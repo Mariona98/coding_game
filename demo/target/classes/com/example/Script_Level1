@@ -1,0 +1,12 @@
+# Example Level 1 solution script; run_level.py loads this kind of code in the sandbox.
+# It queues movement commands through game_api.hero; adapt the moves for a different route.
+from game_api import hero
+hero.moveRight()
+hero.moveRight()
+hero.moveUp()
+hero.moveUp()
+hero.moveDown()
+hero.moveDown()
+hero.moveRight()
+hero.moveRight()
+hero.moveRight()

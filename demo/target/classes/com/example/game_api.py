@@ -1,0 +1,24 @@
+
+
+commands = []
+
+
+class Hero:
+    
+
+    def moveRight(self):
+
+        commands.append("MOVE_RIGHT")
+
+    def moveLeft(self):
+        commands.append("MOVE_LEFT")
+
+    def moveUp(self):
+        commands.append("MOVE_UP") 
+
+    def moveDown(self):
+        commands.append("MOVE_DOWN")
+
+  
+# One shared API instance is imported by both the runner and submitted code.
+hero = Hero()

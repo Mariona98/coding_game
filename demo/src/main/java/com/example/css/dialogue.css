@@ -1,0 +1,18 @@
+.pane {
+    -fx-background-color: linear-gradient(
+        to bottom,
+        #3e3a2f,
+        #3a3324
+    );
+
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #080603;
+    -fx-border-width: 3px;
+}
+.dialogue-text {
+    -fx-text-fill: #e1deda;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+/* Styles the dialogue panel and text displayed during level introductions. */
