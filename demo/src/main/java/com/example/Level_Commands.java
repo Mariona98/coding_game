@@ -1,8 +1,7 @@
 package com.example;
 
 /**
- * Movement instructions emitted by the Python game API and consumed by the
- * Java level engine. Add a value here when adding a supported movement action.
+ * Commands emitted by the Python game API and consumed by the Java level engine.
  */
 public enum Level_Commands {
 
@@ -11,7 +10,10 @@ public enum Level_Commands {
     MOVE_UP,
     MOVE_DOWN,
     ATTACK,
-    SCAN
+    SCAN,
+    ADD,
+    DROP;
+    
 
     
 }

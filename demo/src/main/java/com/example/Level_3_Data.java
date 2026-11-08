@@ -1,97 +1,104 @@
 package com.example;
 
-/**
- * Supplies Level 1's values to the shared {@link GameLevelData} structure.
- * Edit these values and {@link #createLevel()} without changing other levels.
- */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/** Supplies Level 3's map and randomized enemy positions. */
 public class Level_3_Data {
 
-    // These values belong to Level 1; other levels configure their own coordinates.
     public static final int LEVEL_WIDTH = 12;
     public static final int LEVEL_HEIGHT = 12;
-
-    
-
-
-
-    public static final int DOOR_X = 8;
-    public static final int DOOR_Y = 5;
-
-    public static final int BUTTON_X = 5;
-    public static final int BUTTON_Y = 3;
-    
     public static final int HERO_START_X = 3;
     public static final int HERO_START_Y = 5;
+    public static final int ENEMY_COUNT = 6;
     public static final int GOLD_MAX_STEPS = 10;
     public static final int GOLD_MAX_LINES = 10;
+    public static final int COMMAND_USAGE_LIMIT = 5;
+    // The sample solver may cross the 12x12 map to reach every randomized enemy.
+    public static final int MOVEMENT_COMMAND_USAGE_LIMIT =
+        ENEMY_COUNT * (LEVEL_WIDTH + LEVEL_HEIGHT - 2);
+    // One attack is needed to remove each of the six enemies.
+    public static final int ATTACK_COMMAND_USAGE_LIMIT = ENEMY_COUNT;
 
-    // Legacy fields retained for compatibility; gameplay state belongs to the mechanics engine.
     public int heroX;
     public int heroY;
-    
+
     public static final String[] DIALOGUES = {
         "Welcome, hero!",
-        "You need to reach the door.",
-        "But the door is currently closed.",
-        "Find the button and press it.",
-        "Then move to the door.",
-        "Good luck!"
+        "Explore the 12 by 12 map.",
+        "Six enemies are scattered across the map.",
+        "Scan for their positions, then defeat them all!"
     };
 
     public static final GameLevelData LEVEL = createLevel();
 
-    /** Initializes the legacy position fields to Level 1's configured start. */
     public Level_3_Data() {
         resetPositions();
     }
 
-    /** Builds Level 1's tile map and combines all of its values into shared level data. */
-    private static GameLevelData createLevel() {
-        // The first index is X (column); the second index is Y (row).
+    /** Creates a fresh level so each run gets a new enemy layout. */
+    public static GameLevelData createLevel() {
         GameLevelData.Tile[][] tiles =
             GameLevelData.createOpenTileTable(LEVEL_WIDTH, LEVEL_HEIGHT);
-
-
-
-        for (int y = 4; y <= 7; y++) {
-            for (int x = 4; x <= 8; x++) {
+        for (int x = 0; x < LEVEL_WIDTH; x++) {
+            for (int y = 0; y < LEVEL_HEIGHT; y++) {
                 tiles[x][y] = new GameLevelData.Tile(true, null);
             }
         }
-        for (int y = 4; y <= 6; y++) {
-            tiles[3][y] = new GameLevelData.Tile(true, null);
-        }
-        tiles[BUTTON_X][BUTTON_Y] = new GameLevelData.Tile(true, null);
-        tiles[DOOR_X][DOOR_Y] = new GameLevelData.Tile(true, null);
-        System.out.println("The walkable tiles are:");  
+
+        List<int[]> availablePositions = new ArrayList<>();
         for (int y = 0; y < LEVEL_HEIGHT; y++) {
             for (int x = 0; x < LEVEL_WIDTH; x++) {
-                if (tiles[x][y].isWalkable()) {
-                    System.out.println("  (" + x + ", " + y + ")");
+                if (x != HERO_START_X || y != HERO_START_Y) {
+                    availablePositions.add(new int[] {x, y});
                 }
             }
         }
+        Collections.shuffle(availablePositions);
 
-        return new GameLevelData(
-
-            LEVEL_WIDTH,
-            LEVEL_HEIGHT,
+        GameLevelData.LevelObject[] objects =
+            new GameLevelData.LevelObject[ENEMY_COUNT + 1];
+        objects[0] = new GameLevelData.LevelObject(
+            "hero",
+            GameLevelData.LevelObject.Type.HERO,
+            "/com/example/css/hero.png",
+            null,
             HERO_START_X,
             HERO_START_Y,
-            BUTTON_X,
-            BUTTON_Y,
-            DOOR_X,
-            DOOR_Y,
-            -1, // no totem in Level 1
-            -1, // no enemy in Level 1
-            -1, // no totem in Level 1
-            -1,
+            63,
+            63,
+            false,
+            null,
+            false
+        );
+
+        for (int i = 0; i < ENEMY_COUNT; i++) {
+            int[] position = availablePositions.get(i);
+            objects[i + 1] = new GameLevelData.LevelObject(
+                "enemy-" + (i + 1),
+                GameLevelData.LevelObject.Type.ENEMY,
+                "/com/example/css/enemy.png",
+                null,
+                position[0],
+                position[1],
+                52,
+                52,
+                false,
+                null,
+                false
+            );
+        }
+
+        return new GameLevelData(
+            LEVEL_WIDTH,
+            LEVEL_HEIGHT,
             GOLD_MAX_STEPS,
             GOLD_MAX_LINES,
-            "/com/example/css/level1.png",
+            "/com/example/css/level3.png",
             "The hero cannot move beyond the edge of this map.",
             DIALOGUES,
-            "Use movement commands to find the switch, open the door, and reach the exit.",
+            "Explore the map while avoiding the six enemies.",
             new GameLevelData.HelpSection[] {
                 new GameLevelData.HelpSection(
                     "Import the hero",
@@ -104,48 +111,33 @@ public class Level_3_Data {
                     "hero.moveRight()\nhero.moveLeft()\nhero.moveUp()\nhero.moveDown()"
                 ),
                 new GameLevelData.HelpSection(
-                    "Level 1 objective",
-                    "The switch is two tiles to the right and two tiles up from the starting point. "
-                        + "Press it, then make your way to the exit.",
+                    "Level 3 objective",
+                    "Scan the map, move next to an enemy, and use hero.attack(). "
+                        + "Defeat all six enemies to win.",
+                    "enemy_count, enemies = hero.scan()\nhero.attack()"
+                ),
+                new GameLevelData.HelpSection(
+                    "Scan for enemies",
+                    "hero.scan() returns the enemy count and their (x, y) coordinates.",
+                    "enemy_count, enemy_positions = hero.scan()\n"
+                        + "print(enemy_count)\n"
+                        + "for x, y in enemy_positions:\n"
+                        + "    print(x, y)"
+                ),
+                new GameLevelData.HelpSection(
+                    "Command limits",
+                    "You can use up to " + MOVEMENT_COMMAND_USAGE_LIMIT
+                        + " movement commands total and " + ATTACK_COMMAND_USAGE_LIMIT
+                        + " attacks. Scan, Add, and Drop each have a limit of "
+                        + COMMAND_USAGE_LIMIT + ".",
                     "hero.moveRight()\nhero.moveUp()"
                 )
             },
             tiles,
-            new GameLevelData.LevelObject[] {
-                new GameLevelData.LevelObject(
-                    GameLevelData.LevelObject.Type.HERO,
-                    "/com/example/css/hero.png",
-                    null,
-                    HERO_START_X,
-                    HERO_START_Y,
-                    63,
-                    63,
-                    false,
-                    null
-                ),
-                new GameLevelData.LevelObject(
-                    GameLevelData.LevelObject.Type.BUTTON,
-                    "/com/example/css/button.png",
-                    "/com/example/css/button-pressed.png",
-                    BUTTON_X,
-                    BUTTON_Y,
-                    38,
-                    30,
-                    false,
-                    null
-                ),
-                new GameLevelData.LevelObject(
-                    GameLevelData.LevelObject.Type.DOOR,
-                    "/com/example/css/door (2).png",
-                    "/com/example/css/door-open.png",
-                    DOOR_X,
-                    DOOR_Y,
-                    66,
-                    66,
-                    false,
-                    null
-                )
-            }
+            objects,
+            COMMAND_USAGE_LIMIT,
+            MOVEMENT_COMMAND_USAGE_LIMIT,
+            ATTACK_COMMAND_USAGE_LIMIT
         );
     }
 
@@ -153,6 +145,5 @@ public class Level_3_Data {
     public void resetPositions() {
         heroX = HERO_START_X;
         heroY = HERO_START_Y;
-        
     }
 }

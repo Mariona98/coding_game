@@ -15,6 +15,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
@@ -27,7 +28,11 @@ import javafx.scene.layout.Region;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class GameScreen {
@@ -44,19 +49,26 @@ public class GameScreen {
     private Label stepCounter;
     @FXML
     private Label lineCounter;
-    private ImageView hero;
+    
     @FXML
     private ImageView levelBackground;
     @FXML
+    
     private GridPane grid;
-    private ImageView doorclosed;
-    private ImageView button;
+   
     @FXML   
     private ImageView scroll;
     @FXML 
     private ImageView book;
+    private ImageView hero;
     private GameLevelData.LevelObject buttonObject;
     private GameLevelData.LevelObject doorObject;
+    private GameLevelData.LevelObject heroObject;
+    private GameLevelData.LevelObject itemObject;
+    private final Map<GameLevelData.LevelObject, ImageView> objectViews =
+        new IdentityHashMap<>();
+    
+    
 
      @FXML
     private Label dialogueText;
@@ -130,9 +142,13 @@ private String saveFilename;
             case 2:
                 levelData = Level_2_Data.LEVEL;
                 break;
+            case 3:
+                levelData = Level_3_Data.createLevel();
+                break;
             default:
                 throw new IllegalArgumentException("No data is configured for level " + levelNumber);
         }
+        levelData.resetLevelObjectActivations();
         engine = new Level_Mechanics(levelData);
         
         if (levelData.getWidth() != grid.getColumnConstraints().size()
@@ -148,10 +164,9 @@ private String saveFilename;
     private void buildLevelObjects() {
         grid.getChildren().clear();
         hero = null;
-        button = null;
-        doorclosed = null;
-        buttonObject = null;
-        doorObject = null;
+        objectViews.clear();
+
+        addGridLines();
 
         for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
             ImageView imageView = new ImageView(loadImage(object.getImagePath()));
@@ -161,30 +176,37 @@ private String saveFilename;
             imageView.setPickOnBounds(true);
             GridPane.setHalignment(imageView, javafx.geometry.HPos.CENTER);
             GridPane.setValignment(imageView, javafx.geometry.VPos.CENTER);
+            
             grid.add(imageView, object.getX(), object.getY());
+            objectViews.put(object, imageView);
 
-            switch (object.getType()) {
-                case HERO:
-                    hero = imageView;
-                    break;
-                case BUTTON:
-                    button = imageView;
-                    buttonObject = object;
-                    break;
-                case DOOR:
-                    doorclosed = imageView;
-                    doorObject = object;
-                    break;
-                case BLOCKER:
-                case DECORATION:
-                    break;
-                default:
-                    throw new IllegalStateException(
-                        "Unsupported level object type: " + object.getType()
-                    );
+            if (object.getType() == GameLevelData.LevelObject.Type.HERO) {
+                hero = imageView;
             }
         }
     }
+
+    private void addGridLines() {
+        for (int row = 0; row < levelData.getHeight(); row++) {
+            for (int column = 0; column < levelData.getWidth(); column++) {
+                Region cell = new Region();
+                cell.setMouseTransparent(true);
+                cell.setMinSize(0, 0);
+                cell.setPrefSize(0, 0);
+                cell.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                cell.setStyle(
+                    "-fx-background-color: transparent;"
+                        + "-fx-border-color: rgba(255, 255, 255, 0.85);"
+                        + "-fx-border-width: " + (row == 0 ? "1" : "0")
+                        + " 1 1 " + (column == 0 ? "1" : "0") + ";"
+                );
+                GridPane.setHgrow(cell, Priority.ALWAYS);
+                GridPane.setVgrow(cell, Priority.ALWAYS);
+                grid.add(cell, column, row);
+            }
+        }
+    }
+
 
     /** Loads the dialogue sequence belonging to the currently selected level. */
     private void setLevelDialogues() {
@@ -272,12 +294,12 @@ private String saveFilename;
         
         System.out.println("Calling Python_Reader.runPython()...");
         try {
-            commandsList = Python_Reader.runPython(userCode);
+            // Send the active level so the Python runner can expose scan data
+            // only for levels opted into scanning.
+            commandsList = Python_Reader.runPython(userCode, levelNumber, levelData);
         } catch (Python_Reader.PythonExecutionException e) {
             System.err.println("Sandboxed Python run failed: " + e.getMessage());
-            finishFailedRun(
-                "The sandboxed Python run failed:\n" + e.getMessage()
-            );
+            finishFailedRun(explainPythonError(e.getMessage()));
             return;
         } catch (IOException e) {
             e.printStackTrace();
@@ -327,6 +349,127 @@ private String saveFilename;
         engine.resetGame();
         updateVisuals();
     }
+
+    /**
+     * Converts Python's traceback into short, actionable guidance for a player.
+     * Unknown errors get a general explanation instead of a confusing raw traceback.
+     */
+    private String explainPythonError(String output) {
+        String details = output == null ? "" : output;
+
+        // Find the line in the submitted script, not a line in the support runner.
+        Matcher lineMatcher = Pattern.compile(
+            "(?m)File [^\\r\\n]*script\\.py[\"'], line (\\d+)"
+        ).matcher(details);
+        String lineHint = lineMatcher.find()
+            ? " (near your line " + lineMatcher.group(1) + ")"
+            : "";
+        String pythonDetail = getLastErrorLine(details);
+
+        // Distinguish setup failures so they are not blamed on the player's code.
+        if (details.contains("Sandy is required")
+            || details.contains("Could not start Sandy")
+            || details.contains("Could not determine the Python installation")) {
+            return "The game could not start its Python environment. "
+                + "Please ask for help or try again later.";
+        }
+
+        if (details.contains("IndentationError")) {
+            return addPythonDetail(
+                "Indentation error" + lineHint
+                    + ": check that each line in a code block is indented consistently.",
+                pythonDetail
+            );
+        }
+        if (details.contains("SyntaxError")) {
+            return addPythonDetail(
+                "Python syntax error" + lineHint
+                    + ": check for a missing colon, unmatched parentheses or quotes, "
+                    + "or a misspelled command.",
+                pythonDetail
+            );
+        }
+        if (details.contains("NameError")) {
+            return addPythonDetail(
+                "Python could not find a name" + lineHint
+                    + ". Check variable spelling and capitalization, and make sure "
+                    + "you imported the name before using it.",
+                pythonDetail
+            );
+        }
+        if (details.contains("TypeError")) {
+            return addPythonDetail(
+                "A command received the wrong kind or number of values" + lineHint
+                    + ". Check the method name and how you called it.",
+                pythonDetail
+            );
+        }
+        if (details.contains("ModuleNotFoundError") || details.contains("ImportError")) {
+            return addPythonDetail(
+                "Python could not load an import" + lineHint
+                    + ". Check the import spelling and use only modules supported by the game.",
+                pythonDetail
+            );
+        }
+        if (details.contains("AttributeError")) {
+            return addPythonDetail(
+                "That object does not have the requested method or property" + lineHint
+                    + ". Check the spelling and use a command shown in the level instructions.",
+                pythonDetail
+            );
+        }
+        if (details.contains("IndexError")) {
+            return addPythonDetail(
+                "Your code tried to access a list position that does not exist" + lineHint
+                    + ". Check the list length and the index you used.",
+                pythonDetail
+            );
+        }
+        if (details.contains("ZeroDivisionError")) {
+            return addPythonDetail(
+                "Your code tried to divide by zero" + lineHint
+                    + ". Check the divisor before dividing.",
+                pythonDetail
+            );
+        }
+        if (details.contains("ValueError")) {
+            return addPythonDetail(
+                "A command received a value it could not use" + lineHint
+                    + ". Check the value's format and allowed range.",
+                pythonDetail
+            );
+        }
+
+        // Keep a compact final diagnostic clue instead of showing the full traceback.
+        return addPythonDetail(
+            "Python stopped unexpectedly" + lineHint
+                + ". Check your spelling, method names, and values. If the problem "
+                + "is unclear, ask for help.",
+            pythonDetail
+        );
+    }
+
+    /** Adds Python's concise exception line so players can see the exact clue. */
+    private String addPythonDetail(String explanation, String pythonDetail) {
+        return pythonDetail.isEmpty()
+            ? explanation
+            : explanation + "\nPython detail: " + pythonDetail;
+    }
+
+    /** Returns the final non-empty traceback line for the unclassified-error hint. */
+    private String getLastErrorLine(String output) {
+        if (output == null) {
+            return "";
+        }
+        String[] lines = output.split("\\R");
+        for (int i = lines.length - 1; i >= 0; i--) {
+            String line = lines[i].trim();
+            if (!line.isEmpty() && !line.startsWith("Traceback")) {
+                return line.length() > 180 ? line.substring(0, 180) + "..." : line;
+            }
+        }
+        return "";
+    }
     
     /** Executes the next queued move, updates the scene, and handles tile messages. */
     private void executeNextCommand() throws IOException{
@@ -340,16 +483,9 @@ private String saveFilename;
             return;
         }
         
-        // Check if level is already complete
         
-
-        // Check if hero is dead
-        if (engine.checkHeroDead()) {
-            System.out.println("HERO IS DEAD!");
-            System.out.println("===== RUN FINISHED =====");
-            finishFailedRun(
-                "The hero did not reach the goal. There may be another way to solve this level. Keep trying!"
-            );
+        if (engine.isGamewon()) {
+            finishLevel();
             return;
         }
         
@@ -362,6 +498,10 @@ private String saveFilename;
         System.out.println("Executing step " + step + ": " + cmd);
         
         engine.executeCommand(cmd);
+        if (engine.didExceedCommandLimit()) {
+            finishFailedRun(engine.getLastMovementMessage());
+            return;
+        }
         
         System.out.println("Hero position after command:");
         System.out.println("X = " + engine.getHeroX());
@@ -458,42 +598,49 @@ private String saveFilename;
         stage = (Stage) Run.getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Coders' Haven");
+        stage.setTitle("CODING HELL0");
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.show();
     }
     
-    /** Updates the hero, switch, and door positions and images from the engine state. */
+    /** Synchronizes object positions and images with the current game state. */
     private void updateVisuals() {
-        // Synchronize map objects and their images with the current engine state.
+        
         setGridPosition(hero, engine.getHeroX(), engine.getHeroY());
-
         engine.updateButtonState();
-
-        if (doorObject.getActivatedImagePath() != null) {
-            String doorImagePath = engine.isDoorOpen()
-                ? doorObject.getActivatedImagePath()
-                : doorObject.getImagePath();
-            doorclosed.setImage(loadImage(doorImagePath));
-        }
-        if (buttonObject.getActivatedImagePath() != null) {
-            String buttonImagePath = engine.isDoorOpen()
-                ? buttonObject.getActivatedImagePath()
-                : buttonObject.getImagePath();
-            button.setImage(loadImage(buttonImagePath));
+        for (Map.Entry<GameLevelData.LevelObject, ImageView> entry : objectViews.entrySet()) {
+            GameLevelData.LevelObject object = entry.getKey();
+            // Attacks remove enemies from level data; hide their original scene nodes too.
+            if (object.getType() == GameLevelData.LevelObject.Type.ENEMY
+                && !levelData.getLevelObjects().contains(object)) {
+                entry.getValue().setVisible(false);
+                continue;
+            }
+            if (object.getType() != GameLevelData.LevelObject.Type.HERO) {
+                setGridPosition(entry.getValue(), object.getX(), object.getY());
+            }
+            String imagePath = object.isActivated()
+                && object.getActivatedImagePath() != null
+                ? object.getActivatedImagePath()
+                : object.getImagePath();
+            entry.getValue().setImage(loadImage(imagePath));
         }
     }
 
     /** Places an image node at the specified column and row in the game grid. */
     private void setGridPosition(ImageView image, int x, int y) {
-        if (x==-1 || y==-1) {
+        if (image == null) {
+            return;
+        }
+        if (x == -1 || y == -1) {
             image.setVisible(false);
             return;
         }
         image.setVisible(true);
         GridPane.setColumnIndex(image, x);
         GridPane.setRowIndex(image, y);
+        
     }
 
     /** Loads an image resource or throws an explicit error if the resource is missing. */
@@ -627,6 +774,7 @@ private String saveFilename;
                 )
             );
         }
+
         return content;
     }
 

@@ -165,7 +165,7 @@ public class GameMap {
         Scene scene = new Scene(root, 1260, 810);
 
         stage.setScene(scene);
-        stage.setTitle("Coders' Haven");
+        stage.setTitle("CODING HELL0");
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.show();

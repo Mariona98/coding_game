@@ -30,7 +30,7 @@
                </image>
                 </ImageView>
 
-                <GridPane fx:id="grid" gridLinesVisible="true" maxHeight="810.0" maxWidth="900.0" minHeight="810.0" minWidth="900.0" prefHeight="810.0" prefWidth="900.0">
+                <GridPane fx:id="grid" gridLinesVisible="false" maxHeight="810.0" maxWidth="900.0" minHeight="810.0" minWidth="900.0" prefHeight="810.0" prefWidth="900.0">
 
                     
                     <columnConstraints>

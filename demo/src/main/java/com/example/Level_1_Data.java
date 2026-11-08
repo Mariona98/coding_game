@@ -24,6 +24,9 @@ public class Level_1_Data {
     public static final int HERO_START_Y = 5;
     public static final int GOLD_MAX_STEPS = 10;
     public static final int GOLD_MAX_LINES = 10;
+    public static final int COMMAND_USAGE_LIMIT = 5;
+    // Level 1 needs at least nine moves to press the button and reach the door.
+    public static final int MOVEMENT_COMMAND_USAGE_LIMIT = 9;
 
     // Legacy fields retained for compatibility; gameplay state belongs to the mechanics engine.
     public int heroX;
@@ -76,16 +79,6 @@ public class Level_1_Data {
 
             LEVEL_WIDTH,
             LEVEL_HEIGHT,
-            HERO_START_X,
-            HERO_START_Y,
-            BUTTON_X,
-            BUTTON_Y,
-            DOOR_X,
-            DOOR_Y,
-            -1, // no totem in Level 1
-            -1, // no enemy in Level 1
-            -1, // no totem in Level 1
-            -1,
             GOLD_MAX_STEPS,
             GOLD_MAX_LINES,
             "/com/example/css/level1.png",
@@ -108,44 +101,62 @@ public class Level_1_Data {
                     "The switch is two tiles to the right and two tiles up from the starting point. "
                         + "Press it, then make your way to the exit.",
                     "hero.moveRight()\nhero.moveUp()"
+                ),
+                new GameLevelData.HelpSection(
+                    "Command limits",
+                    "You can use up to " + MOVEMENT_COMMAND_USAGE_LIMIT
+                        + " movement commands total (all directions combined) and up to "
+                        + COMMAND_USAGE_LIMIT + " uses of each other command.",
+                    "hero.moveRight()\nhero.moveUp()"
                 )
             },
+
             tiles,
             new GameLevelData.LevelObject[] {
                 new GameLevelData.LevelObject(
+                    "hero",
                     GameLevelData.LevelObject.Type.HERO,
                     "/com/example/css/hero.png",
                     null,
                     HERO_START_X,
                     HERO_START_Y,
-                    63,
-                    63,
+                    66,
+                    66,
                     false,
-                    null
+                    null,
+                    false
+
                 ),
                 new GameLevelData.LevelObject(
+                    "button",
                     GameLevelData.LevelObject.Type.BUTTON,
                     "/com/example/css/button.png",
-                    "/com/example/css/button-pressed.png",
+                    null,
                     BUTTON_X,
                     BUTTON_Y,
-                    38,
-                    30,
+                    66,
+                    66,
                     false,
-                    null
+                    null,
+                    false
                 ),
                 new GameLevelData.LevelObject(
+                    "door",
                     GameLevelData.LevelObject.Type.DOOR,
                     "/com/example/css/door (2).png",
-                    "/com/example/css/door-open.png",
+                    null,
                     DOOR_X,
                     DOOR_Y,
                     66,
                     66,
                     false,
-                    null
+                    null,
+                    false
                 )
-            }
+             
+            },
+            COMMAND_USAGE_LIMIT,
+            MOVEMENT_COMMAND_USAGE_LIMIT
         );
     }
 
@@ -155,4 +166,8 @@ public class Level_1_Data {
         heroY = HERO_START_Y;
         
     }
+
+
+
+    
 }

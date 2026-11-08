@@ -1,0 +1,202 @@
+ADDING A NEW LEVEL
+==================
+
+This project keeps each level's data in a class such as Level_1_Data or
+Level_2_Data. GameLevelData is the shared format, GameScreen loads the selected
+level, and Level_Mechanics decides whether moves and the win condition succeed.
+
+STEP 1: Decide what the level should teach
+------------------------------------------
+Write down:
+  - The map size and walkable route.
+  - Where the hero starts.
+  - Which objects the player must interact with.
+  - What exact sequence or condition counts as winning.
+  - The step and code-line limits for a gold result.
+
+Win conditions are evaluated by Level_Mechanics and can vary by level. Existing
+examples include reaching an open door, activating puzzle objects, and
+defeating enemies. Level data places and configures objects; changing the
+objective itself requires mechanics-code changes. Gold is separate: the player
+must win while meeting both configured limits (steps AND nonblank code lines).
+
+STEP 2: Create the level data class
+-----------------------------------
+Add a class in this package, following the pattern in Level_1_Data.java or
+Level_2_Data.java. Define:
+  - LEVEL_WIDTH and LEVEL_HEIGHT.
+  - HERO_START_X and HERO_START_Y.
+  - GOLD_MAX_STEPS and GOLD_MAX_LINES.
+  - Dialogue, command-help text, and a background image path.
+  - A static LEVEL field initialized by a createLevel() method.
+
+The current GameScene grid has 12 columns and 12 rows, and GameScreen checks
+that the level dimensions match it. To use a different size, update the scene
+grid too.
+
+STEP 3: Define every placed object in one list
+----------------------------------------------
+Create a GameLevelData.LevelObject[] in createLevel(). This is the source of
+truth for the hero, button, door, enemy, totem, and other rendered objects.
+Each entry specifies its type, image resource path, grid x/y, displayed size,
+whether it blocks movement, and (for blockers) the message shown on collision.
+The hero object's coordinates must match HERO_START_X/Y. Add only the objects
+required by that level's objective: for example, Level 1 uses a button and
+door, while Level 3 uses enemies. ENEMY and TOTEM are available object types;
+set blocksMovement to true if they should stop the hero. Keep images under the
+project's resources and use their classpath paths, for example
+"/com/example/css/enemy.png".
+
+STEP 4: Define the walkable tiles
+---------------------------------
+Start with:
+
+  GameLevelData.Tile[][] tiles =
+      GameLevelData.createOpenTileTable(LEVEL_WIDTH, LEVEL_HEIGHT);
+
+Tiles begin blocked. Mark valid floor/path cells with:
+
+  tiles[x][y] = new GameLevelData.Tile(true, null);
+
+The first index is x (column), the second is y (row). Ensure the hero has a
+valid route to the level's objective. Button, door, and objective cells should
+be walkable. Blocking objects are checked separately from tile walkability.
+
+The map uses the tile table as its initial walkable route. The current level
+mechanics do not dynamically change tile walkability during a run.
+
+STEP 5: Return the shared level data
+------------------------------------
+Return a new GameLevelData with the dimensions, hero start, gold limits,
+background, boundary message, dialogue/help, tile table, and your object list.
+Use the existing level classes as a working example of the constructor shape.
+
+STEP 6: Make the level selectable
+---------------------------------
+Adding a data class alone does not make a playable map entry. Register its
+actual level ID in GameScreen.configureLevel() with a new case. Add a map
+button and handler in GameMap.java and game_map.fxml, and update GameMap's
+level-button, description, and level-data selection logic so the player can
+open it. Use the same ID for completion, gold, and saved best scores.
+
+The current three level IDs are 1, 11, and 21: Level_1_Data, Level_2_Data, and
+Level_3_Data respectively. For testing, GameMap temporarily allows all three
+levels to be entered. To restore progression gating, set
+TEMPORARILY_ALLOW_ALL_LEVELS to false; then level 11 requires level 1 to be
+completed, and level 21 requires level 11 to be completed.
+
+STEP 7: Check the result
+------------------------
+Build and run the game. Confirm that the map entry opens the intended level,
+images load, walls and blockers prevent the right moves, and the level's
+objective can be completed. For a button-and-door level, verify that the button
+opens the door and reaching it wins. For an enemy level, verify that defeating
+all required enemies wins. Try solutions just below and above each gold limit;
+gold is awarded only when both limits are met.
+
+SETTING THE GOALS
+=================
+
+Win objective:
+  Win rules are implemented in Level_Mechanics. Current levels can use
+  different objectives: Level 1 uses its button and door, Level 2 uses puzzle
+  items, and Level 3 wins after all its enemies are defeated. Level data
+  supplies the objects; mechanics code determines what completing them means.
+
+Gold objective:
+  Set GOLD_MAX_STEPS and GOLD_MAX_LINES in the new level class. GameScreen
+  counts each executed movement command as a step and counts nonblank lines in
+  the submitted code. A completed level earns gold when steps <=
+  getGoldMaxSteps() AND nonblank lines <= getGoldMaxLines().
+
+Choose targets by solving the level yourself first. Count the shortest
+reasonable route for the step target, then decide how much room to allow for
+loops or alternate routes. Set the line target based on whether you want to
+reward compact code or allow beginner-friendly commands on separate lines.
+These limits affect gold, not whether the player can complete the level.
+
+LEVEL 3: RANDOM ENEMIES, SCAN, AND SOLUTION
+==========================================
+
+Level_3_Data creates a fully walkable 12 by 12 map. It places six enemies at
+random, distinct coordinates, never on the hero's starting tile (3, 5). A new
+layout is created when Level 3 is configured for a run.
+
+Python_Reader has a SCANNABLE_LEVELS array. Only levels listed there receive
+scan data. For an enabled level, Java passes one JSON argument to run_level.py
+containing the active map width, height, and enemy coordinates. Because this
+comes from the active level instance, it contains the randomized positions for
+that run. The runner decodes the JSON and calls game_api.configure_scan_data()
+before executing the player's Python code.
+
+On a scannable level, hero.scan() returns a pair:
+
+  enemy_count, enemy_positions = hero.scan()
+
+enemy_count is the number of enemies. enemy_positions is a list of (x, y)
+tuples, in the same order as the Java level objects. The call also emits one
+SCAN command for the mechanics engine. Scanning reveals positions; it does not
+move the hero or defeat an enemy.
+
+To defeat an enemy, the hero must be on one of its four adjacent tiles and call
+hero.attack(). An attack removes the first adjacent enemy in the level-object
+order. Level 3 wins once all enemies are removed. Enemies do not block
+movement, and every tile on this map is walkable.
+
+Script_level3.py contains a complete example solution for the randomized map.
+Copy its contents into the game's Python editor while playing Level 3. It:
+  1. Scans once and reads the enemy count and coordinates.
+  2. Uses breadth-first search to find the nearest tile adjacent to any living
+     enemy.
+  3. Selects the enemy that Java's attack command removes first, matching the
+     scanned order.
+  4. Moves next to that enemy, attacks, and repeats until all enemies are gone.
+
+The script starts from Level 3's configured hero position (3, 5). If the map's
+dimensions or hero start changes, update MAP_WIDTH, MAP_HEIGHT, and
+hero_position in Script_level3.py. If the level gains blocked tiles, update
+the route search so it avoids them.
+
+COMMAND USAGE LIMITS
+====================
+
+GameLevelData defaults each command category to five uses per run. All four
+movement directions share the Move category; Attack, Scan, Add, and Drop each
+have their own category and allowance. Level_Mechanics checks the limit before
+running a command. Exceeding it shows a message and ends the run. Counts reset
+when a run is reset.
+
+Levels can configure different allowances in GameLevelData:
+  - Level 1: five uses per non-movement command category and nine moves, so its
+    existing button-and-door route remains possible.
+  - Level 2: five uses per category, with all movement directions sharing its
+    five-move allowance.
+  - Level 3: five uses for Scan, Add, and Drop; six attacks (one per enemy);
+    and enough shared movement uses to reach all six randomized enemies on the
+    open 12 by 12 map.
+
+The Level 3 movement allowance is calculated as
+ENEMY_COUNT * (LEVEL_WIDTH + LEVEL_HEIGHT - 2). The map has no blocked tiles,
+and from any location a remaining enemy can be reached within this conservative
+allowance over all six attacks. Gold step and line targets are separate: a run
+can win even if it exceeds a gold target.
+
+HOW COMPLICATED CAN A LEVEL BE?
+===============================
+
+Simple (low complexity): Reuse the current button-and-door rules, define a new
+walkable map, place objects, and tune the two gold limits. This is mostly level
+data plus registering the new level with the map and screen.
+
+Moderate: Add multiple hazards or visual objects using existing LevelObject
+types, tune blocked messages, and carefully lay out alternate routes. Check
+that every object fits in the grid and that all intended paths are walkable.
+
+Advanced: Add a new objective or interaction (keys, collectible delivery,
+multiple switches, timed doors, enemies that move, or different win
+conditions). This needs changes to Level_Mechanics and likely GameScreen's
+object-state/rendering logic, plus new level data and tests. It is not just a
+matter of adding another object entry.
+
+Current project caveat: only levels 1, 11, and 21 are currently wired to the
+level data classes. The other numbered map buttons are visual placeholders.
