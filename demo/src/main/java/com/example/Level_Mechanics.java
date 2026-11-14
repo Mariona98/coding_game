@@ -13,13 +13,15 @@ public class Level_Mechanics {
     private enum CommandCategory {
         MOVE,
         ATTACK,
-        SCAN,
         ADD,
         DROP
     }
 
     private int heroX;
     private int heroY;
+    private int totemX;
+    private int totemY;
+    private boolean totemProgramActive;
     private final int startX;
     private final int startY;
     private final GameLevelData levelData;
@@ -51,6 +53,15 @@ public boolean dooropened = false;
         this.startY = levelData.getHeroObjectY();
         heroX = this.startX;
         heroY = this.startY;
+        totemX = -1;
+        totemY = -1;
+        for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
+            if (object.getType() == GameLevelData.LevelObject.Type.TOTEM) {
+                totemX = object.getX();
+                totemY = object.getY();
+                break;
+            }
+        }
         levelStartTime = System.currentTimeMillis();
         // Start each category at zero so every level begins with a fresh allowance.
         for (CommandCategory category : CommandCategory.values()) {
@@ -59,7 +70,11 @@ public boolean dooropened = false;
     }
 
     public void executeCommand(Level_Commands cmd) {
-        // Invalid/no-op moves leave the hero in place and expose a message to the UI.
+        // Invalid/no-op moves leave the actor in place and expose a message to the UI.
+        if (cmd == Level_Commands.TOTEM_PROGRAM_END) {
+            totemProgramActive = false;
+            return;
+        }
         if (GameOver) {
             isGamewon = false;
             System.out.println("Command ignored because the game is over.");
@@ -72,6 +87,25 @@ public boolean dooropened = false;
 
         lastMovementMessage = null;
         commandLimitExceeded = false;
+
+        if (cmd == Level_Commands.TOTEM_PROGRAM) {
+            if (totemX < 0 || totemY < 0
+                || Math.abs(heroX - totemX) + Math.abs(heroY - totemY) != 1) {
+                lastMovementMessage =
+                    "The hero must stand next to the totem before calling its function.";
+                GameOver = true;
+                return;
+            }
+            totemProgramActive = true;
+            return;
+        }
+        if ((isTotemMovement(cmd) || cmd == Level_Commands.TOTEM_ATTACK)
+            && !totemProgramActive) {
+            lastMovementMessage =
+                "The totem only accepts commands inside a function called with hero.command().";
+            GameOver = true;
+            return;
+        }
 
         // Check the category before running the action so an over-limit command
         // cannot move the hero or change the level state.
@@ -94,6 +128,19 @@ public boolean dooropened = false;
         }
         commandUsage.put(category, used + 1);
 
+        if (isTotemMovement(cmd)) {
+            moveTotem(cmd);
+            return;
+        }
+        if (cmd == Level_Commands.TOTEM_ATTACK) {
+            if (totemX < 0 || totemY < 0) {
+                lastMovementMessage = "There is no totem in this level.";
+                return;
+            }
+            attackEnemy(totemX, totemY);
+            return;
+        }
+
         int nextX = heroX;
         int nextY = heroY;
 
@@ -114,14 +161,9 @@ public boolean dooropened = false;
                 nextY++;
                 break;
             case ATTACK:
-                attackEnemy();
+                attackEnemy(heroX, heroY);
                 System.out.println("Attack command received.");
                 break;
-            case SCAN:
-                // Scan results are prepared by Python for the active level;
-                // scanning itself must not trigger the adjacent-enemy hazard.
-                System.out.println("Scan command received.");
-                break;  
             case ADD:
                 String additem = levelData.getAddItemId(heroX, heroY);
                 if (additem == null) {
@@ -182,7 +224,8 @@ public boolean dooropened = false;
 
         heroX = nextX;
         heroY = nextY;
-        
+
+        enemyAttack();
 
         System.out.println("Hero moved to (" + heroX + ", " + heroY + ").");
        
@@ -195,11 +238,14 @@ public boolean dooropened = false;
             case MOVE_LEFT:
             case MOVE_UP:
             case MOVE_DOWN:
+            case TOTEM_MOVE_RIGHT:
+            case TOTEM_MOVE_LEFT:
+            case TOTEM_MOVE_UP:
+            case TOTEM_MOVE_DOWN:
                 return CommandCategory.MOVE;
             case ATTACK:
+            case TOTEM_ATTACK:
                 return CommandCategory.ATTACK;
-            case SCAN:
-                return CommandCategory.SCAN;
             case ADD:
                 return CommandCategory.ADD;
             case DROP:
@@ -213,6 +259,46 @@ public boolean dooropened = false;
     private String getCommandCategoryName(CommandCategory category) {
         return category == CommandCategory.MOVE ? "movement" : category.name();
     }
+
+    private boolean isTotemMovement(Level_Commands command) {
+        return command == Level_Commands.TOTEM_MOVE_RIGHT
+            || command == Level_Commands.TOTEM_MOVE_LEFT
+            || command == Level_Commands.TOTEM_MOVE_UP
+            || command == Level_Commands.TOTEM_MOVE_DOWN;
+    }
+
+    private void moveTotem(Level_Commands command) {
+        if (totemX < 0 || totemY < 0) {
+            lastMovementMessage = "There is no totem in this level.";
+            return;
+        }
+        int nextX = totemX;
+        int nextY = totemY;
+        switch (command) {
+            case TOTEM_MOVE_RIGHT:
+                nextX++;
+                break;
+            case TOTEM_MOVE_LEFT:
+                nextX--;
+                break;
+            case TOTEM_MOVE_UP:
+                nextY--;
+                break;
+            case TOTEM_MOVE_DOWN:
+                nextY++;
+                break;
+            default:
+                throw new IllegalArgumentException("Not a totem movement command: " + command);
+        }
+        if (levelData.getTile(nextX, nextY) == null) {
+            lastMovementMessage = levelData.getBoundaryMessage();
+            return;
+        }
+        totemX = nextX;
+        totemY = nextY;
+        System.out.println("Totem moved to (" + totemX + ", " + totemY + ").");
+    }
+
     public void updateButtonState() {
         // Standing on the switch opens the door; stepping away leaves it open.
         if (heroX == levelData.getButtonObjectX() && heroY == levelData.getButtonObjectY()) {
@@ -242,33 +328,58 @@ public boolean dooropened = false;
 
 
     public boolean checkWin() {
-        boolean reachedOpenDoor = isDoorOpen()
-            && heroX == levelData.getDoorX()
-            && heroY == levelData.getDoorY();
-        boolean hasPuzzle = false;
-        boolean allPuzzlesActivated = true;
-        boolean hasEnemy = false;
-        for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
-            if (object.getType() == GameLevelData.LevelObject.Type.PUZZLE) {
-                hasPuzzle = true;
-                if (!object.isActivated()) {
-                    allPuzzlesActivated = false;
-                    break;
-                }
-            }
-            if (object.getType() == GameLevelData.LevelObject.Type.ENEMY) {
-                hasEnemy = true;
-            }
-            if (object.getType() != GameLevelData.LevelObject.Type.ENEMY){
-                    hasEnemy = false;
-            }
+        boolean won;
+        switch (levelData.getWinCondition()) {
+            case REACH_OPEN_DOOR:
+                won = isDoorOpen()
+                    && heroX == levelData.getDoorX()
+                    && heroY == levelData.getDoorY();
+                break;
+            case ACTIVATE_ALL_PUZZLES:
+                won = hasPuzzles() && areAllPuzzlesActivated();
+                break;
+            case DEFEAT_ALL_ENEMIES:
+                won = areAllEnemiesDefeated();
+                break;
+            default:
+                throw new IllegalStateException(
+                    "Unsupported win condition: " + levelData.getWinCondition()
+                );
         }
 
-        if (reachedOpenDoor || (hasPuzzle && allPuzzlesActivated)|| (!hasEnemy && !hasPuzzle && !reachedOpenDoor)) {
+        if (won) {
             setGamewon();
             System.out.println("Game won!");
         }
         return isGamewon;
+    }
+
+    private boolean hasPuzzles() {
+        for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
+            if (object.getType() == GameLevelData.LevelObject.Type.PUZZLE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean areAllPuzzlesActivated() {
+        for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
+            if (object.getType() == GameLevelData.LevelObject.Type.PUZZLE
+                && !object.isActivated()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean areAllEnemiesDefeated() {
+        for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
+            if (object.getType() == GameLevelData.LevelObject.Type.ENEMY) {
+                return false;
+            }
+        }
+        return true;
     }
 
   
@@ -282,6 +393,7 @@ public boolean dooropened = false;
 
         heroX = startX;
         heroY = startY;
+        totemProgramActive = false;
         dooropened = false;
         pressButton = false;
         isGamewon = false;
@@ -305,56 +417,28 @@ public boolean dooropened = false;
             if (object.getType() == GameLevelData.LevelObject.Type.ENEMY) {
                 if (heroX == object.getX() && heroY == object.getY()) {
                     GameOver = true;
-                    System.out.println("Game over! The hero was attacked by an enemy.");
+                    lastMovementMessage = "The hero was attacked by an enemy.";
+                    System.out.println("Game over! " + lastMovementMessage);
                     return;
                 }
             }
         }
     }
 
- public int scanForEnemies() {
-         
-for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
-            if (object.getType() == GameLevelData.LevelObject.Type.ENEMY) {
-                if (heroX == object.getX() + 1 && heroY == object.getY()) {
-                    GameOver = true;
-                    System.out.println("Game over! The hero was attacked by an enemy.");
-                    return 1;
-                }
-                if (heroX == object.getX() - 1 && heroY == object.getY()) {
-                    GameOver = true;
-                    System.out.println("Game over! The hero was attacked by an enemy.");
-                    return 2;
-                }
-                if (heroX == object.getX() && heroY == object.getY() + 1) {
-                    GameOver = true;
-                    System.out.println("Game over! The hero was attacked by an enemy.");
-                    return 3;
-                }
-                if (heroX == object.getX() && heroY == object.getY() - 1) {
-                    GameOver = true;
-                    System.out.println("Game over! The hero was attacked by an enemy.");
-                    return 4;
-                }
-            }
-        }
-        return 0;
-    }
-
-    public void attackEnemy() {
+    public void attackEnemy(int attackerX, int attackerY) {
         for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
             if (object.getType() == GameLevelData.LevelObject.Type.ENEMY) {
-                if ((heroX == object.getX() + 1 && heroY == object.getY()) ||
-                    (heroX == object.getX() - 1 && heroY == object.getY()) ||
-                    (heroX == object.getX() && heroY == object.getY() + 1) ||
-                    (heroX == object.getX() && heroY == object.getY() - 1)) {
+                if ((attackerX == object.getX() + 1 && attackerY == object.getY()) ||
+                    (attackerX == object.getX() - 1 && attackerY == object.getY()) ||
+                    (attackerX == object.getX() && attackerY == object.getY() + 1) ||
+                    (attackerX == object.getX() && attackerY == object.getY() - 1)) {
                     levelData.removeLevelObject(object);
                     System.out.println("Enemy at (" + object.getX() + ", " + object.getY() + ") has been defeated.");
                     return;
                 }
             }
         }
-        System.out.println("No enemy adjacent to the hero to attack.");
+        System.out.println("No enemy adjacent to the attacker to attack.");
     }
     public long getElapsedTimeSeconds() {
         return (System.currentTimeMillis() - levelStartTime) / 1000;
@@ -372,6 +456,14 @@ for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
         return heroY;
     }
 
+    public int getTotemX() {
+        return totemX;
+    }
+
+    public int getTotemY() {
+        return totemY;
+    }
+
     public String getLastMovementMessage() {
         return lastMovementMessage;
     }
@@ -387,4 +479,6 @@ for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
     public void setGamewon() {
         this.isGamewon = true;
     }
+
+ 
 }

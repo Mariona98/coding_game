@@ -15,19 +15,17 @@ public class Level_2_Data {
     public static final int HERO_START_Y = 5;
     public static final int GOLD_MAX_STEPS = 10;
     public static final int GOLD_MAX_LINES = 10;
-    public static final int COMMAND_USAGE_LIMIT = 5;
+    public static final int COMMAND_USAGE_LIMIT = 15;
 
     // Legacy fields retained for compatibility; gameplay state belongs to the mechanics engine.
     public int heroX;
     public int heroY;
     
     public static final String[] DIALOGUES = {
-        "Welcome, hero!",
-        "You need to reach the door.",
-        "But the door is currently closed.",
-        "Find the button and press it.",
-        "Then move to the door.",
-        "Good luck!"
+        "It seems there is no door here ...",
+        "Maybe this ritualistic symbols will open a protal to the next level.",
+        "I could activate them if i draw them with the paint ",
+        "Help me carry the necessary amount of paint to the symbols and draw them."
     };
 
     public static final GameLevelData LEVEL = createLevel();
@@ -71,6 +69,7 @@ public class Level_2_Data {
             DIALOGUES,
             "Use movement commands to find the switch, open the door, and reach the exit.",
             new GameLevelData.HelpSection[] {
+                
                 new GameLevelData.HelpSection(
                     "Import the hero",
                     "Add this import before issuing movement commands.",
@@ -82,17 +81,21 @@ public class Level_2_Data {
                     "hero.moveRight()\nhero.moveLeft()\nhero.moveUp()\nhero.moveDown()"
                 ),
                 new GameLevelData.HelpSection(
-                    "Level 2 objective",
-                    "The switch is two tiles to the right and two tiles up from the starting point. "
-                        + "Press it, then make your way to the exit.",
-                    "hero.moveRight()\nhero.moveUp()"
+                    "Add and remove paint from the hero",
+                    "The hero can carry paint and use it to draw on the floor. Use the addPaint method to add paint to the hero's inventory, and use the removePaint method to remove paint from the hero's inventory.",
+                    "hero.addPaint()\nhero.removePaint()"
                 ),
                 new GameLevelData.HelpSection(
-                    "Command limits",
-                    "You can use up to " + COMMAND_USAGE_LIMIT
-                        + " commands in each category. All movement directions share one limit.",
-                    "hero.moveRight()\nhero.moveUp()"
-                )
+                    "Level 2 objective",
+                    "Complete the ritual by drawing the symbols on the floor using the paint.",
+                    "null"
+                ),
+                new GameLevelData.HelpSection(
+                    "Gold objectives",
+                    "The hero that can complete the level in fewer than " + GOLD_MAX_STEPS + " steps and fewer than " + GOLD_MAX_LINES + " lines of code will be awarded gold.",
+                    null)
+                
+
             },
 
             tiles,
@@ -157,7 +160,10 @@ public class Level_2_Data {
 
              
             },
-            COMMAND_USAGE_LIMIT
+            COMMAND_USAGE_LIMIT,
+            COMMAND_USAGE_LIMIT,
+            COMMAND_USAGE_LIMIT,
+            GameLevelData.WinCondition.ACTIVATE_ALL_PUZZLES
         );
     }
 

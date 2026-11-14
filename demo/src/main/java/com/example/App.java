@@ -36,7 +36,7 @@ public class App extends Application {
             // The Stage retains its Scene, so a static Scene field is unnecessary.
             // These dimensions set the initial window size; change them to resize the layout.
             Scene scene = new Scene(root, 586, 438);
-            stage.setTitle("Coders' Haven");
+            stage.setTitle("Coding Hell0");
             stage.setScene(scene);
             stage.setResizable(false); // Remove or set to true to let users resize the window.
             stage.show();

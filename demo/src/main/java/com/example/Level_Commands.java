@@ -10,7 +10,13 @@ public enum Level_Commands {
     MOVE_UP,
     MOVE_DOWN,
     ATTACK,
-    SCAN,
+    TOTEM_PROGRAM,
+    TOTEM_PROGRAM_END,
+    TOTEM_MOVE_RIGHT,
+    TOTEM_MOVE_LEFT,
+    TOTEM_MOVE_UP,
+    TOTEM_MOVE_DOWN,
+    TOTEM_ATTACK,
     ADD,
     DROP;
     

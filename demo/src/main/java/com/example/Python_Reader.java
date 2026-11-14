@@ -24,44 +24,25 @@ public class Python_Reader {
     /** Maximum amount of non-command process output retained for error messages. */
     private static final int MAX_ERROR_OUTPUT_LENGTH = 16_384;
 
-    // Add a level number here when its Python scripts should be allowed to scan.
-    private static final int[] SCANNABLE_LEVELS = {3};
-
     // Legacy placeholder for player item input; this field is not used by runPython.
     public String item;
 
     /**
-     * Executes player code and returns each valid Level_Commands token emitted
-     * by run_level.py. Python stdout is treated as the command protocol; text
-     * that is not a command is collected as diagnostic output.
+     * Executes player code with a JSON snapshot of the selected level and returns
+     * each valid Level_Commands token emitted by run_level.py.
      *
      * @param code Python source entered by the player
+     * @param levelData selected level's map and objects, serialized as a run-start snapshot
      * @return commands in the order printed by the Python runner
      * @throws IOException if temporary files or process streams cannot be used
      * @throws InterruptedException if this Java thread is interrupted while waiting
      * @throws PythonExecutionException if setup, sandboxing, or Python execution fails
      */
-    public static List<Level_Commands> runPython(String code)
+    public static List<Level_Commands> runPython(String code, GameLevelData levelData)
         throws IOException, InterruptedException, PythonExecutionException {
-        return runPython(code, -1, null);
-    }
-
-    /**
-     * Runs player code with scan details only when the selected level allows scanning.
-     *
-     * @param code Python source entered by the player
-     * @param levelNumber selected level number, used to check scan permission
-     * @param levelData active map whose size and enemy positions are sent to Python
-     * @return commands in the order printed by the Python runner
-     * @throws IOException if temporary files or process streams cannot be used
-     * @throws InterruptedException if this Java thread is interrupted while waiting
-     * @throws PythonExecutionException if setup, sandboxing, or Python execution fails
-     */
-    public static List<Level_Commands> runPython(
-        String code,
-        int levelNumber,
-        GameLevelData levelData
-    ) throws IOException, InterruptedException, PythonExecutionException {
+        if (levelData == null) {
+            throw new IllegalArgumentException("Level data is required to run Python code.");
+        }
         // Use monotonic time for durations so clock adjustments do not affect timings.
         long totalStartedAt = System.nanoTime();
         long stageStartedAt = totalStartedAt;
@@ -88,13 +69,16 @@ public class Python_Reader {
         Path userScript = workingDirectory.resolve("script.py");
         Path runnerScript = workingDirectory.resolve("run_level.py");
         Path gameApi = workingDirectory.resolve("game_api.py");
+        Path levelSnapshot = workingDirectory.resolve("level_data.json");
 
         try {
             stageStartedAt = System.nanoTime();
-            // Write the player's source and copy the trusted helper scripts beside it.
+            // Write player source and the selected level's initial state. The snapshot
+            // is intentionally separate from Python source so strings/IDs stay data.
             Files.write(userScript, code.getBytes(StandardCharsets.UTF_8));
             copyPythonResource("/com/example/run_level.py", runnerScript);
             copyPythonResource("/com/example/game_api.py", gameApi);
+            writeLevelSnapshot(levelData, levelSnapshot);
 
             // Create Sandy's allow-list and resource limits for this execution.
             String sandboxConfig = createSandboxConfig(
@@ -112,18 +96,7 @@ public class Python_Reader {
             command.add("-B");
             command.add(runnerScript.toString());
             command.add(userScript.toString());
-            if (isScannableLevel(levelNumber)) {
-                if (levelData == null) {
-                    throw new PythonExecutionException(
-                        "Cannot provide scan data without active level data."
-                    );
-                }
-
-                // Pass the current map snapshot as one JSON argument. Coordinates
-                // come from this run's level instance, including randomized enemies.
-                command.add("--scan-data");
-                command.add(createScanDataJson(levelData));
-            }
+            command.add(levelSnapshot.toString());
             logTiming("Prepare scripts and sandbox", stageStartedAt);
 
             // Run from the temporary directory and combine stderr and stdout so all
@@ -204,50 +177,99 @@ public class Python_Reader {
             Files.deleteIfExists(userScript);
             Files.deleteIfExists(runnerScript);
             Files.deleteIfExists(gameApi);
+            Files.deleteIfExists(levelSnapshot);
             Files.deleteIfExists(workingDirectory);
             logTiming("Cleanup", stageStartedAt);
             logTiming("Total Python run", totalStartedAt);
         }
     }
 
-    /** Checks whether a level number is present in the opt-in scan-level array. */
-    private static boolean isScannableLevel(int levelNumber) {
-        for (int scannableLevel : SCANNABLE_LEVELS) {
-            if (scannableLevel == levelNumber) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
-     * Encodes only numeric map dimensions and enemy coordinates, so no string
-     * escaping is needed and the result can safely be passed as one process argument.
+     * Writes the selected level's dimensions, walkability, and object data as JSON
+     * so the Python runner can pass it to the game_api module.
      */
-    private static String createScanDataJson(GameLevelData levelData) {
+    private static void writeLevelSnapshot(GameLevelData levelData, Path destination)
+        throws IOException {
         StringBuilder json = new StringBuilder();
-        json.append("{\"width\":")
-            .append(levelData.getWidth())
-            .append(",\"height\":")
-            .append(levelData.getHeight())
-            .append(",\"enemies\":[");
+        json.append("{\"width\":").append(levelData.getWidth())
+            .append(",\"height\":").append(levelData.getHeight())
+            .append(",\"tiles\":[");
 
-        boolean firstEnemy = true;
-        for (GameLevelData.LevelObject object : levelData.getLevelObjects()) {
-            if (object.getType() != GameLevelData.LevelObject.Type.ENEMY) {
-                continue;
-            }
-            if (!firstEnemy) {
+        for (int y = 0; y < levelData.getHeight(); y++) {
+            if (y > 0) {
                 json.append(',');
             }
-            json.append('[')
-                .append(object.getX())
-                .append(',')
-                .append(object.getY())
-                .append(']');
-            firstEnemy = false;
+            json.append('[');
+            for (int x = 0; x < levelData.getWidth(); x++) {
+                if (x > 0) {
+                    json.append(',');
+                }
+                json.append(levelData.getTile(x, y).isWalkable());
+            }
+            json.append(']');
         }
-        return json.append("]}").toString();
+
+        json.append("],\"objects\":[");
+        List<GameLevelData.LevelObject> objects = levelData.getLevelObjects();
+        for (int index = 0; index < objects.size(); index++) {
+            if (index > 0) {
+                json.append(',');
+            }
+            GameLevelData.LevelObject object = objects.get(index);
+            json.append("{\"id\":");
+            appendJsonString(json, object.getId());
+            json.append(",\"type\":");
+            appendJsonString(json, object.getType().name());
+            json.append(",\"x\":").append(object.getX())
+                .append(",\"y\":").append(object.getY())
+                .append(",\"blocks_movement\":").append(object.blocksMovement())
+                .append(",\"activated\":").append(object.isActivated())
+                .append('}');
+        }
+        json.append("]}");
+        Files.write(destination, json.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    /** Appends a valid JSON string value, including null IDs, with escaped controls. */
+    private static void appendJsonString(StringBuilder json, String value) {
+        if (value == null) {
+            json.append("null");
+            return;
+        }
+        json.append('"');
+        for (int index = 0; index < value.length(); index++) {
+            char character = value.charAt(index);
+            switch (character) {
+                case '"':
+                    json.append("\\\"");
+                    break;
+                case '\\':
+                    json.append("\\\\");
+                    break;
+                case '\b':
+                    json.append("\\b");
+                    break;
+                case '\f':
+                    json.append("\\f");
+                    break;
+                case '\n':
+                    json.append("\\n");
+                    break;
+                case '\r':
+                    json.append("\\r");
+                    break;
+                case '\t':
+                    json.append("\\t");
+                    break;
+                default:
+                    if (character < 0x20) {
+                        json.append(String.format("\\u%04x", (int) character));
+                    } else {
+                        json.append(character);
+                    }
+            }
+        }
+        json.append('"');
     }
 
     /** Prints elapsed time for one setup or execution stage. */

@@ -1,6 +1,5 @@
 package com.example;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,9 +9,16 @@ import java.util.List;
  * Shared immutable structure for describing a level. Each level supplies its
  * own values for the map (indexed as {@code tiles[x][y]}), level objects,
  * dialogue, background, tile messages, and command help; the game screen and
- * mechanics consume the same structure.
+ * mechanics consume the same structure. Its win condition is configured per level.
  */
 public final class GameLevelData {
+
+    /** Goal that must be completed to win the level. */
+    public enum WinCondition {
+        REACH_OPEN_DOOR,
+        ACTIVATE_ALL_PUZZLES,
+        DEFEAT_ALL_ENEMIES
+    }
 
     /** Default maximum uses allowed for each command category in a level. */
     public static final int DEFAULT_COMMAND_USAGE_LIMIT = 5;
@@ -26,7 +32,8 @@ public final class GameLevelData {
             PUZZLE,
             ITEM,
             ENEMY,
-            TOTEM
+            TOTEM,
+            DECOR
         }
 
         private final Type type;
@@ -78,6 +85,11 @@ public final class GameLevelData {
 
         public Type getType() {
             return type;
+        }
+
+        /** Returns the level-configured identifier, or null when the object has none. */
+        public String getId() {
+            return id;
         }
 
         public String getImagePath() {
@@ -185,6 +197,7 @@ public final class GameLevelData {
     private final int commandUsageLimit;
     private final int movementCommandUsageLimit;
     private final int attackCommandUsageLimit;
+    private final WinCondition winCondition;
 
 
     public GameLevelData(
@@ -308,7 +321,43 @@ public final class GameLevelData {
         int movementCommandUsageLimit,
         int attackCommandUsageLimit
     ) {
-        
+        this(
+            width,
+            height,
+            goldMaxSteps,
+            goldMaxLines,
+            backgroundPath,
+            boundaryMessage,
+            dialogues,
+            commandHelpIntroduction,
+            commandHelpSections,
+            tiles,
+            levelObjects,
+            commandUsageLimit,
+            movementCommandUsageLimit,
+            attackCommandUsageLimit,
+            WinCondition.REACH_OPEN_DOOR
+        );
+    }
+
+    /** Creates level data with command limits and an explicit level-specific goal. */
+    public GameLevelData(
+        int width,
+        int height,
+        int goldMaxSteps,
+        int goldMaxLines,
+        String backgroundPath,
+        String boundaryMessage,
+        String[] dialogues,
+        String commandHelpIntroduction,
+        HelpSection[] commandHelpSections,
+        Tile[][] tiles,
+        LevelObject[] levelObjects,
+        int commandUsageLimit,
+        int movementCommandUsageLimit,
+        int attackCommandUsageLimit,
+        WinCondition winCondition
+    ) {
         if (width <= 0 || height <= 0 || tiles == null || tiles.length != width) {
             throw new IllegalArgumentException("Tile table dimensions do not match the level size.");
         }
@@ -326,6 +375,9 @@ public final class GameLevelData {
             || commandHelpSections == null
             || levelObjects == null) {
             throw new IllegalArgumentException("Level dialogue and command help must be configured.");
+        }
+        if (winCondition == null) {
+            throw new IllegalArgumentException("Each level must configure a win condition.");
         }
         for (HelpSection section : commandHelpSections) {
             if (section == null) {
@@ -374,6 +426,7 @@ public final class GameLevelData {
         this.commandUsageLimit = commandUsageLimit;
         this.movementCommandUsageLimit = movementCommandUsageLimit;
         this.attackCommandUsageLimit = attackCommandUsageLimit;
+        this.winCondition = winCondition;
     }
 
    
@@ -429,6 +482,11 @@ public final class GameLevelData {
     /** Returns the allowed attack uses for this level. */
     public int getAttackCommandUsageLimit() {
         return attackCommandUsageLimit;
+    }
+
+    /** Returns the goal configured for this level. */
+    public WinCondition getWinCondition() {
+        return winCondition;
     }
 
     public String getBackgroundPath() {

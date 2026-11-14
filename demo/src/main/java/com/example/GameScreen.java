@@ -294,9 +294,8 @@ private String saveFilename;
         
         System.out.println("Calling Python_Reader.runPython()...");
         try {
-            // Send the active level so the Python runner can expose scan data
-            // only for levels opted into scanning.
-            commandsList = Python_Reader.runPython(userCode, levelNumber, levelData);
+            // Execute the submitted Python and convert its output to game commands.
+            commandsList = Python_Reader.runPython(userCode, levelData);
         } catch (Python_Reader.PythonExecutionException e) {
             System.err.println("Sandboxed Python run failed: " + e.getMessage());
             finishFailedRun(explainPythonError(e.getMessage()));
@@ -502,10 +501,16 @@ private String saveFilename;
             finishFailedRun(engine.getLastMovementMessage());
             return;
         }
+        if (engine.GameOver) {
+            finishFailedRun(engine.getLastMovementMessage());
+            return;
+        }
         
-        System.out.println("Hero position after command:");
-        System.out.println("X = " + engine.getHeroX());
-        System.out.println("Y = " + engine.getHeroY());
+        System.out.println(
+            "Hero position: (" + engine.getHeroX() + ", " + engine.getHeroY()
+                + "), totem position: (" + engine.getTotemX() + ", "
+                + engine.getTotemY() + ")."
+        );
 
         updateVisuals();
         String tileMessage = engine.getLastMovementMessage();
@@ -617,7 +622,13 @@ private String saveFilename;
                 entry.getValue().setVisible(false);
                 continue;
             }
-            if (object.getType() != GameLevelData.LevelObject.Type.HERO) {
+            if (object.getType() == GameLevelData.LevelObject.Type.TOTEM) {
+                setGridPosition(
+                    entry.getValue(),
+                    engine.getTotemX(),
+                    engine.getTotemY()
+                );
+            } else if (object.getType() != GameLevelData.LevelObject.Type.HERO) {
                 setGridPosition(entry.getValue(), object.getX(), object.getY());
             }
             String imagePath = object.isActivated()

@@ -1,12 +1,8 @@
 package com.example;
 
-/**
- * Supplies Level 1's values to the shared {@link GameLevelData} structure.
- * Edit these values and {@link #createLevel()} without changing other levels.
- */
+
 public class Level_1_Data {
 
-    // These values belong to Level 1; other levels configure their own coordinates.
     public static final int LEVEL_WIDTH = 12;
     public static final int LEVEL_HEIGHT = 12;
 
@@ -19,12 +15,17 @@ public class Level_1_Data {
 
     public static final int BUTTON_X = 5;
     public static final int BUTTON_Y = 3;
+
+    public static final int DECOY_X = 5;
+    public static final int DECOY_Y = 4;
     
     public static final int HERO_START_X = 3;
     public static final int HERO_START_Y = 5;
+
     public static final int GOLD_MAX_STEPS = 10;
     public static final int GOLD_MAX_LINES = 10;
     public static final int COMMAND_USAGE_LIMIT = 5;
+
     // Level 1 needs at least nine moves to press the button and reach the door.
     public static final int MOVEMENT_COMMAND_USAGE_LIMIT = 9;
 
@@ -33,12 +34,11 @@ public class Level_1_Data {
     public int heroY;
     
     public static final String[] DIALOGUES = {
-        "Welcome, hero!",
-        "You need to reach the door.",
-        "But the door is currently closed.",
-        "Find the button and press it.",
-        "Then move to the door.",
-        "Good luck!"
+        "Oh hello , could you help me out? I need to get to the door but it is locked.",
+        "I think one of the buttons will open the door for me.",
+        "It seems one of them is a decoy, I need  to get closer to check which one is the real button.",
+        "You can use the movement commands to help me navigate the map , and i will tell you if i see the DECOY.",
+        "Awaiting your commands!"
     };
 
     public static final GameLevelData LEVEL = createLevel();
@@ -97,17 +97,24 @@ public class Level_1_Data {
                     "hero.moveRight()\nhero.moveLeft()\nhero.moveUp()\nhero.moveDown()"
                 ),
                 new GameLevelData.HelpSection(
+                    "Getting the Id of the objects",
+                    "You can get the Id of the object in a specific direction by using the getObjectId method which returns the id ( string ) of the object in that direction.",
+                    "hero.getObjectId(\"RIGHT\")\nhero.getObjectId(\"LEFT\")\nhero.getObjectId(\"UP\")\nhero.getObjectId(\"DOWN\")"
+                ),
+                new GameLevelData.HelpSection(
                     "Level 1 objective",
-                    "The switch is two tiles to the right and two tiles up from the starting point. "
+                    "Press the button and avoid the decoy to open the door and reach the exit."
                         + "Press it, then make your way to the exit.",
-                    "hero.moveRight()\nhero.moveUp()"
+                        null
+                    
                 ),
                 new GameLevelData.HelpSection(
                     "Command limits",
                     "You can use up to " + MOVEMENT_COMMAND_USAGE_LIMIT
                         + " movement commands total (all directions combined) and up to "
                         + COMMAND_USAGE_LIMIT + " uses of each other command.",
-                    "hero.moveRight()\nhero.moveUp()"
+                        null
+                    
                 )
             },
 
@@ -128,6 +135,19 @@ public class Level_1_Data {
 
                 ),
                 new GameLevelData.LevelObject(
+                    "DECOY",
+                    GameLevelData.LevelObject.Type.ENEMY,
+                    "/com/example/css/button.png",
+                    null,
+                    DECOY_X,
+                    DECOY_Y,
+                    66,
+                    66,
+                    false,
+                    null,
+                    false
+                ),
+                new GameLevelData.LevelObject(
                     "button",
                     GameLevelData.LevelObject.Type.BUTTON,
                     "/com/example/css/button.png",
@@ -140,6 +160,7 @@ public class Level_1_Data {
                     null,
                     false
                 ),
+                
                 new GameLevelData.LevelObject(
                     "door",
                     GameLevelData.LevelObject.Type.DOOR,
@@ -156,7 +177,9 @@ public class Level_1_Data {
              
             },
             COMMAND_USAGE_LIMIT,
-            MOVEMENT_COMMAND_USAGE_LIMIT
+            MOVEMENT_COMMAND_USAGE_LIMIT,
+            COMMAND_USAGE_LIMIT,
+            GameLevelData.WinCondition.REACH_OPEN_DOOR
         );
     }
 

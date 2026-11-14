@@ -1,23 +1,38 @@
-"""Sandbox entry point: execute the submitted script and print recorded moves.
+"""Sandbox entry point: load the level snapshot, run player code, print moves.
 
-Called by Python_Reader with the submitted script path as the first argument.
+Python_Reader supplies the submitted script path and JSON level snapshot path.
 """
 
-import sys
 import json
+import sys
 import game_api
 
 # Keep game_api's command list as the single source of recorded player actions.
+if len(sys.argv) != 3:
+    raise ValueError("Expected a script path and a level snapshot path.")
 filename = sys.argv[1]
+level_filename = sys.argv[2]
 
-# Java adds scan data only for levels listed in Python_Reader.SCANNABLE_LEVELS.
-# It is passed as one JSON argument so dimensions and all enemy coordinates stay together.
-if len(sys.argv) == 4 and sys.argv[2] == "--scan-data":
-    game_api.configure_scan_data(json.loads(sys.argv[3]))
-elif len(sys.argv) != 2:
-    raise ValueError("Expected a script path and optional scan data.")
+# Keep the JSON snapshot as data on game_api; no player-facing setup function is needed.
+with open(level_filename, encoding="utf-8") as level_file:
+    game_api.level_data = json.load(level_file)
 
-with open(filename) as f:
+# Make the complete object list directly available through the game API.
+game_api.objects = game_api.level_data.get("objects", [])
+
+# Initialize the hero's tracked coordinates after level data has been loaded.
+hero_start = next(
+    (obj for obj in game_api.objects if obj.get("type") == "HERO"),
+    None,
+)
+if hero_start is None:
+    raise ValueError("The level snapshot does not contain a hero object.")
+game_api.heroX = hero_start["x"]
+game_api.heroY = hero_start["y"]
+
+
+
+with open(filename, encoding="utf-8") as f:
     code = f.read()
 
 # Execute player code inside the Sandy sandbox configured by Python_Reader.

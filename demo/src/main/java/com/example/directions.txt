@@ -115,70 +115,43 @@ loops or alternate routes. Set the line target based on whether you want to
 reward compact code or allow beginner-friendly commands on separate lines.
 These limits affect gold, not whether the player can complete the level.
 
-LEVEL 3: RANDOM ENEMIES, SCAN, AND SOLUTION
+LEVEL 3: PROGRAMMABLE TOTEM AND LAVA
 ==========================================
 
-Level_3_Data creates a fully walkable 12 by 12 map. It places six enemies at
-random, distinct coordinates, never on the hero's starting tile (3, 5). A new
-layout is created when Level 3 is configured for a run.
+Level_3_Data creates a 12 by 12 lava map. Only the hero's tile (1, 1) and the
+totem's tile (1, 2) are walkable. Six enemies are placed on lava tiles at fixed
+coordinates. The hero cannot leave its safe tile. The totem can move over lava
+and attack an enemy from an adjacent tile.
 
-Python_Reader has a SCANNABLE_LEVELS array. Only levels listed there receive
-scan data. For an enabled level, Java passes one JSON argument to run_level.py
-containing the active map width, height, and enemy coordinates. Because this
-comes from the active level instance, it contains the randomized positions for
-that run. The runner decodes the JSON and calls game_api.configure_scan_data()
-before executing the player's Python code.
+Import the hero and totem, define a function with Python's def keyword, then
+have the adjacent hero call it with hero.command(function_name). The totem only
+accepts moveRight(), moveLeft(), moveUp(), moveDown(), and attack() commands
+inside a function invoked this way. Level 3 is complete only after all six
+enemies are defeated.
 
-On a scannable level, hero.scan() returns a pair:
-
-  enemy_count, enemy_positions = hero.scan()
-
-enemy_count is the number of enemies. enemy_positions is a list of (x, y)
-tuples, in the same order as the Java level objects. The call also emits one
-SCAN command for the mechanics engine. Scanning reveals positions; it does not
-move the hero or defeat an enemy.
-
-To defeat an enemy, the hero must be on one of its four adjacent tiles and call
-hero.attack(). An attack removes the first adjacent enemy in the level-object
-order. Level 3 wins once all enemies are removed. Enemies do not block
-movement, and every tile on this map is walkable.
-
-Script_level3.py contains a complete example solution for the randomized map.
-Copy its contents into the game's Python editor while playing Level 3. It:
-  1. Scans once and reads the enemy count and coordinates.
-  2. Uses breadth-first search to find the nearest tile adjacent to any living
-     enemy.
-  3. Selects the enemy that Java's attack command removes first, matching the
-     scanned order.
-  4. Moves next to that enemy, attacks, and repeats until all enemies are gone.
-
-The script starts from Level 3's configured hero position (3, 5). If the map's
-dimensions or hero start changes, update MAP_WIDTH, MAP_HEIGHT, and
-hero_position in Script_level3.py. If the level gains blocked tiles, update
-the route search so it avoids them.
+Script_level3.py contains a working example for the fixed enemy positions.
+Copy it into the game's Python editor to see the hero issue the function and
+the totem travel over lava to attack every enemy.
 
 COMMAND USAGE LIMITS
 ====================
 
-GameLevelData defaults each command category to five uses per run. All four
-movement directions share the Move category; Attack, Scan, Add, and Drop each
-have their own category and allowance. Level_Mechanics checks the limit before
-running a command. Exceeding it shows a message and ends the run. Counts reset
-when a run is reset.
+GameLevelData defaults each command category to five uses per run. All movement
+directions, including totem movement, share the Move category; hero and totem
+attacks share the Attack category. Add and Drop each have their own category.
+Level_Mechanics checks the limit before running a command. Exceeding it shows a
+message and ends the run. Counts reset when a run is reset.
 
 Levels can configure different allowances in GameLevelData:
   - Level 1: five uses per non-movement command category and nine moves, so its
     existing button-and-door route remains possible.
   - Level 2: five uses per category, with all movement directions sharing its
     five-move allowance.
-  - Level 3: five uses for Scan, Add, and Drop; six attacks (one per enemy);
-    and enough shared movement uses to reach all six randomized enemies on the
-    open 12 by 12 map.
+  - Level 3: five uses for Add and Drop; six attacks (one per enemy); and 20
+    shared movement uses.
 
-The Level 3 movement allowance is calculated as
-ENEMY_COUNT * (LEVEL_WIDTH + LEVEL_HEIGHT - 2). The map has no blocked tiles,
-and from any location a remaining enemy can be reached within this conservative
-allowance over all six attacks. Gold step and line targets are separate: a run
+The hero can only walk on the two safe tiles; the totem ignores lava walkability
+but must remain inside the map. Gold step and line targets are separate: a run
 can win even if it exceeds a gold target.
 
 HOW COMPLICATED CAN A LEVEL BE?

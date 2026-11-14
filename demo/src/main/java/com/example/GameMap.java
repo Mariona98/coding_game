@@ -23,6 +23,8 @@ public class GameMap {
 
     @FXML
     private Button lv2;
+    @FXML 
+    private Button lv3;
 
     @FXML
     private Button mainMenuButton;
@@ -43,6 +45,8 @@ public class GameMap {
         }
         configureLevelButton(lv1, 1);
         configureLevelButton(lv2, 2);
+        configureLevelButton(lv3, 3);
+        
 
         System.out.println("GameMap received save file: " + saveFilename);
     }
@@ -67,6 +71,8 @@ public class GameMap {
                 return lv1;
             case 2:
                 return lv2;
+            case 3:
+                return lv3;
             default:
                 throw new IllegalArgumentException(
                     "No map button is configured for level " + levelNumber
@@ -87,6 +93,14 @@ public class GameMap {
             openLevel(2, "/com/example/fxml/GameScene.fxml", lv2);
         }
     }
+
+    @FXML
+    private void onLevel3Clicked() throws IOException {
+        if (showLevelInfo(3)) {
+            openLevel(3, "/com/example/fxml/GameScene.fxml", lv3);
+        }
+    }
+
 //Review and rewrite
     private boolean showLevelInfo(int levelNumber) {
         // Let players review instructions and their best result before entering.
@@ -96,7 +110,9 @@ public class GameMap {
         description += "\n\nYou can revisit this level at any time.";
         GameLevelData levelData = levelNumber == 1
             ? Level_1_Data.LEVEL
-            : Level_2_Data.LEVEL;
+            : levelNumber == 2
+            ? Level_2_Data.LEVEL
+            : Level_3_Data.LEVEL;
         description += "\nGold target: finish in "
             + levelData.getGoldMaxSteps()
             + " steps or fewer and use "

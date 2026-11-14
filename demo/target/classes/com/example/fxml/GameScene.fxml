@@ -133,7 +133,7 @@
                   <VBox prefHeight="174.0" prefWidth="497.0">
                      <children>
       
-                      <Label fx:id="dialogueText" alignment="CENTER" prefHeight="188.0" prefWidth="498.0" styleClass="dialogue-text" stylesheets="@../css/dialogue.css" text="" textAlignment="CENTER" />
+                      <Label fx:id="dialogueText" alignment="CENTER" prefHeight="188.0" prefWidth="498.0" styleClass="dialogue-text" stylesheets="@../css/dialogue.css" text="" textAlignment="CENTER" wrapText="true" />
       
                       <Label alignment="BOTTOM_RIGHT" prefHeight="71.0" prefWidth="533.0" text="Click to continue">
                            <padding>

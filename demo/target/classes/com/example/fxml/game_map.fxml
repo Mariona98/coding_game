@@ -19,7 +19,7 @@
             <Font size="9.0" />
          </font>
       </Button>
-      <Button fx:id="lv3" layoutX="245.0" layoutY="569.0" minHeight="76.0" minWidth="78.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="78.0" styleClass="circle-button" stylesheets="@../css/map.css" text="3">
+      <Button fx:id="lv3" layoutX="245.0" layoutY="569.0" minHeight="76.0" minWidth="78.0" mnemonicParsing="false" onAction="#onLevel3Clicked" prefHeight="76.0" prefWidth="78.0" styleClass="circle-button" stylesheets="@../css/map.css" text="3">
          <font>
             <Font size="9.0" />
          </font>
