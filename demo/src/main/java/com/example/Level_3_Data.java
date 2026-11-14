@@ -5,10 +5,10 @@ public class Level_3_Data {
 
     public static final int LEVEL_WIDTH = 12;
     public static final int LEVEL_HEIGHT = 12;
-    public static final int HERO_START_X = 1;
-    public static final int HERO_START_Y = 1;
-    public static final int TOTEM_START_X = 1;
-    public static final int TOTEM_START_Y = 2;
+    public static final int HERO_START_X = 3;
+    public static final int HERO_START_Y = 2;
+    public static final int TOTEM_START_X = 3;
+    public static final int TOTEM_START_Y = 3;
     public static final int ENEMY_COUNT = 6;
     public static final int GOLD_MAX_STEPS = 25;
     public static final int GOLD_MAX_LINES = 30;
@@ -21,9 +21,9 @@ public class Level_3_Data {
     public int heroY;
 
     public static final String[] DIALOGUES = {
-        "Welcome, hero!",
-        "The hero and totem are trapped on two safe tiles.",
-        "Program the totem with a def function to cross the lava.",
+        "It seems I'm stuck on this lava field.",
+        "I see a totem it looks like it can walk through lava.",
+        "Help me program it to navigate and kill the enemies.",
         "Defeat all six enemies to complete the level."
     };
 
@@ -43,12 +43,12 @@ public class Level_3_Data {
             new GameLevelData.Tile(true, null);
 
         int[][] enemyPositions = {
-            {2, 2},
-            {4, 2},
             {7, 2},
-            {10, 2},
-            {10, 4},
-            {5, 4}
+            {8, 4},
+            {11, 10},
+            {5, 11},
+            {11, 5},
+            {2, 7}
         };
         GameLevelData.LevelObject[] objects =
             new GameLevelData.LevelObject[ENEMY_COUNT + 2];
@@ -101,7 +101,7 @@ public class Level_3_Data {
             LEVEL_HEIGHT,
             GOLD_MAX_STEPS,
             GOLD_MAX_LINES,
-            "/com/example/Lava #4.png",
+            "/com/example/css/level3.png",
             "The hero cannot leave the two safe tiles.",
             DIALOGUES,
             "Define a function that programs the totem to defeat all six enemies.",

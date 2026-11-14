@@ -22,7 +22,7 @@ public class Level_1_Data {
     public static final int HERO_START_X = 3;
     public static final int HERO_START_Y = 5;
 
-    public static final int GOLD_MAX_STEPS = 10;
+    public static final int GOLD_MAX_STEPS = 9;
     public static final int GOLD_MAX_LINES = 10;
     public static final int COMMAND_USAGE_LIMIT = 5;
 
@@ -56,13 +56,14 @@ public class Level_1_Data {
 
 
 
-        for (int y = 4; y <= 7; y++) {
-            for (int x = 4; x <= 8; x++) {
+        for (int y = 4; y <= 6; y++) {
+            for (int x = 3; x <= 8; x++) {
                 tiles[x][y] = new GameLevelData.Tile(true, null);
             }
         }
-        for (int y = 4; y <= 6; y++) {
-            tiles[3][y] = new GameLevelData.Tile(true, null);
+        for (int x = 4; x <= 7; x++) {
+            tiles[x][3] = new GameLevelData.Tile(true, null);
+            tiles[x][7] = new GameLevelData.Tile(true, null);
         }
         tiles[BUTTON_X][BUTTON_Y] = new GameLevelData.Tile(true, null);
         tiles[DOOR_X][DOOR_Y] = new GameLevelData.Tile(true, null);

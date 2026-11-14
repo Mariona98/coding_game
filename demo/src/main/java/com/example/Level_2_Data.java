@@ -11,8 +11,8 @@ public class Level_2_Data {
     public static final int LEVEL_HEIGHT = 12;
 
     
-    public static final int HERO_START_X = 3;
-    public static final int HERO_START_Y = 5;
+    public static final int HERO_START_X = 1;
+    public static final int HERO_START_Y = 9;
     public static final int GOLD_MAX_STEPS = 10;
     public static final int GOLD_MAX_LINES = 10;
     public static final int COMMAND_USAGE_LIMIT = 15;
@@ -48,6 +48,19 @@ public class Level_2_Data {
                 tiles[x][y] = new GameLevelData.Tile(true, null);
             }
         }
+
+        int[][] puzzlePositions = {
+            {6, 3},
+            {7, 3},
+            {6, 4},
+            {7, 4},
+            {6, 6},
+            {7, 6},
+            {6,7},
+            {7,7},
+            {6,8},
+            {5,9}
+        };
        
         System.out.println("The walkable tiles are:");  
         for (int y = 0; y < LEVEL_HEIGHT; y++) {
@@ -58,6 +71,54 @@ public class Level_2_Data {
             }
         }
 
+
+
+
+        GameLevelData.LevelObject[] objects =
+            new GameLevelData.LevelObject[12];
+        objects[0] = new GameLevelData.LevelObject(
+            "hero",
+            GameLevelData.LevelObject.Type.HERO,
+            "/com/example/css/hero.png",
+            null,
+            HERO_START_X,
+            HERO_START_Y,
+            63,
+            63,
+            false,
+            null,
+            false
+        );
+
+        for (int i = 0; i < 10; i++) {
+            int[] position = puzzlePositions[i];
+            objects[i + 1] = new GameLevelData.LevelObject(
+                "RED",
+                GameLevelData.LevelObject.Type.PUZZLE,
+                "/com/example/css/red symbol.png",
+                "/com/example/css/red symbol activated.png",
+                position[0],
+                position[1],
+                52,
+                52,
+                false,
+                null,
+                false
+            );
+        }
+        objects[11] = new GameLevelData.LevelObject(
+            "RED",
+            GameLevelData.LevelObject.Type.ITEM,
+            "/com/example/css/redpaint.png",
+            null,
+            3,
+            5,
+            52,
+            52,
+            false,
+            null,
+            false
+        );
         return new GameLevelData(
 
             LEVEL_WIDTH,
@@ -72,8 +133,8 @@ public class Level_2_Data {
                 
                 new GameLevelData.HelpSection(
                     "Import the hero",
-                    "Add this import before issuing movement commands.",
-                    "from game_api import hero"
+                    "Import the hero and inventory before issuing commands.",
+                    "from game_api import hero, inventory"
                 ),
                 new GameLevelData.HelpSection(
                     "Move one tile",
@@ -82,8 +143,10 @@ public class Level_2_Data {
                 ),
                 new GameLevelData.HelpSection(
                     "Add and remove paint from the hero",
-                    "The hero can carry paint and use it to draw on the floor. Use the addPaint method to add paint to the hero's inventory, and use the removePaint method to remove paint from the hero's inventory.",
-                    "hero.addPaint()\nhero.removePaint()"
+                    "Use inventory.append() while on the paint item to pick it up. "
+                        + "Use inventory.remove() while on a symbol to drop paint "
+                        + "and activate that symbol.",
+                    "inventory.append()\ninventory.remove()"
                 ),
                 new GameLevelData.HelpSection(
                     "Level 2 objective",
@@ -99,67 +162,7 @@ public class Level_2_Data {
             },
 
             tiles,
-            new GameLevelData.LevelObject[] {
-                
-                new GameLevelData.LevelObject(
-                    "hero",
-                    GameLevelData.LevelObject.Type.HERO,
-                    "/com/example/css/hero.png",
-                    null,
-                    HERO_START_X,
-                    HERO_START_Y,
-                    66,
-                    66,
-                    false,
-                    null,
-                    false
-
-                ),
-                new GameLevelData.LevelObject(
-                    "RED",
-                    GameLevelData.LevelObject.Type.PUZZLE,
-                    "/com/example/css/red symbol.png",
-                    "/com/example/css/red symbol activated.png",
-                    5,
-                    5,
-                    66,
-                    66,
-                    false,
-                    null,
-                    false
-                ),
-                new GameLevelData.LevelObject(
-                    "RED",
-                    GameLevelData.LevelObject.Type.PUZZLE,
-                    "/com/example/css/red symbol.png",
-                    "/com/example/css/red symbol activated.png",
-                    5,
-                    6,
-                    66,
-                    66,
-                    false,
-                    null,
-                    false
-                ),
-                new GameLevelData.LevelObject(
-                    "RED",
-                    GameLevelData.LevelObject.Type.ITEM,
-                    "/com/example/css/redpaint.png",
-                    null,
-                    8,
-                    5,
-                    66,
-                    66,
-                    false,
-                    null,
-                    false
-                )
-
-
-
-
-             
-            },
+            objects,
             COMMAND_USAGE_LIMIT,
             COMMAND_USAGE_LIMIT,
             COMMAND_USAGE_LIMIT,

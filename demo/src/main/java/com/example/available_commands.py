@@ -32,7 +32,6 @@ hero.getObjectId("RIGHT")  # Check the object in front of the hero
 hero.getObjectId("LEFT")
 hero.getObjectId("UP")
 hero.getObjectId("DOWN")
-
 # What each command does:
 # - hero.moveRight() / hero.moveLeft() / hero.moveUp() / hero.moveDown(): move the hero one tile in that direction.
 # - hero.attack(): attack from the hero's current position.

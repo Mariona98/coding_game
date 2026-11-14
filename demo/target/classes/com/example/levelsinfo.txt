@@ -1,0 +1,336 @@
+CODER'S HAVEN - LEVEL REFERENCE FOR SCRIPT PLANNING
+===================================================
+
+Purpose
+-------
+This file describes the three configured levels and the Python commands
+available to player scripts. Coordinates are grid coordinates, not pixels.
+Every map is 12 columns by 12 rows. Coordinates start at (0, 0) in the upper
+left: x increases to the right and y increases downward.
+
+In the grids below:
+  W = walkable by the hero
+  # = not walkable by the hero
+Columns are x=0 through x=11; each displayed row is the corresponding y value.
+Walkability comes from the tile table. An object's presence does not by itself
+change a tile's walkability. Object movement-blocking flags and level-specific
+hazards are listed separately below.
+
+Shared Python API and execution behavior
+-----------------------------------------
+The game runs the player's Python script once, against a snapshot of the level
+at the start of the run. API methods record commands; Java applies them in
+order after the Python script finishes. A script cannot query the live game
+between commands.
+
+Import the APIs used by a script:
+  from game_api import hero, totem, inventory
+
+The shared API methods are:
+  hero.moveRight()          Move the hero one tile right.
+  hero.moveLeft()           Move the hero one tile left.
+  hero.moveUp()             Move the hero one tile up (y decreases).
+  hero.moveDown()           Move the hero one tile down (y increases).
+  hero.attack()             Attack an enemy orthogonally adjacent to the hero.
+  hero.getObjectId("RIGHT") Return the ID of an object one tile in that
+                            direction, or None if the snapshot has no object
+                            there. Directions: "RIGHT", "LEFT", "UP", "DOWN".
+  inventory.append()        Queue ADD: pick up an item on the hero's tile.
+  inventory.remove()        Queue DROP: drop the first carried item on the
+                            hero's tile.
+  hero.command(function)    Run a player-defined function as a totem command
+                            block. The function must be callable (normally
+                            defined with def).
+  totem.moveRight()         Move the totem one tile right.
+  totem.moveLeft()          Move the totem one tile left.
+  totem.moveUp()            Move the totem one tile up.
+  totem.moveDown()          Move the totem one tile down.
+  totem.attack()            Attack an enemy orthogonally adjacent to the totem.
+
+Totem methods raise an error in the Python API unless called inside the
+function executed by hero.command(...). The Java engine also requires the hero
+to be orthogonally adjacent to the totem when the command block starts.
+Totem movement ignores tile walkability but cannot leave map bounds. Hero
+movement obeys tile walkability and map bounds.
+
+Object lookup caveat: getObjectId reads the initial object snapshot, not the
+live game state. Moving objects or removed enemies are not reflected in it.
+The helper is not a route/pathfinding function and does not report tile
+walkability.
+
+Command limits and scoring
+--------------------------
+Each movement call uses one shared MOVE allowance, regardless of direction
+or whether the actor is hero or totem. Hero and totem attacks share the
+ATTACK allowance. ADD and DROP have separate allowances. Limits are per run
+and reset on game reset. The engine checks a category's limit before executing
+the over-limit command; it does not perform that command.
+
+Gold is a separate completion score, not a requirement to win. A level awards
+gold only if the player wins and both measured values are at or below their
+configured maximums: movement steps <= GOLD_MAX_STEPS and nonblank source
+lines <= GOLD_MAX_LINES. The source comments/help sometimes say "fewer than";
+the actual comparison is inclusive (<=). The Python sandbox also has a
+30-second execution timeout, 512 MB memory limit, and one-process limit.
+
+
+LEVEL 1 (configured level ID 1)
+===============================
+
+Objective and rules
+-------------------
+Step on the button at (5, 3) to open the door at (8, 5), then reach the door.
+The object named DECOY at (5, 4) has type ENEMY. Moving the hero onto an enemy
+tile ends the run, so avoid that coordinate. The door tile is initially
+walkable in the tile table, but the hero cannot enter it until the door opens.
+The decoy tile is walkable in the tile table, but unsafe because it is an
+enemy tile. The button can be reached safely from (4,3) or (6,3).
+
+Map (W = walkable; # = blocked)
+-------------------------------
+      x  0 1 2 3 4 5 6 7 8 9 10 11
+y=00     # # # # # # # # # #  #  #
+y=01     # # # # # # # # # #  #  #
+y=02     # # # # # # # # # #  #  #
+y=03     # # # # W W W W # #  #  #
+y=04     # # # W W W W W W #  #  #
+y=05     # # # W W W W W W #  #  #
+y=06     # # # W W W W W W #  #  #
+y=07     # # # # W W W W # #  #  #
+y=08     # # # # # # # # # #  #  #
+y=09     # # # # # # # # # #  #  #
+y=10     # # # # # # # # # #  #  #
+y=11     # # # # # # # # # #  #  #
+
+Walkable coordinates by row:
+  y=3: (4,3) through (7,3)
+  y=4: (3,4) through (8,4)
+  y=5: (3,5) through (8,5)
+  y=6: (3,6) through (8,6)
+  y=7: (4,7) through (7,7)
+Every coordinate not marked W above is blocked for hero movement.
+
+Objects
+-------
+All objects have fit size 66x66, blocksMovement=false, blockedMessage=null,
+and initiallyActivated=false.
+
+  ID       Type    Position  Image                         Activated image
+  hero     HERO    (3,5)     /com/example/css/hero.png      none
+  DECOY    ENEMY   (5,4)     /com/example/css/button.png    none
+  button   BUTTON  (5,3)     /com/example/css/button.png    none
+  door     DOOR    (8,5)     /com/example/css/door (2).png  none
+
+The hero starts at (3,5). Button and door activation are managed by the
+mechanics; their configured object movement-blocking flag is false.
+
+Commands and limits
+-------------------
+Useful for this level:
+  hero.moveRight(), hero.moveLeft(), hero.moveUp(), hero.moveDown()
+  hero.getObjectId("RIGHT"|"LEFT"|"UP"|"DOWN")
+
+First identify the button by its object ID before stepping onto it. For
+example, from the start, move to (4,3), check the tile to the right, and only
+enter it if its ID is "button". Then follow the open route to the door:
+
+  from game_api import hero
+  hero.moveUp(); hero.moveRight(); hero.moveUp()
+  if hero.getObjectId("RIGHT") == "button":
+      hero.moveRight(); hero.moveRight(); hero.moveRight()
+      hero.moveDown(); hero.moveRight(); hero.moveDown()
+
+The check is made at (4,3); "RIGHT" is the adjacent tile (5,3). The first move
+inside the if steps onto the button, and the remaining moves reach the door at
+(8,5). This route avoids the decoy at (5,4) and uses 9 movement commands. If
+the adjacent ID is not "button", the conditional route is not issued.
+
+The shared API also exposes hero.attack(), inventory.append(),
+inventory.remove(), hero.command(function), and totem movement/attack.
+Those are not needed for this objective; there is no totem, collectible item,
+or usable enemy target in the intended solution. getObjectId is the only
+provided observation helper.
+
+  Shared movement limit: 9 total movement commands (all directions combined).
+  ATTACK limit: 5.
+  ADD limit: 5.
+  DROP limit: 5.
+  Gold: at most 10 movement steps and at most 10 nonblank source lines.
+Note: there is no totem on this level; the movement limit applies to hero
+movement in normal play.
+
+
+LEVEL 2 (configured level ID 11)
+================================
+
+Objective and rules
+-------------------
+Activate all ten RED puzzle tiles by dropping RED paint on each one. The hero
+starts at (1,9); the RED paint item is at (3,5). An ADD at the item coordinate
+picks up its ID ("RED"). A DROP on a puzzle tile activates that puzzle if the
+carried item ID matches the puzzle ID. DROP removes the first carried item.
+The item object remains at (3,5) after ADD, so paint can be picked up again
+there.
+
+Map (all 144 tiles are walkable by the hero)
+---------------------------------------------
+      x  0 1 2 3 4 5 6 7 8 9 10 11
+y=00     W W W W W W W W W W  W  W
+y=01     W W W W W W W W W W  W  W
+y=02     W W W W W W W W W W  W  W
+y=03     W W W W W W W W W W  W  W
+y=04     W W W W W W W W W W  W  W
+y=05     W W W W W W W W W W  W  W
+y=06     W W W W W W W W W W  W  W
+y=07     W W W W W W W W W W  W  W
+y=08     W W W W W W W W W W  W  W
+y=09     W W W W W W W W W W  W  W
+y=10     W W W W W W W W W W  W  W
+y=11     W W W W W W W W W W  W  W
+
+Blocked coordinates: none. This is the entire 12x12 grid; each W represents
+one walkable coordinate (x,y) for the corresponding column and row.
+
+Objects
+-------
+All objects have blocksMovement=false, blockedMessage=null, and
+initiallyActivated=false. The hero is 63x63; each symbol and the paint item
+are 52x52.
+
+  ID       Type    Position  Image                                      Activated image
+  hero     HERO    (1,9)     /com/example/css/hero.png                   none
+  RED      PUZZLE  (6,3)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (7,3)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (6,4)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (7,4)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (6,6)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (7,6)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (6,7)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (7,7)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (6,8)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      PUZZLE  (5,9)     /com/example/css/red symbol.png             /com/example/css/red symbol activated.png
+  RED      ITEM    (3,5)     /com/example/css/redpaint.png               none
+
+Commands and limits
+-------------------
+Objective commands:
+  hero.moveRight(), hero.moveLeft(), hero.moveUp(), hero.moveDown()
+  inventory.append()  # ADD / pick up the item at the hero's current tile
+  inventory.remove()  # DROP / place the first carried item at current tile
+
+Use the implemented Python API like this:
+  from game_api import hero, inventory
+  inventory.append()
+  inventory.remove()
+
+The shared API also exposes hero.attack(), hero.getObjectId(direction),
+hero.command(function), and totem movement/attack. There is no totem or enemy
+in this level, so attacks and totem commands are not needed.
+
+The in-game help uses the same inventory.append() and inventory.remove()
+methods shown above. ADD and DROP each have a limit of 15, enough for the ten
+symbols; all movement directions share a limit of 15.
+
+  Shared movement limit: 15 total moves.
+  ATTACK limit: 15.
+  ADD limit: 15.
+  DROP limit: 15.
+  Gold: at most 10 movement steps and at most 10 nonblank source lines.
+
+
+LEVEL 3 (configured level ID 21)
+================================
+
+Objective and rules
+-------------------
+Defeat all six enemies with the totem. The hero starts at (3,2), and the totem
+starts at (3,3), so they are adjacent. The hero can walk only on the two safe
+tiles shown below; entering an enemy tile ends the run. The totem ignores
+walkability (including lava) but must stay within the 12x12 map. An attacker must be
+orthogonally adjacent to an enemy to defeat it; diagonal adjacency does not
+count. A successful attack removes one adjacent enemy.
+
+Start a totem program while the hero is next to it:
+  from game_api import hero, totem
+
+  def defeat_enemies():
+      # Use totem.moveRight/Left/Up/Down and totem.attack here.
+      pass
+
+  hero.command(defeat_enemies)
+
+The sample is a syntax/template only; the "pass" line does not defeat enemies.
+The hero.command call must occur while hero and totem are adjacent. Put the
+totem actions inside the function called there.
+
+Map (W = walkable by hero; # = blocked to hero / lava)
+------------------------------------------------------
+      x  0 1 2 3 4 5 6 7 8 9 10 11
+y=00     # # # # # # # # # #  #  #
+y=01     # # # # # # # # # #  #  #
+y=02     # # # W # # # # # #  #  #
+y=03     # # # W # # # # # #  #  #
+y=04     # # # # # # # # # #  #  #
+y=05     # # # # # # # # # #  #  #
+y=06     # # # # # # # # # #  #  #
+y=07     # # # # # # # # # #  #  #
+y=08     # # # # # # # # # #  #  #
+y=09     # # # # # # # # # #  #  #
+y=10     # # # # # # # # # #  #  #
+y=11     # # # # # # # # # #  #  #
+
+Hero-walkable coordinates: (3,2), (3,3). The other 142 coordinates are not
+walkable by the hero. The totem can nevertheless enter any in-bounds tile.
+
+Objects
+-------
+All objects have blocksMovement=false, blockedMessage=null, and
+initiallyActivated=false.
+
+  ID              Type   Position  Fit size  Image                         Activated image
+  hero            HERO   (3,2)     63x63     /com/example/css/hero.png      none
+  enemy-1         ENEMY  (7,2)     52x52     /com/example/css/enemy.png     none
+  enemy-2         ENEMY  (8,4)     52x52     /com/example/css/enemy.png     none
+  enemy-3         ENEMY  (11,10)   52x52     /com/example/css/enemy.png     none
+  enemy-4         ENEMY  (5,11)    52x52     /com/example/css/enemy.png     none
+  enemy-5         ENEMY  (11,5)    52x52     /com/example/css/enemy.png     none
+  enemy-6         ENEMY  (2,7)     52x52     /com/example/css/enemy.png     none
+  function-totem  TOTEM  (3,3)     52x52     /com/example/css/totem.png     none
+
+The enemy coordinate list is fixed in the level data. The hero is defeated if
+it moves onto an enemy tile; keep the hero on the safe tiles.
+
+Commands and limits
+-------------------
+Useful for this level:
+  hero.command(function)
+  totem.moveRight(), totem.moveLeft(), totem.moveUp(), totem.moveDown()
+  totem.attack()
+
+Hero movement, hero.attack(), inventory.append()/remove(), and
+hero.getObjectId(direction) are also exposed by the shared API, but the hero
+should stay on its safe tiles and the totem is the intended attacker.
+
+  Shared movement limit: 20 total moves, including all totem and hero moves.
+  Shared ATTACK limit: 6 total attacks (hero and totem attacks combined).
+  ADD limit: 15.
+  DROP limit: 15.
+  Gold: at most 25 movement steps and at most 30 nonblank source lines.
+  Win condition: all six ENEMY objects have been removed.
+
+LEVEL DATA CONSTANTS SUMMARY
+============================
+
+Level 1 (ID 1): 12x12; hero start (3,5); button (5,3); decoy (5,4);
+door (8,5); gold <=10 moves / <=10 nonblank lines; MOVE 9, other categories 5.
+
+Level 2 (ID 11): 12x12; hero start (1,9); RED puzzles (6,3), (7,3), (6,4),
+(7,4), (6,6), (7,6), (6,7), (7,7), (6,8), and (5,9); RED item (3,5);
+gold <=10 moves / <=10 nonblank lines; all command categories MOVE, ATTACK,
+ADD, DROP have limit 15.
+
+Level 3 (ID 21): 12x12; hero start (3,2); totem start (3,3); enemies at
+(7,2), (8,4), (11,10), (5,11), (11,5), (2,7); gold <=25 moves /
+<=30 nonblank lines; MOVE 20, ATTACK 6, ADD 15, DROP 15.
+
+
