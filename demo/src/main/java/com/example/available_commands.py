@@ -1,5 +1,5 @@
 # Available commands the player can write
-#
+
 # Import the objects the player can use
 from game_api import hero, totem, inventory
 
@@ -19,7 +19,7 @@ def move_totem():
     totem.moveLeft()   # Move the totem 1 tile to the left
     totem.moveUp()     # Move the totem 1 tile up
     totem.moveDown()   # Move the totem 1 tile down
-    totem.attack()     # Make the totem attack an enemy
+    totem.attack()     # Make the totem attack an enemy on an adjacent tile
 
 hero.command(move_totem)
 
@@ -27,11 +27,14 @@ hero.command(move_totem)
 inventory.append()  # Add an item to the inventory / pick up an item
 inventory.remove()  # Remove/drop an item from the inventory
 
-# Extra look-up helper
+# Returns id of the object.
 hero.getObjectId("RIGHT")  # Check the object in front of the hero
 hero.getObjectId("LEFT")
 hero.getObjectId("UP")
 hero.getObjectId("DOWN")
+
+
+#Summary
 # What each command does:
 # - hero.moveRight() / hero.moveLeft() / hero.moveUp() / hero.moveDown(): move the hero one tile in that direction.
 # - hero.attack(): attack from the hero's current position.

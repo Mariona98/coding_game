@@ -23,11 +23,12 @@ public class Level_1_Data {
     public static final int HERO_START_Y = 5;
 
     public static final int GOLD_MAX_STEPS = 9;
-    public static final int GOLD_MAX_LINES = 10;
-    public static final int COMMAND_USAGE_LIMIT = 5;
+    public static final int GOLD_MAX_LINES = 11;
+
+    public static final int COMMAND_USAGE_LIMIT = 16;//lets say lines
 
     // Level 1 needs at least nine moves to press the button and reach the door.
-    public static final int MOVEMENT_COMMAND_USAGE_LIMIT = 9;
+    public static final int MOVEMENT_COMMAND_USAGE_LIMIT = 10;//to pass
 
     // Legacy fields retained for compatibility; gameplay state belongs to the mechanics engine.
     public int heroX;
@@ -43,14 +44,14 @@ public class Level_1_Data {
 
     public static final GameLevelData LEVEL = createLevel();
 
-    /** Initializes the legacy position fields to Level 1's configured start. */
+   
     public Level_1_Data() {
         resetPositions();
     }
 
-    /** Builds Level 1's tile map and combines all of its values into shared level data. */
+    
     private static GameLevelData createLevel() {
-        // The first index is X (column); the second index is Y (row).
+        // The first index is X (column) the second index is Y (row).
         GameLevelData.Tile[][] tiles =
             GameLevelData.createOpenTileTable(LEVEL_WIDTH, LEVEL_HEIGHT);
 
@@ -58,15 +59,15 @@ public class Level_1_Data {
 
         for (int y = 4; y <= 6; y++) {
             for (int x = 3; x <= 8; x++) {
-                tiles[x][y] = new GameLevelData.Tile(true, null);
+                tiles[x][y] = new GameLevelData.Tile(true);
             }
         }
         for (int x = 4; x <= 7; x++) {
-            tiles[x][3] = new GameLevelData.Tile(true, null);
-            tiles[x][7] = new GameLevelData.Tile(true, null);
+            tiles[x][3] = new GameLevelData.Tile(true);
+            tiles[x][7] = new GameLevelData.Tile(true);
         }
-        tiles[BUTTON_X][BUTTON_Y] = new GameLevelData.Tile(true, null);
-        tiles[DOOR_X][DOOR_Y] = new GameLevelData.Tile(true, null);
+        tiles[BUTTON_X][BUTTON_Y] = new GameLevelData.Tile(true);
+        tiles[DOOR_X][DOOR_Y] = new GameLevelData.Tile(true);
         System.out.println("The walkable tiles are:");  
         for (int y = 0; y < LEVEL_HEIGHT; y++) {
             for (int x = 0; x < LEVEL_WIDTH; x++) {
@@ -184,7 +185,7 @@ public class Level_1_Data {
         );
     }
 
-    /** Resets the legacy position fields; the active game engine tracks gameplay movement. */
+    
     public void resetPositions() {
         heroX = HERO_START_X;
         heroY = HERO_START_Y;

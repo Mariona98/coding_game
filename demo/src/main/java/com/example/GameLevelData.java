@@ -2,29 +2,24 @@ package com.example;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
-/**
- * Shared immutable structure for describing a level. Each level supplies its
- * own values for the map (indexed as {@code tiles[x][y]}), level objects,
- * dialogue, background, tile messages, and command help; the game screen and
- * mechanics consume the same structure. Its win condition is configured per level.
- */
 public final class GameLevelData {
 
-    /** Goal that must be completed to win the level. */
+    //The goals available for levels
     public enum WinCondition {
         REACH_OPEN_DOOR,
         ACTIVATE_ALL_PUZZLES,
         DEFEAT_ALL_ENEMIES
     }
 
-    /** Default maximum uses allowed for each command category in a level. */
+    //maybe for later uses
     public static final int DEFAULT_COMMAND_USAGE_LIMIT = 5;
 
-    /** A level object rendered by the game controller rather than declared in FXML. */
+    
     public static final class LevelObject {
+
+        //type of objects available in the levels
         public enum Type {
             HERO,
             BUTTON,
@@ -87,7 +82,7 @@ public final class GameLevelData {
             return type;
         }
 
-        /** Returns the level-configured identifier, or null when the object has none. */
+        
         public String getId() {
             return id;
         }
@@ -135,18 +130,18 @@ public final class GameLevelData {
         
     }
 
-    /** Describes whether a map tile can be entered and any message shown there. */
+    
     public static final class Tile {
         private final boolean walkable;
    
 
-        /** Creates a tile with its movement rule and optional arrival message. */
-        public Tile(boolean walkable, String message) {
+        
+        public Tile(boolean walkable) {
             this.walkable = walkable;
             
         }
 
-        /** Returns whether the hero can enter this tile. */
+        
         public boolean isWalkable() {
             return walkable;
         }
@@ -198,7 +193,9 @@ public final class GameLevelData {
     private final int movementCommandUsageLimit;
     private final int attackCommandUsageLimit;
     private final WinCondition winCondition;
-    /** Creates level data with command limits and an explicit level-specific goal. */
+
+
+    //creates a level
     public GameLevelData(
         int width,
         int height,
@@ -293,7 +290,7 @@ public final class GameLevelData {
         Tile[][] tiles = new Tile[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                tiles[x][y] = new Tile(false, null);
+                tiles[x][y] = new Tile(false);
             }
         }
         return tiles;
@@ -307,7 +304,7 @@ public final class GameLevelData {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             throw new IllegalArgumentException("Tile position is outside the tile table.");
         }
-        tiles[x][y] = new Tile(walkable, null);
+        tiles[x][y] = new Tile(walkable);
     }
 
    
@@ -327,22 +324,22 @@ public final class GameLevelData {
         return goldMaxLines;
     }
 
-    /** Returns the maximum allowed uses for each command category in this level. */
+    //later use
     public int getCommandUsageLimit() {
         return commandUsageLimit;
     }
 
-    /** Returns the shared movement limit for all four movement directions. */
+    //later use
     public int getMovementCommandUsageLimit() {
         return movementCommandUsageLimit;
     }
 
-    /** Returns the allowed attack uses for this level. */
+    //later use
     public int getAttackCommandUsageLimit() {
         return attackCommandUsageLimit;
     }
 
-    /** Returns the goal configured for this level. */
+    
     public WinCondition getWinCondition() {
         return winCondition;
     }
@@ -380,7 +377,7 @@ public int getButtonObjectX() {
                 return object.getX();
             }
         }
-        return -1; // Button object not found
+        return -1; 
     }
     public int getButtonObjectY() {
         for (LevelObject object : levelObjects) {
@@ -388,7 +385,7 @@ public int getButtonObjectX() {
                 return object.getY();
             }
         }
-        return -1; // Button object not found
+        return -1; 
     }
 
     public int getHeroObjectX() {
@@ -397,7 +394,7 @@ public int getButtonObjectX() {
                 return object.getX();
             }
         }
-        return -1; // Hero object not found
+        return -1; 
     }
     public int getHeroObjectY() {
         for (LevelObject object : levelObjects) {
@@ -405,7 +402,7 @@ public int getButtonObjectX() {
                 return object.getY();
             }
         }
-        return -1; // Hero object not found
+        return -1; 
     }
     public int getItemObjectX() {
         for (LevelObject object : levelObjects) {
@@ -413,7 +410,7 @@ public int getButtonObjectX() {
                 return object.getX();
             }
         }
-        return -1; // Item object not found
+        return -1; 
     }
     public int getItemObjectY() {
         for (LevelObject object : levelObjects) {
@@ -421,7 +418,7 @@ public int getButtonObjectX() {
                 return object.getY();
             }
         }
-        return -1; // Item object not found
+        return -1; 
     }
     public int getDoorX() {
         for (LevelObject object : levelObjects) {
@@ -429,7 +426,7 @@ public int getButtonObjectX() {
                 return object.getX();
             }
         }
-        return -1; // Door object not found
+        return -1; 
     }
     public int getDoorY() {
         for (LevelObject object : levelObjects) {
@@ -437,7 +434,7 @@ public int getButtonObjectX() {
                 return object.getY();
             }
         }
-        return -1; // Door object not found
+        return -1; 
     }
     public LevelObject getLevelObjectById(String id) {
         for (LevelObject object : levelObjects) {
@@ -457,7 +454,7 @@ public int getButtonObjectX() {
                 return object.id;
             }
         }
-        return null; // Item object not found
+        return null; 
     }
 
     public String getPuzzleObjectIdAt(int x, int y) {
@@ -488,7 +485,7 @@ public int getButtonObjectX() {
                 return object.getX();
             }
         }
-        return -1; // Item object not found
+        return -1; 
     }
     public int getPuzzleObjectY() {
         for (LevelObject object : levelObjects) {
@@ -496,7 +493,7 @@ public int getButtonObjectX() {
                 return object.getY();
             }
         }
-        return -1; // Item object not found
+        return -1; 
     }
     
     public void setLevelObjectActivatedAt(
@@ -535,7 +532,7 @@ public int getButtonObjectX() {
                 return object.getImagePath();
             }
         }
-        return null; // Hero object not found
+        return null; 
     }
     public int getHeroObjectFitWidth() {
         for (LevelObject object : levelObjects) {
@@ -543,7 +540,7 @@ public int getButtonObjectX() {
                 return (int) object.getFitWidth();
             }
         }
-        return -1; // Hero object not found
+        return -1;
     }
     public int getHeroObjectFitHeight() {
         for (LevelObject object : levelObjects) {
@@ -551,7 +548,7 @@ public int getButtonObjectX() {
                 return (int) object.getFitHeight();
             }
         }
-        return -1; // Hero object not found
+        return -1; 
     } 
 
    

@@ -1,6 +1,6 @@
 package com.example;
 
-/** Supplies Level 3's lava map, fixed enemies, and programmable totem. */
+
 public class Level_3_Data {
 
     public static final int LEVEL_WIDTH = 12;
@@ -10,11 +10,16 @@ public class Level_3_Data {
     public static final int TOTEM_START_X = 3;
     public static final int TOTEM_START_Y = 3;
     public static final int ENEMY_COUNT = 6;
-    public static final int GOLD_MAX_STEPS = 25;
-    public static final int GOLD_MAX_LINES = 30;
+    public static final int GOLD_MAX_STEPS = 32;
+    public static final int GOLD_MAX_LINES = 15;
     public static final int COMMAND_USAGE_LIMIT = 15;
     public static final int MOVEMENT_COMMAND_USAGE_LIMIT = 20;
-    // One attack is needed to remove each of the six enemies.
+
+    //lines basic 17
+    //steps basic 35
+
+
+    
     public static final int ATTACK_COMMAND_USAGE_LIMIT = ENEMY_COUNT;
 
     public int heroX;
@@ -38,9 +43,9 @@ public class Level_3_Data {
         GameLevelData.Tile[][] tiles =
             GameLevelData.createOpenTileTable(LEVEL_WIDTH, LEVEL_HEIGHT);
         tiles[HERO_START_X][HERO_START_Y] =
-            new GameLevelData.Tile(true, null);
+            new GameLevelData.Tile(true);
         tiles[TOTEM_START_X][TOTEM_START_Y] =
-            new GameLevelData.Tile(true, null);
+            new GameLevelData.Tile(true);
 
         int[][] enemyPositions = {
             {7, 2},
@@ -143,7 +148,7 @@ public class Level_3_Data {
         );
     }
 
-    /** Resets the legacy position fields; the active game engine tracks gameplay movement. */
+    
     public void resetPositions() {
         heroX = HERO_START_X;
         heroY = HERO_START_Y;

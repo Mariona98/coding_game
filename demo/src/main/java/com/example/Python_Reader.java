@@ -21,10 +21,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class Python_Reader {
 
-    /** Maximum amount of non-command process output retained for error messages. */
+    /** Maximum amount of non-command process output retained for error messages: 16 KiB. */
     private static final int MAX_ERROR_OUTPUT_LENGTH = 16_384;
 
-    // Legacy placeholder for player item input; this field is not used by runPython.
+    // Legacy placeholder for player item input; runPython does not read or write this field.
     public String item;
 
     /**
@@ -39,7 +39,10 @@ public class Python_Reader {
      * @throws PythonExecutionException if setup, sandboxing, or Python execution fails
      */
     public static List<Level_Commands> runPython(String code, GameLevelData levelData)
+        
         throws IOException, InterruptedException, PythonExecutionException {
+        
+        // A level snapshot is required to initialize the Python game API.
         if (levelData == null) {
             throw new IllegalArgumentException("Level data is required to run Python code.");
         }
@@ -66,6 +69,7 @@ public class Python_Reader {
 
         // Keep this run's scripts separate from the project and other executions.
         Path workingDirectory = Files.createTempDirectory("coders-haven-python-");
+        // Give each input its own file in the temporary run directory.
         Path userScript = workingDirectory.resolve("script.py");
         Path runnerScript = workingDirectory.resolve("run_level.py");
         Path gameApi = workingDirectory.resolve("game_api.py");
@@ -85,7 +89,8 @@ public class Python_Reader {
                 pythonDirectory,
                 workingDirectory
             );
-            // Pass arguments separately so paths containing spaces stay intact.
+            // Build Sandy's argument vector in order instead of joining it into one
+            // command string, so paths containing spaces remain single arguments.
             List<String> command = new ArrayList<>();
             command.add(sandyExecutable);
             command.add("-s");
@@ -99,8 +104,8 @@ public class Python_Reader {
             command.add(levelSnapshot.toString());
             logTiming("Prepare scripts and sandbox", stageStartedAt);
 
-            // Run from the temporary directory and combine stderr and stdout so all
-            // process output can be read from one stream.
+            // Set the temporary directory as the process working directory and merge
+            // stderr into stdout so commands and diagnostics can be read from one stream.
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             processBuilder.directory(workingDirectory.toFile());
             processBuilder.redirectErrorStream(true);
@@ -137,6 +142,7 @@ public class Python_Reader {
             )) {
                 String line;
                 while ((line = reader.readLine()) != null) {
+                    // Keep the raw stream visible in the application console for debugging.
                     System.out.println("SANDBOX OUTPUT: " + line);
                     if (line.trim().isEmpty()) {
                         // Blank lines are neither valid commands nor useful diagnostics.
@@ -190,16 +196,20 @@ public class Python_Reader {
      */
     private static void writeLevelSnapshot(GameLevelData levelData, Path destination)
         throws IOException {
+        // Build JSON manually so the Python runner can read a self-contained snapshot.
         StringBuilder json = new StringBuilder();
+        // Store the dimensions first, followed by a two-dimensional walkability array.
         json.append("{\"width\":").append(levelData.getWidth())
             .append(",\"height\":").append(levelData.getHeight())
             .append(",\"tiles\":[");
 
+        // Visit each tile row and separate JSON array entries with commas.
         for (int y = 0; y < levelData.getHeight(); y++) {
             if (y > 0) {
                 json.append(',');
             }
             json.append('[');
+            // Record whether each tile can be walked on.
             for (int x = 0; x < levelData.getWidth(); x++) {
                 if (x > 0) {
                     json.append(',');
@@ -209,6 +219,7 @@ public class Python_Reader {
             json.append(']');
         }
 
+        // Append every level object with the properties needed by the Python API.
         json.append("],\"objects\":[");
         List<GameLevelData.LevelObject> objects = levelData.getLevelObjects();
         for (int index = 0; index < objects.size(); index++) {
@@ -227,15 +238,18 @@ public class Python_Reader {
                 .append('}');
         }
         json.append("]}");
+        // Write the completed snapshot using UTF-8 so Java and Python agree on encoding.
         Files.write(destination, json.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     /** Appends a valid JSON string value, including null IDs, with escaped controls. */
     private static void appendJsonString(StringBuilder json, String value) {
+        // JSON has a literal null value; it must not be written as the text "null".
         if (value == null) {
             json.append("null");
             return;
         }
+        // Surround the value with quotes and escape characters that JSON reserves.
         json.append('"');
         for (int index = 0; index < value.length(); index++) {
             char character = value.charAt(index);
@@ -262,6 +276,7 @@ public class Python_Reader {
                     json.append("\\t");
                     break;
                 default:
+                    // Encode any other control character as a four-digit Unicode escape.
                     if (character < 0x20) {
                         json.append(String.format("\\u%04x", (int) character));
                     } else {
@@ -274,6 +289,7 @@ public class Python_Reader {
 
     /** Prints elapsed time for one setup or execution stage. */
     private static void logTiming(String stage, long startedAt) {
+        // Convert elapsed monotonic time to milliseconds and label the measured stage.
         long elapsedMillis = TimeUnit.NANOSECONDS.toMillis(
             System.nanoTime() - startedAt
         );
@@ -284,16 +300,21 @@ public class Python_Reader {
      * Finds Sandy using SANDY_EXE, known project-relative paths, then PATH.
      */
     private static String resolveSandyExecutable()
-        throws PythonExecutionException {
+        
+    throws PythonExecutionException {
+        // Prefer an explicitly configured Sandy executable.
         String configuredPath = System.getenv("SANDY_EXE");
+        
         if (configuredPath != null && !configuredPath.trim().isEmpty()) {
             // An explicit but invalid setting is an error, not a reason to use another copy.
             Path executable = Path.of(configuredPath).toAbsolutePath().normalize();
+            
             if (!Files.isRegularFile(executable)) {
                 throw new PythonExecutionException(
                     "SANDY_EXE does not point to a file: " + executable
                 );
             }
+
             return executable.toString();
         }
 
@@ -326,6 +347,7 @@ public class Python_Reader {
      */
     private static Path resolvePythonExecutable()
         throws IOException, InterruptedException, PythonExecutionException {
+        // Use the caller's explicit interpreter path when it is configured.
         String configuredPython = System.getenv("PYTHON_EXE");
         if (configuredPython != null && !configuredPython.trim().isEmpty()) {
             // Do not silently ignore an invalid explicit interpreter setting.
@@ -347,7 +369,7 @@ public class Python_Reader {
         try {
             Process resolver;
             try {
-                // Print only the interpreter path; Python_Reader validates it below.
+                // Ask the Windows Python launcher to print the chosen interpreter path.
                 resolver = new ProcessBuilder(
                     "py",
                     "-c",
@@ -365,6 +387,7 @@ public class Python_Reader {
 
             // Avoid hanging indefinitely if the launcher stalls.
             if (!resolver.waitFor(10, TimeUnit.SECONDS)) {
+                // Stop a stalled launcher so interpreter discovery cannot hang forever.
                 resolver.destroyForcibly();
                 throw new PythonExecutionException(
                     "Timed out while locating Python. Set PYTHON_EXE to python.exe."
@@ -426,6 +449,9 @@ public class Python_Reader {
         String writableDirectory = tomlString(workingDirectory.toString());
         String pythonHome = tomlString(pythonDirectory.toString());
 
+        // Assemble Sandy's TOML policy: identify the sandbox and its working directory,
+        // then allow reads from the run/Python folders and execution from Python's folder.
+        // The remaining settings disable child processes and cap runtime and resources.
         return "[sandbox]\n"
             + "token = 'appcontainer'\n"
             + "workdir = " + writableDirectory + "\n"
@@ -457,10 +483,12 @@ public class Python_Reader {
 
     /** Checked failure type for Python setup, sandboxing, and execution errors. */
     public static class PythonExecutionException extends Exception {
+        // Identifies this exception class version if Java serializes it.
         private static final long serialVersionUID = 1L;
 
-        /** Creates an exception carrying the diagnostic shown to the caller. */
+        // Creates this project-specific checked exception with a diagnostic message.
         public PythonExecutionException(String output) {
+            // Store the message in Exception so callers can retrieve it with getMessage().
             super(output);
         }
     }

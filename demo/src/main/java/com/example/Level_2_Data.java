@@ -1,23 +1,23 @@
 package com.example;
 
-/**
- * Supplies Level 1's values to the shared {@link GameLevelData} structure.
- * Edit these values and {@link #createLevel()} without changing other levels.
- */
+
 public class Level_2_Data {
 
-    // These values belong to Level 1; other levels configure their own coordinates.
+    
     public static final int LEVEL_WIDTH = 12;
     public static final int LEVEL_HEIGHT = 12;
 
     
     public static final int HERO_START_X = 1;
     public static final int HERO_START_Y = 9;
-    public static final int GOLD_MAX_STEPS = 10;
-    public static final int GOLD_MAX_LINES = 10;
+    public static final int GOLD_MAX_STEPS = 22;
+    public static final int GOLD_MAX_LINES = 20;
     public static final int COMMAND_USAGE_LIMIT = 15;
 
-    // Legacy fields retained for compatibility; gameplay state belongs to the mechanics engine.
+    //lines basic 33
+    //steps basic 30
+
+    
     public int heroX;
     public int heroY;
     
@@ -30,14 +30,14 @@ public class Level_2_Data {
 
     public static final GameLevelData LEVEL = createLevel();
 
-    /** Initializes the legacy position fields to Level 1's configured start. */
+    
     public Level_2_Data() {
         resetPositions();
     }
 
-    /** Builds Level 1's tile map and combines all of its values into shared level data. */
+    
     private static GameLevelData createLevel() {
-        // The first index is X (column); the second index is Y (row).
+        // The first index is X (column) the second index is Y (row).
         GameLevelData.Tile[][] tiles =
             GameLevelData.createOpenTileTable(LEVEL_WIDTH, LEVEL_HEIGHT);
 
@@ -45,7 +45,7 @@ public class Level_2_Data {
 
         for (int y = 0; y <= 11; y++) {
             for (int x = 0; x <= 11; x++) {
-                tiles[x][y] = new GameLevelData.Tile(true, null);
+                tiles[x][y] = new GameLevelData.Tile(true);
             }
         }
 
@@ -170,7 +170,7 @@ public class Level_2_Data {
         );
     }
 
-    /** Resets the legacy position fields; the active game engine tracks gameplay movement. */
+    
     public void resetPositions() {
         heroX = HERO_START_X;
         heroY = HERO_START_Y;

@@ -12,10 +12,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-/**
- * Controller for the level-selection screen. Loads save progress, shows each
- * level's completion state, and opens the selected level or main menu.
- */
+
 public class GameMap {
 
     @FXML
@@ -32,10 +29,7 @@ public class GameMap {
     private String saveFilename;
     private Levels_Info saveData = new Levels_Info();
 
-    /**
-     * Called by the menu/game screen after FXML loading to connect this map to
-     * the current save file and refresh the level buttons.
-     */
+
     public void setSaveFilename(String saveFilename) {
         this.saveFilename = saveFilename;
 
@@ -104,15 +98,18 @@ public class GameMap {
 //Review and rewrite
     private boolean showLevelInfo(int levelNumber) {
         // Let players review instructions and their best result before entering.
-        String description = levelNumber == 1
-            ? "Learn to activate the floor switch to open the door, then guide the hero to the exit."
-            : "The switch and door are close together. Plan the hero's moves carefully to reach the exit.";
+        GameLevelData levelData;
+        if (levelNumber == 1) {
+            levelData = Level_1_Data.LEVEL;
+        } else if (levelNumber == 2) {
+            levelData = Level_2_Data.LEVEL;
+        } else {
+            levelData = Level_3_Data.LEVEL;
+        }
+        String description = levelData.getCommandHelpIntroduction();
+    
+           
         description += "\n\nYou can revisit this level at any time.";
-        GameLevelData levelData = levelNumber == 1
-            ? Level_1_Data.LEVEL
-            : levelNumber == 2
-            ? Level_2_Data.LEVEL
-            : Level_3_Data.LEVEL;
         description += "\nGold target: finish in "
             + levelData.getGoldMaxSteps()
             + " steps or fewer and use "
@@ -145,6 +142,7 @@ public class GameMap {
         alert.setHeaderText("Level " + levelNumber + " Information");
         alert.setContentText(description);
         alert.getButtonTypes().setAll(startLevel, cancel);
+        alert.setGraphic(null); 
 
         return alert.showAndWait()
             .filter(startLevel::equals)
